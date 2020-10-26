@@ -6,7 +6,8 @@ Definitions for the latest [Obsidian](https://obsidian.md) API.
 
 ### Documentation
 
-All documentation is located in the file `obsidian.d.ts`. This will include types, properties, methods and comments explaining what everything does.
+All API documentation is located in the file `obsidian.d.ts`.
+This will include types, properties, methods and comments explaining what everything does.
 
 ### Plugin structure
 

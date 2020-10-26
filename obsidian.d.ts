@@ -183,7 +183,8 @@ declare global {
     function ajaxPromise(options: AjaxOptions): Promise<any>;
     function ready(fn: () => any): void;
 }
-//# sourceMappingURL=enhance.d.ts.map
+//# sourceMappingURL=enhance.d.ts.map/// <reference types="node" />
+
 /**
  * @public
  */
@@ -218,6 +219,14 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      */
     onChange(callback: (value: string) => any): this;
 }
+
+/**
+ * Adds an icon to the library
+ * @param iconId - the icon ID
+ * @param svgContent - the content of the SVG, without the <svg>. Must fit viewBox="0 0 100 100".
+ * @public
+ */
+export function addIcon(iconId: string, svgContent: string): void;
 
 /**
  * @public
@@ -375,6 +384,82 @@ export class Component {
 /**
  * @public
  */
+export interface DataAdapter {
+    /**
+     * @public
+     */
+    getName(): string;
+
+    /**
+     * @public
+     */
+    exists(normalizedPath: string, sensitive: boolean): Promise<boolean>;
+    /**
+     * @public
+     */
+    list(normalizedPath: string): Promise<ListedFiles>;
+    /**
+     * @public
+     */
+    read(normalizedPath: string): Promise<string>;
+    /**
+     * @public
+     */
+    readBinary(normalizedPath: string): Promise<ArrayBuffer>;
+    /**
+     * @public
+     */
+    write(normalizedPath: string, data: string): Promise<void>;
+    /**
+     * @public
+     */
+    writeBinary(normalizedPath: string, data: ArrayBuffer): Promise<void>;
+    /**
+     * @public
+     */
+    getResourcePath(normalizedPath: string): string;
+    /**
+     * @public
+     */
+    mkdir(normalizedPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    trashSystem(normalizedPath: string): Promise<boolean>;
+    /**
+     * @public
+     */
+    trashLocal(normalizedPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    rmdir(normalizedPath: string, recursive: boolean): Promise<void>;
+    /**
+     * @public
+     */
+    remove(normalizedPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    rename(normalizedPath: string, normalizedNewPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    copy(normalizedPath: string, normalizedNewPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    setCtime(normalizedPath: string, ctime: number): Promise<void>;
+    /**
+     * @public
+     */
+    setMtime(normalizedPath: string, mtime: number): Promise<void>;
+
+}
+
+/**
+ * @public
+ */
 export class DropdownComponent extends ValueComponent<string> {
     /**
      * @public
@@ -477,7 +562,113 @@ export class ExtraButtonComponent extends BaseComponent {
  * @public
  */
 export interface FileStats {
+    /**
+     * @public
+     */
+    ctime: number;
+    /**
+     * @public
+     */
+    mtime: number;
+    /**
+     * @public
+     */
+    size: number;
+}
 
+/**
+ * @public
+ */
+export class FileSystemAdapter implements DataAdapter {
+
+    /**
+     * @public
+     */
+    getName(): string;
+    /**
+     * @public
+     */
+    getBasePath(): string;
+
+    /**
+     * @public
+     */
+    mkdir(normalizedPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    trashSystem(normalizedPath: string): Promise<boolean>;
+    /**
+     * @public
+     */
+    trashLocal(normalizedPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    rmdir(normalizedPath: string, recursive: boolean): Promise<void>;
+    /**
+     * @public
+     */
+    read(normalizedPath: string): Promise<string>;
+    /**
+     * @public
+     */
+    readBinary(normalizedPath: string): Promise<ArrayBuffer>;
+    /**
+     * @public
+     */
+    write(normalizedPath: string, data: string): Promise<void>;
+    /**
+     * @public
+     */
+    writeBinary(normalizedPath: string, data: ArrayBuffer): Promise<void>;
+    /**
+     * @public
+     */
+    getResourcePath(normalizedPath: string): string;
+    /**
+     * @public
+     */
+    remove(normalizedPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    rename(normalizedPath: string, normalizedNewPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    copy(normalizedPath: string, normalizedNewPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    setCtime(normalizedPath: string, ctime: number): Promise<void>;
+    /**
+     * @public
+     */
+    setMtime(normalizedPath: string, mtime: number): Promise<void>;
+    /**
+     * @public
+     */
+    exists(normalizedPath: string, sensitive: boolean): Promise<boolean>;
+    
+    /**
+     * @public
+     */
+    list(normalizedPath: string): Promise<ListedFiles>;
+
+    /**
+     * @public
+     */
+    getFullPath(normalizedPath: string): string;
+
+    /**
+     * @public
+     */
+    static readLocalFile(path: string): Promise<ArrayBuffer>;
+    /**
+     * @public
+     */
+    static mkdir(path: string): Promise<void>;
 }
 
 /**
@@ -588,6 +779,20 @@ export abstract class ItemView extends View {
  * @public
  */
 export interface LinkCache extends ReferenceCache {
+}
+
+/**
+ * @public
+ */
+export interface ListedFiles {
+    /**
+     * @public
+     */
+    files: string[];
+    /**
+     * @public
+     */
+    folders: string[];
 }
 
 /**
@@ -977,11 +1182,16 @@ export abstract class Plugin_2 extends Component {
      */
     constructor(app: App, manifest: PluginManifest);
     /**
+     * This method is run by the constructor. Override it to initialize class properties.
      * @public
      * @virtual
      */
     onInit(): void;
     /**
+     * Adds a ribbon icon to the left bar.
+     * @param icon - The icon name to be used. See {@link addIcon}
+     * @param title - The title to be displayed in the tooltip.
+     * @param callback - The `click` callback.
      * @public
      */
     addRibbonIcon(icon: string, title: string, callback: (evt: MouseEvent) => any): HTMLElement;
@@ -1074,6 +1284,15 @@ export interface ReferenceCache {
 export class Scope {
 
 }
+
+/**
+ *
+ * @param parent - the HTML element to insert the icon
+ * @param iconId - the icon ID
+ * @param size - the pixel size for width and height, defaults to 16
+ * @public
+ */
+export function setIcon(parent: HTMLElement, iconId: string, size?: number): void;
 
 /**
  * @public
@@ -1376,6 +1595,16 @@ export abstract class ValueComponent<T> extends BaseComponent {
  * @public
  */
 export class Vault extends Events {
+    /**
+     * @public
+     */
+    adapter: DataAdapter;
+
+    /**
+     * Gets the name of the vault
+     * @public
+     */
+    getName(): string;
 
     /**
      * @public
@@ -1417,15 +1646,15 @@ export class Vault extends Events {
      */
     getResourcePath(file: TFile): string;
     /**
-     * @param file
-     * @param force Should attempt to delete folder even if it has hidden children
+     * @param file - The file or folder to be deleted
+     * @param force  - Should attempt to delete folder even if it has hidden children
      * @public
      */
     delete(file: TAbstractFile, force?: boolean): Promise<void>;
     /**
      * Tries to move to system trash. If that isn't successful/allowed, use local trash
-     * @param file
-     * @param system
+     * @param file - The file or folder to be deleted
+     * @param system - Should move to system trash
      * @public
      */
     trash(file: TAbstractFile, system: boolean): Promise<void>;
@@ -1733,6 +1962,75 @@ export class WorkspaceLeaf extends WorkspaceItem {
      */
     view: View;
 
+    /**
+     * @public
+     */
+    openFile(file: TFile, openState?: OpenViewState): Promise<void>;
+    /**
+     * @public
+     */
+    open(view: View): Promise<View>;
+
+    /**
+     * @public
+     */
+    getViewState(): ViewState;
+    /**
+     * @public
+     */
+    setViewState(viewState: ViewState, eState?: any): Promise<void>;
+    /**
+     * @public
+     */
+    getEphemeralState(): any;
+    /**
+     * @public
+     */
+    setEphemeralState(state: any): void;
+    
+    /**
+     * @public
+     */
+    togglePinned(): void;
+    /**
+     * @public
+     */
+    setPinned(pinned: boolean): void;
+    /**
+     * @public
+     */
+    setGroupMember(other: WorkspaceLeaf): void;
+    /**
+     * @public
+     */
+    setGroup(group: string): void;
+    /**
+     * @public
+     */
+    detach(): void;
+    
+    /**
+     * @public
+     */
+    getIcon(): string;
+    /**
+     * @public
+     */
+    getDisplayText(): string;
+    
+    /**
+     * @public
+     */
+    onResize(): void;
+
+    /**
+     * @public
+     */
+    on(name: 'pinned-change', callback: (pinned: boolean) => any, ctx?: any): EventRef;
+    /**
+     * @public
+     */
+    on(name: 'group-change', callback: (group: string) => any, ctx?: any): EventRef;
 }
 
 /**
@@ -1753,6 +2051,13 @@ export class WorkspaceSidedock extends WorkspaceSplit {
  * @public
  */
 export class WorkspaceSplit extends WorkspaceParent {
+
+}
+
+/**
+ * @public
+ */
+export class WorkspaceTabs extends WorkspaceParent {
 
 }
 
