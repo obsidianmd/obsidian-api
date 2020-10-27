@@ -1232,7 +1232,38 @@ export { Plugin_2 as Plugin }
  * @public
  */
 export interface PluginManifest {
-
+    /**
+     * @public
+     */
+    dir: string;
+    /**
+     * @public
+     */
+    id: string;
+    /**
+     * @public
+     */
+    name: string;
+    /**
+     * @public
+     */
+    description?: string;
+    /**
+     * @public
+     */
+    author?: string;
+    /**
+     * @public
+     */
+    isDesktopOnly?: boolean;
+    /**
+     * @public
+     */
+    js?: string;
+    /**
+     * @public
+     */
+    css?: string;
 }
 
 /**
