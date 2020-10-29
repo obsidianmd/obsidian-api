@@ -269,7 +269,14 @@ export abstract class BaseComponent {
  * @public
  */
 export interface BlockCache {
-
+    /**
+     * @public
+     */
+    position: Pos;
+    /**
+     * @public
+     */
+    id: string;
 }
 
 /**
@@ -311,7 +318,26 @@ export class ButtonComponent extends BaseComponent {
  * @public
  */
 export interface CachedMetadata {
-
+    /**
+     * @public
+     */
+    links?: LinkCache[];
+    /**
+     * @public
+     */
+    embeds?: EmbedCache[];
+    /**
+     * @public
+     */
+    tags?: TagCache[];
+    /**
+     * @public
+     */
+    headings?: HeadingCache[];
+    /**
+     * @public
+     */
+    blocks?: Record<string, BlockCache>;
 }
 
 /**
@@ -754,7 +780,18 @@ export abstract class FileView extends ItemView {
  * @public
  */
 export interface HeadingCache {
-
+    /**
+     * @public
+     */
+    position: Pos;
+    /**
+     * @public
+     */
+    heading: string;
+    /**
+     * @public
+     */
+    level: number;
 }
 
 /**
@@ -815,6 +852,19 @@ export abstract class ItemView extends View {
 }
 
 /**
+ * Iterate links and embeds. If callback returns true, the iteration process will be interrupted.
+ * @returns true if callback ever returns true, false otherwise.
+ * @public
+ */
+export function iterateCacheRefs(cache: CachedMetadata, cb: (ref: ReferenceCache) => boolean | void): boolean;
+
+/**
+ * @returns true if callback ever returns true, false otherwise.
+ * @public
+ */
+export function iterateRefs(refs: ReferenceCache[], cb: (ref: ReferenceCache) => boolean | void): boolean;
+
+/**
  * @public
  */
 export interface KeymapEventHandler {
@@ -851,7 +901,18 @@ export interface ListedFiles {
  * @public
  */
 export interface Loc {
-
+    /**
+     * @public
+     */
+    line: number;
+    /**
+     * @public
+     */
+    col: number;
+    /**
+     * @public
+     */
+    offset: number;
 }
 
 /**
@@ -1354,7 +1415,14 @@ export enum PopoverState {
  * @public
  */
 export interface Pos {
-
+    /**
+     * @public
+     */
+    start: Loc;
+    /**
+     * @public
+     */
+    end: Loc;
 }
 
 /**
@@ -1383,7 +1451,23 @@ export interface Rect {
  * @public
  */
 export interface ReferenceCache {
-
+    /**
+     * @public
+     */
+    position: Pos;
+    /**
+     * @public
+     */
+    link: string;
+    /**
+     * @public
+     */
+    original: string;
+    /**
+     * if title is different than link text, in the case of [[page name|display name]]
+     * @public
+     */
+    displayText?: string;
 }
 
 /**
@@ -1601,7 +1685,14 @@ export abstract class TAbstractFile {
  * @public
  */
 export interface TagCache {
-
+    /**
+     * @public
+     */
+    position: Pos;
+    /**
+     * @public
+     */
+    tag: string;
 }
 
 /**
@@ -1923,6 +2014,33 @@ export type ViewCreator = (leaf: WorkspaceLeaf) => View;
 /**
  * @public
  */
+export interface ViewState {
+    
+    /**
+     * @public
+     */
+    type: string;
+    /**
+     * @public
+     */
+    state?: any;
+    /**
+     * @public
+     */
+    active?: boolean;
+    /**
+     * @public
+     */
+    pinned?: boolean;
+    /**
+     * @public
+     */
+    group?: WorkspaceLeaf;
+}
+
+/**
+ * @public
+ */
 export interface ViewStateResult {
 
 }
@@ -1931,12 +2049,39 @@ export interface ViewStateResult {
  * @public
  */
 export class Workspace extends Events {
-
+    
+    /**
+     * @public
+     */
+    leftSplit: WorkspaceSidedock;
+    /**
+     * @public
+     */
+    rightSplit: WorkspaceSidedock;
+    /**
+     * @public
+     */
+    leftRibbon: WorkspaceRibbon;
+    /**
+     * @public
+     */
+    rightRibbon: WorkspaceRibbon;
+    /**
+     * @public
+     */
+    rootSplit: WorkspaceSplit;
     /**
      * @public
      */
     activeLeaf: WorkspaceLeaf;
-
+    /**
+     * @public
+     */
+    containerEl: HTMLElement;
+    /**
+     * @public
+     */
+    layoutReady: boolean;
     /**
      * @public
      */
@@ -2154,6 +2299,13 @@ export class WorkspaceLeaf extends WorkspaceItem {
  * @public
  */
 export abstract class WorkspaceParent extends WorkspaceItem {
+
+}
+
+/**
+ * @public
+ */
+export class WorkspaceRibbon {
 
 }
 
