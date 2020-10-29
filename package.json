@@ -1,6 +1,6 @@
 {
   "name": "obsidian-sample-plugin",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "Definitions for the latest Obsidian API (https://obsidian.md)",
   "types": "obsidian.d.ts",
   "keywords": [],

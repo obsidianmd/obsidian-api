@@ -354,48 +354,59 @@ export interface Command {
 export class Component {
 
     /**
+     * Load this component and its children
      * @public
      */
     load(): void;
     /**
+     * Override this to load your component
      * @public
      * @virtual
      */
     onload(): void;
     /**
+     * Unload this component and its children
      * @public
      */
     unload(): void;
     /**
+     * Override this to unload your component
      * @public
      * @virtual
      */
     onunload(): void;
     /**
+     * Adds a child component, loading it if this component is loaded
      * @public
      */
     addChild(component: Component): void;
     /**
+     * Removes a child component, unloading it
      * @public
      */
     removeChild(component: Component): boolean;
     /**
+     * Registers a callback to be called when unloading
      * @public
      */
     register(cb: () => any): void;
     /**
+     * Registers an event to be detached when unloading
      * @public
      */
     registerEvent(eventRef: EventRef): void;
     /**
+     * Registers an DOM event to be detached when unloading
      * @public
      */
     registerDomEvent<K extends keyof HTMLElementEventMap>(el: HTMLElement | Document | Window, type: K, callback: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any): void;
     /**
+     * Registers an key event to be detached when unloading
      * @public
      */
     registerScopeEvent(keyHandler: KeymapEventHandler): void;
     /**
+     * Registers an interval (from setInterval) to be cancelled when unloading
      * @public
      */
     registerInterval(id: number): void;
@@ -809,6 +820,12 @@ export abstract class ItemView extends View {
 export interface KeymapEventHandler {
 
 }
+
+/**
+ * Return `false` to automatically preventDefault
+ * @public
+ */
+export type KeymapEventListener = (ev: KeyboardEvent, modifiers: string, key: string) => boolean | void;
 
 /**
  * @public
