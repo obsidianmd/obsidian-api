@@ -15,10 +15,11 @@ This will include types, properties, methods and comments explaining what everyt
 
 - `id` the ID of your plugin.
 - `name` the display name of your plugin.
+- `author` the plugin author's name.
+- `version` the version of your plugin.
 - `description` the long description of your plugin.
+- `authorUrl` (optional) a URL to your own website.
 - `isDesktopOnly` whether your plugin uses NodeJS or Electron APIs.
-- `js` (optional) an alternative js entry point. Defaults to `main.js`
-- `css` (optional) a css file that should be injected. Defaults to `styles.css`
 
 `main.js`
 
