@@ -16,6 +16,7 @@ declare global {
         last(): T;
         contains(target: T): boolean;
         remove(target: T): void;
+        shuffle(): this;
     }
 }
 declare global {
@@ -197,7 +198,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
     /**
      * @public
      */
-    constructor(setting: Setting, inputEl: T);
+    constructor(inputEl: T);
     /**
      * @public
      */
@@ -258,14 +259,6 @@ export class App extends Events {
  */
 export abstract class BaseComponent {
     /**
-     * @public
-     */
-    setting: Setting;
-    /**
-     * @public
-     */
-    constructor(setting: Setting);
-    /**
      * Facilitates chaining
      * @public
      */
@@ -291,7 +284,7 @@ export class ButtonComponent extends BaseComponent {
     /**
      * @public
      */
-    constructor(setting: Setting);
+    constructor(containerEl: HTMLElement);
     /**
      * @public
      */
@@ -378,7 +371,34 @@ export class Component {
      * @virtual
      */
     onunload(): void;
-
+    /**
+     * @public
+     */
+    addChild(component: Component): void;
+    /**
+     * @public
+     */
+    removeChild(component: Component): boolean;
+    /**
+     * @public
+     */
+    register(cb: () => any): void;
+    /**
+     * @public
+     */
+    registerEvent(eventRef: EventRef): void;
+    /**
+     * @public
+     */
+    registerDomEvent<K extends keyof HTMLElementEventMap>(el: HTMLElement | Document | Window, type: K, callback: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any): void;
+    /**
+     * @public
+     */
+    registerScopeEvent(keyHandler: KeymapEventHandler): void;
+    /**
+     * @public
+     */
+    registerInterval(id: number): void;
 }
 
 /**
@@ -469,7 +489,7 @@ export class DropdownComponent extends ValueComponent<string> {
     /**
      * @public
      */
-    constructor(setting: Setting);
+    constructor(containerEl: HTMLElement);
     /**
      * @public
      */
@@ -551,7 +571,15 @@ export class ExtraButtonComponent extends BaseComponent {
     /**
      * @public
      */
-    constructor(setting: Setting);
+    constructor(containerEl: HTMLElement);
+    /**
+     * @public
+     */
+    setTooltip(tooltip: string): this;
+    /**
+     * @public
+     */
+    setIcon(icon: string): this;
     /**
      * @public
      */
@@ -773,6 +801,13 @@ export abstract class ItemView extends View {
      * @public
      */
     onHeaderMenu(menuGroup: MenuGroupDom): void;
+}
+
+/**
+ * @public
+ */
+export interface KeymapEventHandler {
+
 }
 
 /**
@@ -1121,10 +1156,6 @@ export class MomentFormatComponent extends TextComponent {
     sampleEl: HTMLElement;
     
     /**
-     * @public
-     */
-    constructor(setting: Setting);
-    /**
      * Sets the default format when input is cleared. Also used for placeholder.
      * @public
      */
@@ -1235,7 +1266,7 @@ export interface PluginManifest {
     /**
      * @public
      */
-    dir: string;
+    dir?: string;
     /**
      * @public
      */
@@ -1247,23 +1278,23 @@ export interface PluginManifest {
     /**
      * @public
      */
-    description?: string;
+    author: string;
     /**
      * @public
      */
-    author?: string;
+    version: string;
+    /**
+     * @public
+     */
+    description: string;
+    /**
+     * @public
+     */
+    authorUrl?: string;
     /**
      * @public
      */
     isDesktopOnly?: boolean;
-    /**
-     * @public
-     */
-    js?: string;
-    /**
-     * @public
-     */
-    css?: string;
 }
 
 /**
@@ -1285,7 +1316,14 @@ export abstract class PluginSettingTab extends SettingTab {
  * @public
  */
 export interface Point {
-
+    /**
+     * @public
+     */
+    x: number;
+    /**
+     * @public
+     */
+    y: number;
 }
 
 /**
@@ -1305,6 +1343,28 @@ export interface Pos {
 /**
  * @public
  */
+export interface Rect {
+    /**
+     * @public
+     */
+    x: number;
+    /**
+     * @public
+     */
+    y: number;
+    /**
+     * @public
+     */
+    w: number;
+    /**
+     * @public
+     */
+    h: number;
+}
+
+/**
+ * @public
+ */
 export interface ReferenceCache {
 
 }
@@ -1314,6 +1374,15 @@ export interface ReferenceCache {
  */
 export class Scope {
 
+    /**
+     * @public
+     */
+    registerKey(modifiers: string[], key: string, func: KeymapEventListener): KeymapEventHandler;
+    /**
+     * @public
+     */
+    unregister(handler: KeymapEventHandler): void;
+    
 }
 
 /**
@@ -1452,7 +1521,7 @@ export class SliderComponent extends ValueComponent<number> {
     /**
      * @public
      */
-    constructor(setting: Setting);
+    constructor(containerEl: HTMLElement);
     /**
      * @public
      */
@@ -1525,7 +1594,7 @@ export class TextAreaComponent extends AbstractTextComponent<HTMLTextAreaElement
     /**
      * @public
      */
-    constructor(setting: Setting);
+    constructor(containerEl: HTMLElement);
 }
 
 /**
@@ -1535,7 +1604,7 @@ export class TextComponent extends AbstractTextComponent<HTMLInputElement> {
     /**
      * @public
      */
-    constructor(setting: Setting);
+    constructor(containerEl: HTMLElement);
 }
 
 /**
@@ -1585,7 +1654,7 @@ export class ToggleComponent extends ValueComponent<boolean> {
     /**
      * @public
      */
-    constructor(setting: Setting);
+    constructor(containerEl: HTMLElement);
     /**
      * @public
      */
@@ -1701,7 +1770,7 @@ export class Vault extends Events {
      * @public
      */
     modifyBinary(file: TFile, data: ArrayBuffer): Promise<void>;
-    
+
     /**
      * @public
      */
