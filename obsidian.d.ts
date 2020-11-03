@@ -145,6 +145,7 @@ declare global {
         createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
     }
     function createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
+    function createFragment(callback?: (el: DocumentFragment) => void): DocumentFragment;
 }
 interface EventListenerInfo {
     selector: string;
@@ -361,9 +362,15 @@ export interface Command {
     callback?: () => any;
     /**
      * Complex callback, overrides the simple callback.
-     * If checking is true, then this should not perform any action.
-     * If checking is false, then it should check and perform the action.
-     * Must return whether this command can be executed at the moment.
+     * Used to "check" whether your command can be performed in the current circumstances.
+     * For example, if your command requires the active focused pane to be a MarkdownSourceView, then
+     * you should only return true if the condition is satisfied. Returning false causes the command
+     * to be hidden from the command palette.
+     *
+     * @param checking - Whether the command palette is just "checking" if your command should show right now.
+     * If checking is true, then this function should not perform any action.
+     * If checking is false, then this function should perform the action.
+     * @returns Whether this command can be executed at the moment.
      * @public
      */
     checkCallback?: (checking: boolean) => boolean;
@@ -433,6 +440,7 @@ export class Component {
     registerScopeEvent(keyHandler: KeymapEventHandler): void;
     /**
      * Registers an interval (from setInterval) to be cancelled when unloading
+     * Use {@link window.setInterval} instead of {@link setInterval} to avoid TypeScript confusing between NodeJS vs Browser API
      * @public
      */
     registerInterval(id: number): void;
@@ -1102,7 +1110,7 @@ export class MarkdownView extends EditableFileView {
      * @public
      */
     showSearch(replace?: boolean): void;
-    
+
 }
 
 /**
@@ -1259,6 +1267,11 @@ export class MomentFormatComponent extends TextComponent {
 /**
  * @public
  */
+export function normalizePath(path: string): string;
+
+/**
+ * @public
+ */
 export class Notice {
     
     /**
@@ -1290,12 +1303,6 @@ export abstract class Plugin_2 extends Component {
      * @public
      */
     constructor(app: App, manifest: PluginManifest);
-    /**
-     * This method is run by the constructor. Override it to initialize class properties.
-     * @public
-     * @virtual
-     */
-    onInit(): void;
     /**
      * Adds a ribbon icon to the left bar.
      * @param icon - The icon name to be used. See {@link addIcon}
@@ -1827,15 +1834,15 @@ export class Vault extends Events {
     /**
      * @public
      */
-    create(normalizedPath: string, data: string): Promise<TFile>;
+    create(path: string, data: string): Promise<TFile>;
     /**
      * @public
      */
-    createBinary(normalizedPath: string, data: ArrayBuffer): Promise<TFile>;
+    createBinary(path: string, data: ArrayBuffer): Promise<TFile>;
     /**
      * @public
      */
-    createFolder(normalizedPath: string): Promise<void>;
+    createFolder(path: string): Promise<void>;
     /**
      * @public
      */
@@ -1869,7 +1876,7 @@ export class Vault extends Events {
     /**
      * @public
      */
-    rename(file: TAbstractFile, normalizedNewPath: string): Promise<void>;
+    rename(file: TAbstractFile, newPath: string): Promise<void>;
     /**
      * @public
      */
@@ -1882,7 +1889,7 @@ export class Vault extends Events {
     /**
      * @public
      */
-    copy(file: TFile, normalizedNewPath: string): Promise<TFile>;
+    copy(file: TFile, newPath: string): Promise<TFile>;
 
     /**
      * @public
@@ -1952,14 +1959,7 @@ export abstract class View extends Component {
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
-    /**
-     * @public
-     */
-    open(containerEl: HTMLElement): Promise<void>;
-    /**
-     * @public
-     */
-    close(): Promise<void>;
+
     /**
      * @public
      */
@@ -2101,6 +2101,10 @@ export class Workspace extends Events {
      */
     getLayout(): any;
 
+    /**
+     * @public
+     */
+    createLeafInParent(parent: WorkspaceSplit, index: number): WorkspaceLeaf;
     /**
      * @public
      */
