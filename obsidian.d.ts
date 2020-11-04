@@ -1177,9 +1177,20 @@ export class MenuItemDom {
 }
 
 /**
+ *
+ * Linktext is any internal link that is composed of a path and a subpath, such as "My note#Heading"
+ * Linkpath (or path) is the path part of a linktext
+ * Subpath is the heading/block ID part of a linktext.
+ *
  * @public
  */
 export class MetadataCache extends Events {
+
+    /**
+     * Get the best match for a linkpath.
+     * @public
+     */
+    getFirstLinkpathDest(linkpath: string, sourcePath: string): TFile;
 
     /**
      * @public
@@ -1189,6 +1200,15 @@ export class MetadataCache extends Events {
      * @public
      */
     getCache(path: string): CachedMetadata;
+
+    /**
+     * Generates a linktext for a file.
+     *
+     * If file name is unique, use the filename.
+     * If not unique, use full path.
+     * @public
+     */
+    fileToLinktext(file: TFile, sourcePath: string, omitMdExtension?: boolean): string;
 
 }
 
