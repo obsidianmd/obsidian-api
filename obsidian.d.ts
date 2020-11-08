@@ -185,7 +185,6 @@ declare global {
     function ajaxPromise(options: AjaxOptions): Promise<any>;
     function ready(fn: () => any): void;
 }
-//# sourceMappingURL=enhance.d.ts.map/// <reference types="node" />
 
 /**
  * @public
@@ -364,8 +363,8 @@ export interface Command {
      * Complex callback, overrides the simple callback.
      * Used to "check" whether your command can be performed in the current circumstances.
      * For example, if your command requires the active focused pane to be a MarkdownSourceView, then
-     * you should only return true if the condition is satisfied. Returning false causes the command
-     * to be hidden from the command palette.
+     * you should only return true if the condition is satisfied. Returning false or undefined causes
+     * the command to be hidden from the command palette.
      *
      * @param checking - Whether the command palette is just "checking" if your command should show right now.
      * If checking is true, then this function should not perform any action.
@@ -373,7 +372,7 @@ export interface Command {
      * @returns Whether this command can be executed at the moment.
      * @public
      */
-    checkCallback?: (checking: boolean) => boolean;
+    checkCallback?: (checking: boolean) => boolean | void;
     /**
      * Sets the default hotkey
      * @public
@@ -449,6 +448,16 @@ export class Component {
 /**
  * @public
  */
+export interface Constructor<T> {
+    /**
+     * @public
+     */
+    new (...args: any[]): T;
+}
+
+/**
+ * @public
+ */
 export interface DataAdapter {
     /**
      * @public
@@ -474,11 +483,11 @@ export interface DataAdapter {
     /**
      * @public
      */
-    write(normalizedPath: string, data: string): Promise<void>;
+    write(normalizedPath: string, data: string, immediate?: () => any): Promise<void>;
     /**
      * @public
      */
-    writeBinary(normalizedPath: string, data: ArrayBuffer): Promise<void>;
+    writeBinary(normalizedPath: string, data: ArrayBuffer, immediate?: () => any): Promise<void>;
     /**
      * @public
      */
@@ -690,11 +699,11 @@ export class FileSystemAdapter implements DataAdapter {
     /**
      * @public
      */
-    write(normalizedPath: string, data: string): Promise<void>;
+    write(normalizedPath: string, data: string, immediate?: () => any): Promise<void>;
     /**
      * @public
      */
-    writeBinary(normalizedPath: string, data: ArrayBuffer): Promise<void>;
+    writeBinary(normalizedPath: string, data: ArrayBuffer, immediate?: () => any): Promise<void>;
     /**
      * @public
      */
@@ -926,14 +935,16 @@ export interface Loc {
 /**
  * @public
  */
-export interface MarkdownPostProcessor {
-    
-}
+export type MarkdownPostProcessor = (el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void;
 
 /**
  * @public
  */
 export interface MarkdownPostProcessorContext {
+    /**
+     * @public
+     */
+    docId: string;
 
 }
 
@@ -1092,6 +1103,12 @@ export class MarkdownView extends EditableFileView {
     currentMode: MarkdownSubView;
 
     /**
+     * In memory data
+     * @public
+     */
+    data: string;
+    
+    /**
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
@@ -1225,7 +1242,14 @@ export class Modal {
      * @public
      */
     containerEl: HTMLElement;
-
+    /**
+     * @public
+     */
+    modalEl: HTMLElement;
+    /**
+     * @public
+     */
+    titleEl: HTMLElement;
     /**
      * @public
      */
@@ -2157,6 +2181,13 @@ export class Workspace extends Events {
      * @public
      */
     openLinkText(linktext: string, sourcePath: string, newLeaf?: boolean, openViewState?: OpenViewState): Promise<void>;
+    /**
+     * Sets the active leaf
+     * @param leaf - The new active leaf
+     * @param pushHistory - Whether to push the navigation history, or replace the current navigation history.
+     * @public
+     */
+    setActiveLeaf(leaf: WorkspaceLeaf, pushHistory?: boolean): void;
 
     /**
      * @public
@@ -2178,6 +2209,14 @@ export class Workspace extends Events {
      * @public
      */
     getRightLeaf(shouldSplit: boolean): WorkspaceLeaf;
+    /**
+     * @public
+     */
+    getActiveLeafOfViewType<T extends View>(type: Constructor<T>): T | null;
+    /**
+     * @public
+     */
+    getActiveFile(): TFile | null;
 
     /**
      * @public
