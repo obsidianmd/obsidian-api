@@ -17,6 +17,7 @@ This will include types, properties, methods and comments explaining what everyt
 - `name` the display name of your plugin.
 - `author` the plugin author's name.
 - `version` the version of your plugin.
+- `minAppVersion` the minimum required Obsidian version for your plugin.
 - `description` the long description of your plugin.
 - `authorUrl` (optional) a URL to your own website.
 - `isDesktopOnly` whether your plugin uses NodeJS or Electron APIs.
