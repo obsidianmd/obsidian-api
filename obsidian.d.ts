@@ -781,11 +781,11 @@ export abstract class FileView extends ItemView {
     /**
      * @public
      */
-    onInitMenu(menuDom: MenuDom): MenuGroupDom;
+    onMoreOptionsMenu(menu: Menu): void;
     /**
      * @public
      */
-    onHeaderMenu(menuGroup: MenuGroupDom): void;
+    onHeaderMenu(menu: Menu): void;
 
     /**
      * @public
@@ -855,7 +855,7 @@ export abstract class ItemView extends View {
     /**
      * @public
      */
-    onInitMenu(menuDom: MenuDom): MenuGroupDom;
+    onMoreOptionsMenu(menu: Menu): void;
     
     /**
      * @public
@@ -865,7 +865,7 @@ export abstract class ItemView extends View {
     /**
      * @public
      */
-    onHeaderMenu(menuGroup: MenuGroupDom): void;
+    onHeaderMenu(menu: Menu): void;
 }
 
 /**
@@ -1138,59 +1138,64 @@ export type MarkdownViewMode = 'source' | 'preview' | 'live';
 /**
  * @public
  */
-export class MenuDom extends Component {
-
-    /**
-     * @public
-     */
-    constructor(noicon?: boolean);
-    
-    /**
-     * @public
-     */
-    addGroup(): MenuGroupDom;
-    /**
-     * @public
-     */
-    showAtPosition(position: Point): void;
-    /**
-     * @public
-     */
-    hide(): void;
-}
-
-/**
- * @public
- */
-export class MenuGroupDom {
+export class Menu extends Component {
 
     /**
      * @public
      */
     constructor();
+    
     /**
      * @public
      */
-    addItem(name: string, callback?: (evt: MouseEvent) => any, icon?: string): MenuItemDom;
+    setNoIcon(): this;
+    /**
+     * @public
+     */
+    addItem(cb: (item: MenuItem) => any): this;
+    /**
+     * @public
+     */
+    addSeparator(): this;
+    /**
+     * @public
+     */
+    showAtPosition(position: Point): this;
+    /**
+     * @public
+     */
+    hide(): this;
 }
 
 /**
  * @public
  */
-export class MenuItemDom {
+export class MenuItem {
 
     /**
      * @public
      */
-    constructor(name: string, callback?: (evt: MouseEvent) => any, icon?: string);
+    constructor(menu: Menu);
     /**
      * @public
      */
-    setDisabled(disabled: boolean): void;
+    setTitle(title: string): this;
     /**
      * @public
      */
-    setActive(active: boolean): void;
+    setIcon(icon: string | null, size?: number): this;
+    /**
+     * @public
+     */
+    setActive(active: boolean): this;
+    /**
+     * @public
+     */
+    setDisabled(disabled: boolean): this;
+    /**
+     * @public
+     */
+    onClick(callback: (evt: MouseEvent) => any): this;
 }
 
 /**
@@ -1412,6 +1417,10 @@ export interface PluginManifest {
      * @public
      */
     version: string;
+    /**
+     * @public
+     */
+    minAppVersion: string;
     /**
      * @public
      */
@@ -2047,7 +2056,7 @@ export abstract class View extends Component {
     /**
      * @public
      */
-    onHeaderMenu(menuGroup: MenuGroupDom): void;
+    onHeaderMenu(menu: Menu): void;
 }
 
 /**
@@ -2268,6 +2277,11 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'css-change', callback: () => any, ctx?: any): EventRef;
+    /**
+     * @public
+     */
+    on(name: 'file-menu', callback: (menu: Menu, file: TAbstractFile, source: string, leaf?: WorkspaceLeaf) => any, ctx?: any): EventRef;
+    
 }
 
 /**
