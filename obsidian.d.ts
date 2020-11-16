@@ -794,6 +794,11 @@ export abstract class FileView extends ItemView {
 }
 
 /**
+@public
+ */
+export function getLinkpath(linktext: string): string;
+
+/**
  * @public
  */
 export interface HeadingCache {
@@ -1326,7 +1331,11 @@ export class Notice {
     /**
      * @public
      */
-    constructor(message: string);
+    constructor(message: string, timeout?: number);
+    /**
+     * @public
+     */
+    hide(): void;
 }
 
 /**
@@ -1335,6 +1344,13 @@ export class Notice {
 export interface OpenViewState {
 
 }
+
+/**
+@public
+ */
+export function parseLinktext(linktext: string): {
+
+};
 
 /**
  * @public
