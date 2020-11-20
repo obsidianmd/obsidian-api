@@ -282,6 +282,20 @@ export interface BlockCache {
 /**
  * @public
  */
+export interface BlockSubpathResult extends SubpathResult {
+    /**
+     * @public
+     */
+    type: 'block';
+    /**
+     * @public
+     */
+    block: BlockCache;
+}
+
+/**
+ * @public
+ */
 export class ButtonComponent extends BaseComponent {
     /**
      * @public
@@ -338,6 +352,10 @@ export interface CachedMetadata {
      * @public
      */
     blocks?: Record<string, BlockCache>;
+    /**
+     * @public
+     */
+    frontmatter?: FrontMatterCache;
 }
 
 /**
@@ -794,6 +812,25 @@ export abstract class FileView extends ItemView {
 }
 
 /**
+ * @public
+ */
+export interface FrontMatterCache {
+    /**
+     * @public
+     */
+    position: Pos;
+    /**
+     * @public
+     */
+    [key: string]: any;
+}
+
+/**
+ * @public
+ */
+export function getAllTags(cache: CachedMetadata): string[] | null;
+
+/**
 @public
  */
 export function getLinkpath(linktext: string): string;
@@ -814,6 +851,24 @@ export interface HeadingCache {
      * @public
      */
     level: number;
+}
+
+/**
+ * @public
+ */
+export interface HeadingSubpathResult extends SubpathResult {
+    /**
+     * @public
+     */
+    type: 'heading';
+    /**
+     * @public
+     */
+    current: HeadingCache;
+    /**
+     * @public
+     */
+    next: HeadingCache;
 }
 
 /**
@@ -1267,6 +1322,11 @@ export class Modal {
     /**
      * @public
      */
+    shouldRestoreSelection: boolean;
+    
+    /**
+     * @public
+     */
     constructor(app: App);
     /**
      * @public
@@ -1344,6 +1404,26 @@ export class Notice {
 export interface OpenViewState {
 
 }
+
+/**
+ * @public
+ */
+export function parseFrontMatterAliases(frontmatter: any | null): string[] | null;
+
+/**
+ * @public
+ */
+export function parseFrontMatterEntry(frontmatter: any | null, key: string | RegExp): any | null;
+
+/**
+ * @public
+ */
+export function parseFrontMatterStringArray(frontmatter: any | null, key: string | RegExp): string[] | null;
+
+/**
+ * @public
+ */
+export function parseFrontMatterTags(frontmatter: any | null): string[] | null;
 
 /**
 @public
@@ -1549,6 +1629,11 @@ export interface ReferenceCache {
 /**
  * @public
  */
+export function resolveSubpath(cache: CachedMetadata, subpath: string): HeadingSubpathResult | BlockSubpathResult;
+
+/**
+ * @public
+ */
 export class Scope {
 
     /**
@@ -1618,11 +1703,16 @@ export class Setting {
     /**
      * @public
      */
+    setHeading(): this;
+    /**
+     * @public
+     */
     addButton(cb: (component: ButtonComponent) => any): this;
     /**
      * @public
      */
-    addExtraSetting(cb: (component: ExtraButtonComponent) => any): this;
+    addExtraButton(cb: (component: ExtraButtonComponent) => any): this;
+    
     /**
      * @public
      */
@@ -1733,6 +1823,20 @@ export class SliderComponent extends ValueComponent<number> {
  * @public
  */
 export type SplitDirection = 'vertical' | 'horizontal';
+
+/**
+ * @public
+ */
+export interface SubpathResult {
+    /**
+     * @public
+     */
+    start: Loc;
+    /**
+     * @public
+     */
+    end: Loc | null;
+}
 
 /**
  * @public
@@ -2234,10 +2338,11 @@ export class Workspace extends Events {
      * @public
      */
     getRightLeaf(shouldSplit: boolean): WorkspaceLeaf;
+    
     /**
      * @public
      */
-    getActiveLeafOfViewType<T extends View>(type: Constructor<T>): T | null;
+    getActiveViewOfType<T extends View>(type: Constructor<T>): T | null;
     /**
      * @public
      */
