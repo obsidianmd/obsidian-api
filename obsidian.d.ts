@@ -313,6 +313,14 @@ export class ButtonComponent extends BaseComponent {
     /**
      * @public
      */
+    removeCta(): this;
+    /**
+     * @public
+     */
+    setTooltip(tooltip: string): this;
+    /**
+     * @public
+     */
     setButtonText(name: string): this;
     /**
      * @public
@@ -485,7 +493,7 @@ export interface DataAdapter {
     /**
      * @public
      */
-    exists(normalizedPath: string, sensitive: boolean): Promise<boolean>;
+    exists(normalizedPath: string, sensitive?: boolean): Promise<boolean>;
     /**
      * @public
      */
@@ -749,7 +757,7 @@ export class FileSystemAdapter implements DataAdapter {
     /**
      * @public
      */
-    exists(normalizedPath: string, sensitive: boolean): Promise<boolean>;
+    exists(normalizedPath: string, sensitive?: boolean): Promise<boolean>;
     
     /**
      * @public
@@ -828,6 +836,46 @@ export interface FrontMatterCache {
 /**
  * @public
  */
+export interface FuzzyMatch<T> {
+    /** @public */
+    item: T;
+    /** @public */
+    match: SearchResult;
+}
+
+/**
+ * @public
+ */
+export abstract class FuzzySuggestModal<T> extends SuggestModal<FuzzyMatch<T>> {
+    /**
+     * @public
+     */
+    getSuggestions(query: string): FuzzyMatch<T>[];
+    /**
+     * @public
+     */
+    renderSuggestion(item: FuzzyMatch<T>, el: HTMLElement): void;
+    /**
+     * @public
+     */
+    onChooseSuggestion(item: FuzzyMatch<T>, evt: MouseEvent | KeyboardEvent): void;
+    /**
+     * @public
+     */
+    abstract getItems(): T[];
+    /**
+     * @public
+     */
+    abstract getItemText(item: T): string;
+    /**
+     * @public
+     */
+    abstract onChooseItem(item: T, evt: MouseEvent | KeyboardEvent): void;
+}
+
+/**
+ * @public
+ */
 export function getAllTags(cache: CachedMetadata): string[] | null;
 
 /**
@@ -900,6 +948,30 @@ export class HoverPopover extends Component {
      */
     constructor(parent: HoverParent, targetEl: HTMLElement | null, waitTime?: number);
 
+}
+
+/**
+ * @public
+ */
+export interface Instruction {
+    /** @public */
+    command: string;
+    /** @public */
+    purpose: string;
+}
+
+/**
+ * @public
+ */
+export interface ISuggestOwner<T> {
+    /**
+     * @public
+     */
+    renderSuggestion(value: T, el: HTMLElement): void;
+    /**
+     * @public
+     */
+    selectSuggestion(value: T, evt: MouseEvent | KeyboardEvent): void;
 }
 
 /**
@@ -1418,7 +1490,7 @@ export function parseFrontMatterEntry(frontmatter: any | null, key: string | Reg
 /**
  * @public
  */
-export function parseFrontMatterStringArray(frontmatter: any | null, key: string | RegExp): string[] | null;
+export function parseFrontMatterStringArray(frontmatter: any | null, key: string | RegExp, nospaces?: boolean): string[] | null;
 
 /**
  * @public
@@ -1429,7 +1501,14 @@ export function parseFrontMatterTags(frontmatter: any | null): string[] | null;
 @public
  */
 export function parseLinktext(linktext: string): {
-
+    /**
+    @public
+     */
+    path: string;
+    /**
+    @public
+     */
+    subpath: string;
 };
 
 /**
@@ -1648,6 +1727,30 @@ export class Scope {
 }
 
 /**
+ * @public
+ */
+export type SearchMatches = SearchMatchPart[];
+
+/**
+ * @public
+ */
+export type SearchMatchPart = [number, number];
+
+/**
+ * @public
+ */
+export interface SearchResult {
+    /**
+     * @public
+     */
+    score: number;
+    /**
+     * @public
+     */
+    matches: SearchMatches;
+}
+
+/**
  *
  * @param parent - the HTML element to insert the icon
  * @param iconId - the icon ID
@@ -1737,6 +1840,11 @@ export class Setting {
      * @public
      */
     addSlider(cb: (component: SliderComponent) => any): this;
+    /**
+     * Facilitates chaining
+     * @public
+     */
+    then(cb: (setting: this) => any): this;
 }
 
 /**
@@ -1836,6 +1944,62 @@ export interface SubpathResult {
      * @public
      */
     end: Loc | null;
+}
+
+/**
+ * @public
+ */
+export abstract class SuggestModal<T> extends Modal implements ISuggestOwner<T> {
+    /**
+     * @public
+     */
+    limit: number;
+    /**
+     * @public
+     */
+    emptyStateText: string;
+
+    /**
+     * @public
+     */
+    inputEl: HTMLInputElement;
+    /**
+     * @public
+     */
+    resultContainerEl: HTMLElement;
+    /**
+     * @public
+     */
+    constructor(app: App);
+    /**
+     * @public
+     */
+    setPlaceholder(placeholder: string): void;
+    /**
+     * @public
+     */
+    setInstructions(instructions: Instruction[]): void;
+
+    /**
+     * @public
+     */
+    onNoSuggestion(): void;
+    /**
+     * @public
+     */
+    selectSuggestion(value: T, evt: MouseEvent | KeyboardEvent): void;
+    /**
+     * @public
+     */
+    abstract getSuggestions(query: string): T[];
+    /**
+     * @public
+     */
+    abstract renderSuggestion(value: T, el: HTMLElement): void;
+    /**
+     * @public
+     */
+    abstract onChooseSuggestion(item: T, evt: MouseEvent | KeyboardEvent): void;
 }
 
 /**
@@ -2102,6 +2266,7 @@ export class Vault extends Events {
      * @public
      */
     on(name: 'closed', callback: () => any, ctx?: any): EventRef;
+    
 }
 
 /**
@@ -2394,6 +2559,10 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'layout-ready', callback: () => any, ctx?: any): EventRef;
+    /**
+     * @public
+     */
+    on(name: 'layout-change', callback: () => any, ctx?: any): EventRef;
     /**
      * @public
      */
