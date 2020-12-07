@@ -846,6 +846,11 @@ export interface FuzzyMatch<T> {
 /**
  * @public
  */
+export function fuzzySearch(q: PreparedQuery, text: string): SearchResult;
+
+/**
+ * @public
+ */
 export abstract class FuzzySuggestModal<T> extends SuggestModal<FuzzyMatch<T>> {
     /**
      * @public
@@ -1349,7 +1354,7 @@ export class MetadataCache extends Events {
     /**
      * @public
      */
-    getFileCache(file: TFile): CachedMetadata;
+    getFileCache(file: TFile): CachedMetadata | null;
     /**
      * @public
      */
@@ -1663,6 +1668,23 @@ export interface Pos {
 /**
  * @public
  */
+export interface PreparedQuery {
+    /** @public */
+    query: string;
+    /** @public */
+    tokens: string[];
+    /** @public */
+    fuzzy: string[];
+}
+
+/**
+ * @public
+ */
+export function prepareQuery(query: string): PreparedQuery;
+
+/**
+ * @public
+ */
 export interface Rect {
     /**
      * @public
@@ -1708,6 +1730,16 @@ export interface ReferenceCache {
 /**
  * @public
  */
+export function renderMatches(el: HTMLElement, text: string, matches: SearchMatches, offset?: number): void;
+
+/**
+ * @public
+ */
+export function renderResults(el: HTMLElement, text: string, result: SearchResult, offset?: number): void;
+
+/**
+ * @public
+ */
 export function resolveSubpath(cache: CachedMetadata, subpath: string): HeadingSubpathResult | BlockSubpathResult;
 
 /**
@@ -1729,6 +1761,25 @@ export class Scope {
 /**
  * @public
  */
+export class SearchComponent extends AbstractTextComponent<HTMLInputElement> {
+    /**
+     * @public
+     */
+    clearButtonEl: HTMLElement;
+    /**
+     * @public
+     */
+    constructor(containerEl: HTMLElement);
+    /**
+     * @public
+     */
+    onChanged(): void;
+    
+}
+
+/**
+ * @public
+ */
 export type SearchMatches = SearchMatchPart[];
 
 /**
@@ -1740,14 +1791,18 @@ export type SearchMatchPart = [number, number];
  * @public
  */
 export interface SearchResult {
-    /**
-     * @public
-     */
+    /** @public */
     score: number;
-    /**
-     * @public
-     */
+    /** @public */
     matches: SearchMatches;
+}
+
+/**
+ * @public
+ */
+export interface SearchResultContainer {
+    /** @public */
+    match: SearchResult;
 }
 
 /**
@@ -1824,6 +1879,10 @@ export class Setting {
      * @public
      */
     addText(cb: (component: TextComponent) => any): this;
+    /**
+     * @public
+     */
+    addSearch(cb: (component: SearchComponent) => any): this;
     /**
      * @public
      */
@@ -1926,6 +1985,11 @@ export class SliderComponent extends ValueComponent<number> {
      */
     onChange(callback: (value: number) => any): this;
 }
+
+/**
+ * @public
+ */
+export function sortSearchResults(results: SearchResultContainer[]): void;
 
 /**
  * @public

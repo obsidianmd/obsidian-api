@@ -1,6 +1,6 @@
 {
   "name": "obsidian",
-  "version": "0.9.20",
+  "version": "0.9.21",
   "description": "Definitions for the latest Obsidian API (https://obsidian.md)",
   "types": "obsidian.d.ts",
   "keywords": [],
