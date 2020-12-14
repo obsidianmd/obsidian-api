@@ -142,9 +142,13 @@ declare global {
         /**
          * Create an element and append it to this node.
          */
-        createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
+        createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo | string, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
+        createDiv(o?: DomElementInfo | string, callback?: (el: HTMLDivElement) => void): HTMLDivElement;
+        createSpan(o?: DomElementInfo | string, callback?: (el: HTMLSpanElement) => void): HTMLSpanElement;
     }
-    function createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
+    function createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo | string, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
+    function createDiv(o?: DomElementInfo | string, callback?: (el: HTMLDivElement) => void): HTMLDivElement;
+    function createSpan(o?: DomElementInfo | string, callback?: (el: HTMLSpanElement) => void): HTMLSpanElement;
     function createFragment(callback?: (el: DocumentFragment) => void): DocumentFragment;
 }
 interface EventListenerInfo {
@@ -232,7 +236,7 @@ export function addIcon(iconId: string, svgContent: string): void;
 /**
  * @public
  */
-export class App extends Events {
+export class App {
 
     /**
      * @public
@@ -248,10 +252,6 @@ export class App extends Events {
      */
     metadataCache: MetadataCache;
 
-    /**
-     * @public
-     */
-    on(name: 'codemirror', callback: (cm: CodeMirror.Editor) => any, ctx?: any): EventRef;
 }
 
 /**
@@ -1029,7 +1029,7 @@ export interface KeymapEventHandler {
  * Return `false` to automatically preventDefault
  * @public
  */
-export type KeymapEventListener = (ev: KeyboardEvent, modifiers: string, key: string) => boolean | void;
+export type KeymapEventListener = (evt: KeyboardEvent, modifiers: string, key: string) => boolean | void;
 
 /**
  * @public
@@ -1302,6 +1302,10 @@ export class Menu extends Component {
      * @public
      */
     hide(): this;
+    /**
+     * @public
+     */
+    onHide(callback: () => any): void;
 }
 
 /**
@@ -1561,6 +1565,12 @@ export abstract class Plugin_2 extends Component {
      * @public
      */
     registerExtensions(extensions: string[], viewType: string): void;
+    /**
+     * Runs callback on all currently loaded instances of CodeMirror,
+     * then registers the callback for all future CodeMirror instances.
+     * @public
+     */
+    registerCodeMirror(callback: (cm: CodeMirror.Editor) => any): void;
     /**
      * @public
      */
@@ -2226,7 +2236,7 @@ export class Vault extends Events {
      * @public
      */
     getAbstractFileByPath(path: string): TAbstractFile;
-    
+
     /**
      * @public
      */
@@ -2606,6 +2616,11 @@ export class Workspace extends Events {
     /**
      * @public
      */
+    iterateCodeMirrors(callback: (cm: CodeMirror.Editor) => any): void;
+
+    /**
+     * @public
+     */
     on(name: 'quick-preview', callback: (file: TFile, data: string) => any, ctx?: any): EventRef;
     /**
      * @public
@@ -2635,6 +2650,10 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'file-menu', callback: (menu: Menu, file: TAbstractFile, source: string, leaf?: WorkspaceLeaf) => any, ctx?: any): EventRef;
+    /**
+     * @public
+     */
+    on(name: 'codemirror', callback: (cm: CodeMirror.Editor) => any, ctx?: any): EventRef;
     
 }
 
