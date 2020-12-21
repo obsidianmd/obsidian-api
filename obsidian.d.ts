@@ -1021,15 +1021,29 @@ export function iterateRefs(refs: ReferenceCache[], cb: (ref: ReferenceCache) =>
 /**
  * @public
  */
-export interface KeymapEventHandler {
+export interface KeymapContext {
+    /** @public */
+    modifiers: string;
+    /** @public */
+    key: string;
+    /** @public */
+    keyCode: string;
+}
 
+/**
+ * @public
+ */
+export interface KeymapEventHandler extends KeymapContext {
+    /** @public */
+    scope: Scope;
+    
 }
 
 /**
  * Return `false` to automatically preventDefault
  * @public
  */
-export type KeymapEventListener = (evt: KeyboardEvent, modifiers: string, key: string) => boolean | void;
+export type KeymapEventListener = (evt: KeyboardEvent, ctx: KeymapContext) => boolean | void;
 
 /**
  * @public
@@ -1070,6 +1084,12 @@ export interface Loc {
 }
 
 /**
+ * A post processor receives an element which is a section of the preview.
+ *
+ * Post processors can mutate the DOM to render various things, such as mermaid graphs, latex equations, or custom controls.
+ *
+ * If your post processor requires lifecycle management, for example, to clear an interval, kill a subprocess, etc when this element is
+ * removed from the app, look into {@link MarkdownPostProcessorContext#addChild}
  * @public
  */
 export type MarkdownPostProcessor = (el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void;
@@ -1082,13 +1102,25 @@ export interface MarkdownPostProcessorContext {
      * @public
      */
     docId: string;
+    
+    /** @public */
+    frontmatter: any | null | undefined;
+    
+    /**
+     * Adds a child component that will have its lifecycle managed by the renderer.
+     *
+     * Use this to add a dependent child to the renderer such that if the containerEl
+     * of the child is ever removed, the component's unload will be called.
+     * @public
+     */
+    addChild(child: MarkdownRenderChild): void;
 
 }
 
 /**
  * @public
  */
-export interface MarkdownPreviewEvents {
+export interface MarkdownPreviewEvents extends Component {
 
 }
 
@@ -1149,7 +1181,15 @@ export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSub
 /**
  * @public
  */
-export abstract class MarkdownRenderer extends Component implements MarkdownPreviewEvents, HoverParent {
+export class MarkdownRenderChild extends Component {
+    /** @public */
+    containerEl: HTMLElement;
+}
+
+/**
+ * @public
+ */
+export abstract class MarkdownRenderer extends MarkdownRenderChild implements MarkdownPreviewEvents, HoverParent {
 
 }
 
@@ -1566,6 +1606,10 @@ export abstract class Plugin_2 extends Component {
      */
     registerExtensions(extensions: string[], viewType: string): void;
     /**
+     * @public
+     */
+    registerMarkdownPostProcessor(postProcessor: MarkdownPostProcessor): void;
+    /**
      * Runs callback on all currently loaded instances of CodeMirror,
      * then registers the callback for all future CodeMirror instances.
      * @public
@@ -1760,7 +1804,7 @@ export class Scope {
     /**
      * @public
      */
-    registerKey(modifiers: string[], key: string, func: KeymapEventListener): KeymapEventHandler;
+    registerKey(modifiers: string[], key: string, func: KeymapEventListener, legacy?: boolean): KeymapEventHandler;
     /**
      * @public
      */
@@ -2116,6 +2160,29 @@ export interface TagCache {
 /**
  * @public
  */
+export class Tasks {
+    
+    /**
+     * @public
+     */
+    add(callback: () => Promise<any>): void;
+    /**
+     * @public
+     */
+    addPromise(promise: Promise<any>): void;
+    /**
+     * @public
+     */
+    isEmpty(): boolean;
+    /**
+     * @public
+     */
+    promise(): Promise<any>;
+}
+
+/**
+ * @public
+ */
 export class TextAreaComponent extends AbstractTextComponent<HTMLTextAreaElement> {
     /**
      * @public
@@ -2189,6 +2256,10 @@ export class ToggleComponent extends ValueComponent<boolean> {
      * @public
      */
     setValue(on: boolean): this;
+    /**
+     * @public
+     */
+    setTooltip(tooltip: string): this;
     /**
      * @public
      */
@@ -2655,12 +2726,21 @@ export class Workspace extends Events {
      */
     on(name: 'codemirror', callback: (cm: CodeMirror.Editor) => any, ctx?: any): EventRef;
     
+    /**
+     * @public
+     */
+    on(name: 'quit', callback: (tasks: Tasks) => any, ctx?: any): EventRef;
 }
 
 /**
  * @public
  */
 export abstract class WorkspaceItem extends Events {
+
+    /**
+     * @public
+     */
+    getRoot(): WorkspaceItem;
 
 }
 
