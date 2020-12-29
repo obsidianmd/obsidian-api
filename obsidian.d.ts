@@ -12,8 +12,8 @@ declare global {
 }
 declare global {
     interface Array<T> {
-        first(): T;
-        last(): T;
+        first(): T | undefined;
+        last(): T | undefined;
         contains(target: T): boolean;
         remove(target: T): void;
         shuffle(): this;
@@ -77,9 +77,9 @@ declare global {
     interface Element extends Node {
         setAttr(qualifiedName: string, value: string | number | boolean): void;
         setAttrs(obj: {
-            [key: string]: string | number | boolean;
+            [key: string]: string | number | boolean | null;
         }): void;
-        getAttr(qualifiedName: string): string;
+        getAttr(qualifiedName: string): string | null;
         matchParent(selector: string, lastParent?: Element): Element | null;
     }
 }
@@ -91,15 +91,15 @@ declare global {
     }
 }
 declare global {
-    function fish(selector: string): HTMLElement;
+    function fish(selector: string): HTMLElement | null;
     function fishAll(selector: string): HTMLElement[];
     interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandlers, WindowEventHandlers, WindowLocalStorage, WindowOrWorkerGlobalScope, WindowSessionStorage {
-        fish(selector: string): HTMLElement;
+        fish(selector: string): HTMLElement | null;
         fishAll(selector: string): HTMLElement[];
         ElementList: any;
     }
     interface Element extends Node {
-        find(selector: string): Element;
+        find(selector: string): Element | null;
         findAll(selector: string): HTMLElement[];
         findAllSelf(selector: string): HTMLElement[];
     }
@@ -123,7 +123,7 @@ declare global {
          * HTML attributes to be added.
          */
         attr?: {
-            [key: string]: string | number | boolean;
+            [key: string]: string | number | boolean | null;
         };
         /**
          * HTML title (for hover tooltip).
@@ -206,6 +206,10 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
     /**
      * @public
      */
+    setDisabled(disabled: boolean): this;
+    /**
+     * @public
+     */
     getValue(): string;
     /**
      * @public
@@ -258,11 +262,17 @@ export class App {
  * @public
  */
 export abstract class BaseComponent {
+    /** @public */
+    disabled: boolean;
     /**
      * Facilitates chaining
      * @public
      */
     then(cb: (component: this) => any): this;
+    /**
+     * @public
+     */
+    setDisabled(disabled: boolean): this;
 }
 
 /**
@@ -306,6 +316,10 @@ export class ButtonComponent extends BaseComponent {
      * @public
      */
     constructor(containerEl: HTMLElement);
+    /**
+     * @public
+     */
+    setDisabled(disabled: boolean): this;
     /**
      * @public
      */
@@ -442,7 +456,7 @@ export class Component {
      * Removes a child component, unloading it
      * @public
      */
-    removeChild(component: Component): boolean;
+    removeChild(component: Component): void;
     /**
      * Registers a callback to be called when unloading
      * @public
@@ -573,6 +587,10 @@ export class DropdownComponent extends ValueComponent<string> {
     /**
      * @public
      */
+    setDisabled(disabled: boolean): this;
+    /**
+     * @public
+     */
     addOption(value: string, display: string): this;
     /**
      * @public
@@ -652,6 +670,10 @@ export class ExtraButtonComponent extends BaseComponent {
      * @public
      */
     constructor(containerEl: HTMLElement);
+    /**
+     * @public
+     */
+    setDisabled(disabled: boolean): this;
     /**
      * @public
      */
@@ -846,7 +868,7 @@ export interface FuzzyMatch<T> {
 /**
  * @public
  */
-export function fuzzySearch(q: PreparedQuery, text: string): SearchResult;
+export function fuzzySearch(q: PreparedQuery, text: string): SearchResult | null;
 
 /**
  * @public
@@ -1023,11 +1045,11 @@ export function iterateRefs(refs: ReferenceCache[], cb: (ref: ReferenceCache) =>
  */
 export interface KeymapContext {
     /** @public */
-    modifiers: string;
+    modifiers: string | null;
     /** @public */
-    key: string;
+    code: string | null;
     /** @public */
-    keyCode: string;
+    key: string | null;
 }
 
 /**
@@ -1784,7 +1806,7 @@ export interface ReferenceCache {
 /**
  * @public
  */
-export function renderMatches(el: HTMLElement, text: string, matches: SearchMatches, offset?: number): void;
+export function renderMatches(el: HTMLElement, text: string, matches: SearchMatches | null, offset?: number): void;
 
 /**
  * @public
@@ -1803,8 +1825,11 @@ export class Scope {
 
     /**
      * @public
+     * @param modifiers - `Mod`, `Ctrl`, `Meta`, `Shift`, or `Alt`. `Mod` translates to `Meta` on macOS and `Ctrl` otherwise.
+     * @param code - Keycode from https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values
+     * @param func - the callback
      */
-    registerKey(modifiers: string[], key: string, func: KeymapEventListener, legacy?: boolean): KeymapEventHandler;
+    register(modifiers: string[], code: string | null, func: KeymapEventListener): KeymapEventHandler;
     /**
      * @public
      */
@@ -1872,26 +1897,18 @@ export function setIcon(parent: HTMLElement, iconId: string, size?: number): voi
  * @public
  */
 export class Setting {
-    /**
-     * @public
-     */
+    /** @public */
     settingEl: HTMLElement;
-    /**
-     * @public
-     */
+    /** @public */
     infoEl: HTMLElement;
-    /**
-     * @public
-     */
+    /** @public */
     nameEl: HTMLElement;
-    /**
-     * @public
-     */
+    /** @public */
     descEl: HTMLElement;
-    /**
-     * @public
-     */
+    /** @public */
     controlEl: HTMLElement;
+    /** @public */
+    components: BaseComponent[];
     /**
      * @public
      */
@@ -1916,6 +1933,10 @@ export class Setting {
      * @public
      */
     setHeading(): this;
+    /**
+     * @public
+     */
+    setDisabled(disabled: boolean): this;
     /**
      * @public
      */
@@ -2010,6 +2031,10 @@ export class SliderComponent extends ValueComponent<number> {
      * @public
      */
     constructor(containerEl: HTMLElement);
+    /**
+     * @public
+     */
+    setDisabled(disabled: boolean): this;
     /**
      * @public
      */
@@ -2248,6 +2273,10 @@ export class ToggleComponent extends ValueComponent<boolean> {
      * @public
      */
     constructor(containerEl: HTMLElement);
+    /**
+     * @public
+     */
+    setDisabled(disabled: boolean): this;
     /**
      * @public
      */
@@ -2532,7 +2561,7 @@ export interface ViewStateResult {
  * @public
  */
 export class Workspace extends Events {
-    
+
     /**
      * @public
      */
@@ -2758,6 +2787,7 @@ export class WorkspaceLeaf extends WorkspaceItem {
      * @public
      */
     openFile(file: TFile, openState?: OpenViewState): Promise<void>;
+    
     /**
      * @public
      */
@@ -2809,7 +2839,7 @@ export class WorkspaceLeaf extends WorkspaceItem {
      * @public
      */
     getDisplayText(): string;
-    
+
     /**
      * @public
      */
