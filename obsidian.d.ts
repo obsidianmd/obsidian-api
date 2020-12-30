@@ -1043,19 +1043,15 @@ export function iterateRefs(refs: ReferenceCache[], cb: (ref: ReferenceCache) =>
 /**
  * @public
  */
-export interface KeymapContext {
+export interface KeymapContext extends KeymapInfo {
     /** @public */
-    modifiers: string | null;
-    /** @public */
-    code: string | null;
-    /** @public */
-    key: string | null;
+    vkey: string | null;
 }
 
 /**
  * @public
  */
-export interface KeymapEventHandler extends KeymapContext {
+export interface KeymapEventHandler extends KeymapInfo {
     /** @public */
     scope: Scope;
     
@@ -1066,6 +1062,16 @@ export interface KeymapEventHandler extends KeymapContext {
  * @public
  */
 export type KeymapEventListener = (evt: KeyboardEvent, ctx: KeymapContext) => boolean | void;
+
+/**
+ * @public
+ */
+export interface KeymapInfo {
+    /** @public */
+    modifiers: string | null;
+    /** @public */
+    key: string | null;
+}
 
 /**
  * @public
@@ -1826,10 +1832,10 @@ export class Scope {
     /**
      * @public
      * @param modifiers - `Mod`, `Ctrl`, `Meta`, `Shift`, or `Alt`. `Mod` translates to `Meta` on macOS and `Ctrl` otherwise.
-     * @param code - Keycode from https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code/code_values
+     * @param key - Keycode from https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
      * @param func - the callback
      */
-    register(modifiers: string[], code: string | null, func: KeymapEventListener): KeymapEventHandler;
+    register(modifiers: string[], key: string | null, func: KeymapEventListener): KeymapEventHandler;
     /**
      * @public
      */
