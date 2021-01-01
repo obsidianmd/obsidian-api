@@ -1045,7 +1045,7 @@ export function iterateRefs(refs: ReferenceCache[], cb: (ref: ReferenceCache) =>
  */
 export interface KeymapContext extends KeymapInfo {
     /** @public */
-    vkey: string | null;
+    vkey: string;
 }
 
 /**
