@@ -1219,6 +1219,15 @@ export class MarkdownRenderChild extends Component {
  */
 export abstract class MarkdownRenderer extends MarkdownRenderChild implements MarkdownPreviewEvents, HoverParent {
 
+    /**
+     * Renders markdown string to an HTML element.
+     * @param markdown - The markdown source code
+     * @param el - The element to append to
+     * @param sourcePath - The normalized path of this markdown file, used to resolve relative internal links
+     * @param component - A parent component to manage the lifecycle of the rendered child components, if any
+     * @public
+     */
+    static renderMarkdown(markdown: string, el: HTMLElement, sourcePath: string, component: Component): Promise<void>;
 }
 
 /**
