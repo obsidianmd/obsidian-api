@@ -2668,9 +2668,10 @@ export class Workspace extends Events {
      * Sets the active leaf
      * @param leaf - The new active leaf
      * @param pushHistory - Whether to push the navigation history, or replace the current navigation history.
+     * @param focus - Whether to ask the leaf to focus.
      * @public
      */
-    setActiveLeaf(leaf: WorkspaceLeaf, pushHistory?: boolean): void;
+    setActiveLeaf(leaf: WorkspaceLeaf, pushHistory?: boolean, focus?: boolean): void;
 
     /**
      * @public
@@ -2748,7 +2749,11 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    on(name: 'file-open', callback: (file: TFile) => any, ctx?: any): EventRef;
+    on(name: 'active-leaf-change', callback: (leaf: WorkspaceLeaf | null) => any, ctx?: any): EventRef;
+    /**
+     * @public
+     */
+    on(name: 'file-open', callback: (file: TFile | null) => any, ctx?: any): EventRef;
     /**
      * @public
      */
