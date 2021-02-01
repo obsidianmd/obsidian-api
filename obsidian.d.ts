@@ -824,8 +824,25 @@ export abstract class FileView extends ItemView {
     /**
      * @public
      */
-    load(): void;
+    onload(): void;
+    /**
+     * @public
+     */
+    getState(): any;
 
+    /**
+     * @public
+     */
+    setState(state: any, result: ViewStateResult): Promise<void>;
+
+    /**
+     * @public
+     */
+    onLoadFile(file: TFile): Promise<void>;
+    /**
+     * @public
+     */
+    onUnloadFile(file: TFile): Promise<void>;
     /**
      * @public
      */
@@ -1450,6 +1467,36 @@ export class MetadataCache extends Events {
      */
     fileToLinktext(file: TFile, sourcePath: string, omitMdExtension?: boolean): string;
 
+    /**
+     * Contains all resolved links. This object maps each source file's path to an object of destination file paths with the link count.
+     * Source and destination paths are all vault absolute paths that comes from `TFile.path` and can be used with `Vault.getAbstractFileByPath(path)`.
+     * @public
+     */
+    resolvedLinks: Record<string, Record<string, number>>;
+    /**
+     * Contains all unresolved links. This object maps each source file to an object of unknown destinations with count.
+     * Source paths are all vault absolute paths, similar to `resolvedLinks`.
+     * @public
+     */
+    unresolvedLinks: Record<string, Record<string, number>>;
+
+    /**
+     * Called when a file has been indexed, and its (updated) cache is now available.
+     * @public
+     */
+    on(name: 'changed', callback: (file: TFile) => any, ctx?: any): EventRef;
+
+    /**
+     * Called when a file has been resolved for `resolvedLinks` and `unresolvedLinks`.
+     * This happens sometimes after a file has been indexed.
+     * @public
+     */
+    on(name: 'resolve', callback: (file: TFile) => any, ctx?: any): EventRef;
+    /**
+     * Called when all files has been resolved. This will be fired each time files get modified after the initial load.
+     * @public
+     */
+    on(name: 'resolved', callback: () => any, ctx?: any): EventRef;
 }
 
 /**
@@ -1477,6 +1524,7 @@ export class Modal {
      * @public
      */
     contentEl: HTMLElement;
+    
     /**
      * @public
      */
@@ -2520,6 +2568,7 @@ export abstract class View extends Component {
      */
     getIcon(): string;
     /**
+     * Called when the size of this view is changed.
      * @public
      */
     onResize(): void;
@@ -2531,6 +2580,7 @@ export abstract class View extends Component {
      * @public
      */
     onHeaderMenu(menu: Menu): void;
+    
 }
 
 /**
