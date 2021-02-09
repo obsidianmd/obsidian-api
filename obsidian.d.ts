@@ -256,6 +256,11 @@ export class App {
      */
     metadataCache: MetadataCache;
 
+    /**
+     * @public
+     */
+    fileManager: FileManager;
+
 }
 
 /**
@@ -328,6 +333,10 @@ export class ButtonComponent extends BaseComponent {
      * @public
      */
     removeCta(): this;
+    /**
+     * @public
+     */
+    setWarning(): this;
     /**
      * @public
      */
@@ -581,6 +590,14 @@ export interface DataAdapter {
  */
 export function debounce<T extends unknown[]>(cb: (...args: [...T]) => any, timeout?: number, resetTimer?: boolean): Debouncer<T>;
 
+/** @public */
+export interface Debouncer<T extends unknown[]> {
+    /** @public */
+    (...args: [...T]): void;
+    /** @public */
+    cancel(): this;
+}
+
 /**
  * @public
  */
@@ -696,6 +713,40 @@ export class ExtraButtonComponent extends BaseComponent {
      * @public
      */
     onClick(callback: () => any): this;
+}
+
+/**
+ * Manage the creation, deletion and renaming of files from the UI.
+ * @public
+ */
+export class FileManager {
+
+    /**
+     * Gets the folder that new files should be saved to, given the user's preferences.
+     * @param sourcePath - The path to the current open/focused file,
+     * used when the user wants new files to be created "in the same folder".
+     * Use an empty string if there is no active file.
+     * @public
+     */
+    getNewFileParent(sourcePath: string): TFolder;
+
+    /**
+     * Rename or move a file safely, and update all links to it depending on the user's preferences.
+     * @param file - the file to rename
+     * @param newPath - the new path for the file
+     * @public
+     */
+    renameFile(file: TAbstractFile, newPath: string): Promise<void>;
+
+    /**
+     * Generate a markdown link based on the user's preferences.
+     * @param file - the file to link to.
+     * @param sourcePath - where the link is stored in, used to compute relative links.
+     * @param subpath - A subpath, starting with `#`, used for linking to headings or blocks.
+     * @public
+     */
+    generateMarkdownLink(file: TFile, sourcePath: string, subpath?: string): string;
+    
 }
 
 /**
@@ -1334,6 +1385,7 @@ export interface MarkdownSubView {
      * @public
      */
     set(data: string, clear: boolean): void;
+
 }
 
 /**
@@ -1345,10 +1397,12 @@ export class MarkdownView extends TextFileView {
      * @public
      */
     sourceMode: MarkdownSourceView;
+    
     /**
      * @public
      */
     previewMode: MarkdownPreviewView;
+    
     /**
      * @public
      */
@@ -1367,7 +1421,21 @@ export class MarkdownView extends TextFileView {
     /**
      * @public
      */
-    getMode(): MarkdownViewMode;
+    getMode(): MarkdownViewModeType;
+
+    /**
+     * @public
+     */
+    getViewData(): string;
+    /**
+     * @public
+     */
+    clear(): void;
+
+    /**
+     * @public
+     */
+    setViewData(data: string, clear: boolean): void;
 
     /**
      * @public
@@ -1379,7 +1447,7 @@ export class MarkdownView extends TextFileView {
 /**
  * @public
  */
-export type MarkdownViewMode = 'source' | 'preview' | 'live';
+export type MarkdownViewModeType = 'source' | 'preview' | 'live';
 
 /**
  * @public
@@ -1622,6 +1690,21 @@ export class Notice {
 /**
  * @public
  */
+export interface ObsidianProtocolData {
+    /** @public */
+    action: string;
+    /** @public */
+    [key: string]: string;
+}
+
+/**
+ * @public
+ */
+export type ObsidianProtocolHandler = (params: ObsidianProtocolData) => any;
+
+/**
+ * @public
+ */
 export interface OpenViewState {
 
 }
@@ -1722,6 +1805,14 @@ export abstract class Plugin_2 extends Component {
      * @public
      */
     registerCodeMirror(callback: (cm: CodeMirror.Editor) => any): void;
+    /**
+     * Register a handler for obsidian:// URLs.
+     * @param action - the action string. For example, "open" corresponds to `obsidian://open`.
+     * @param handler - the callback to trigger. You will be passed the key-value pair that is decoded from the query.
+     *                  For example, `obsidian://open?key=value` would generate `{"action": "open", "key": "value"}`.
+     * @public
+     */
+    registerObsidianProtocolHandler(action: string, handler: ObsidianProtocolHandler): void;
     /**
      * @public
      */
@@ -2709,7 +2800,7 @@ export interface ViewStateResult {
  * @public
  */
 export class Workspace extends Events {
-
+    
     /**
      * @public
      */
@@ -2751,6 +2842,8 @@ export class Workspace extends Events {
      */
     requestSaveHistory: () => void;
 
+    /** @public */
+    onLayoutReady(callback: () => any): void;
     /**
      * @public
      */
