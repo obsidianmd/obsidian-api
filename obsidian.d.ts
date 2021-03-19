@@ -1473,13 +1473,10 @@ export abstract class MarkdownRenderer extends MarkdownRenderChild implements Ma
 export class MarkdownSourceView implements MarkdownSubView, HoverParent {
 
     /**
+     * @deprecated - Please use {@link MarkdownView#editor} instead.
      * @public
      */
     cmEditor: CodeMirror.Editor;
-    /**
-     * @public
-     */
-    editor: Editor;
 
     /**
      * @public
