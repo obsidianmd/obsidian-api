@@ -283,11 +283,7 @@ export abstract class BaseComponent {
 /**
  * @public
  */
-export interface BlockCache {
-    /**
-     * @public
-     */
-    position: Pos;
+export interface BlockCache extends CacheItem {
     /**
      * @public
      */
@@ -356,7 +352,7 @@ export class ButtonComponent extends BaseComponent {
     /**
      * @public
      */
-    onClick(callback: () => any): this;
+    onClick(callback: (evt: MouseEvent) => any): this;
 }
 
 /**
@@ -392,6 +388,17 @@ export interface CachedMetadata {
 /**
  * @public
  */
+export interface CacheItem {
+    /**
+     * @public
+     */
+    position: Pos;
+    
+}
+
+/**
+ * @public
+ */
 export interface Command {
     /**
      * Globally unique ID to identify this command.
@@ -421,13 +428,18 @@ export interface Command {
      * @returns Whether this command can be executed at the moment.
      * @public
      */
-    checkCallback?: (checking: boolean) => boolean | void;
+    checkCallback?: CommandCheckCallback;
     /**
      * Sets the default hotkey
      * @public
      */
     hotkeys?: Hotkey[];
 }
+
+/**
+ * @public
+ */
+export type CommandCheckCallback = (checking: boolean) => boolean | void;
 
 /**
  * @public
@@ -532,11 +544,11 @@ export interface DataAdapter {
     /**
      * @public
      */
-    write(normalizedPath: string, data: string, immediate?: () => any): Promise<void>;
+    write(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
     /**
      * @public
      */
-    writeBinary(normalizedPath: string, data: ArrayBuffer, immediate?: () => any): Promise<void>;
+    writeBinary(normalizedPath: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
     /**
      * @public
      */
@@ -561,6 +573,7 @@ export interface DataAdapter {
      * @public
      */
     remove(normalizedPath: string): Promise<void>;
+    
     /**
      * @public
      */
@@ -569,14 +582,17 @@ export interface DataAdapter {
      * @public
      */
     copy(normalizedPath: string, normalizedNewPath: string): Promise<void>;
-    /**
-     * @public
-     */
-    setCtime(normalizedPath: string, ctime: number): Promise<void>;
-    /**
-     * @public
-     */
-    setMtime(normalizedPath: string, mtime: number): Promise<void>;
+}
+
+/**
+ * @public
+ */
+export interface DataWriteOptions {
+    /** @public */
+    ctime?: number;
+    /** @public */
+    mtime?: number;
+    
 }
 
 /**
@@ -642,6 +658,118 @@ export class DropdownComponent extends ValueComponent<string> {
  */
 export abstract class EditableFileView extends FileView {
 
+}
+
+/**
+ * A common interface that bridges the gap between CodeMirror 5 and CodeMirror 6.
+ * @public
+ */
+export abstract class Editor {
+    /** @public */
+    getDoc(): this;
+    /** @public */
+    abstract refresh(): void;
+    /** @public */
+    abstract getValue(): string;
+    /** @public */
+    abstract getLine(line: number): string;
+    /** @public */
+    abstract getSelection(): string;
+    /** @public */
+    somethingSelected(): boolean;
+    /** @public */
+    abstract getRange(from: EditorPosition, to: EditorPosition): string;
+    /** @public */
+    abstract replaceSelection(replacement: string): void;
+    /** @public */
+    abstract replaceRange(replacement: string, from: EditorPosition, to?: EditorPosition, origin?: string): void;
+    /** @public */
+    abstract getCursor(string?: 'from' | 'to' | 'head' | 'anchor'): EditorPosition;
+    /** @public */
+    abstract listSelections(): EditorSelection[];
+    /** @public */
+    abstract setSelection(anchor: EditorPosition, head?: EditorPosition): void;
+    /** @public */
+    abstract focus(): void;
+    /** @public */
+    abstract blur(): void;
+    /** @public */
+    abstract hasFocus(): boolean;
+    /** @public */
+    abstract getScrollInfo(): {
+        /** @public */
+        top: number;
+        /** @public */
+        left: number;
+    };
+    /** @public */
+    abstract scrollTo(x?: number | null, y?: number | null): void;
+    /** @public */
+    abstract scrollIntoView(range: EditorRange, margin?: number): void;
+    /** @public */
+    abstract undo(): void;
+    /** @public */
+    abstract redo(): void;
+    /** @public */
+    abstract exec(command: EditorCommand): void;
+    /** @public */
+    abstract transaction(tx: EditorTransaction): void;
+    /** @public */
+    abstract posToOffset(pos: EditorPosition): number;
+    /** @public */
+    abstract offsetToPos(offset: number): EditorPosition;
+
+}
+
+/** @public */
+export interface EditorChange extends EditorRangeOrCaret {
+    /** @public */
+    text: string;
+}
+
+/** @public */
+export type EditorCommand = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goStart' | 'goEnd' | 'indentMore' | 'indentLess' | 'newlineAndIndent';
+
+/** @public */
+export interface EditorPosition {
+    /** @public */
+    line: number;
+    /** @public */
+    ch: number;
+}
+
+/** @public */
+export interface EditorRange {
+    /** @public */
+    from: EditorPosition;
+    /** @public */
+    to: EditorPosition;
+}
+
+/** @public */
+export interface EditorRangeOrCaret {
+    /** @public */
+    from: EditorPosition;
+    /** @public */
+    to?: EditorPosition;
+}
+
+/** @public */
+export interface EditorSelection {
+    /** @public */
+    anchor: EditorPosition;
+    /** @public */
+    head: EditorPosition;
+}
+
+/** @public */
+export interface EditorTransaction {
+    /** @public */
+    replaceSelection?: string;
+    /** @public */
+    changes?: EditorChange[];
+    /** @public */
+    selection?: EditorRangeOrCaret;
 }
 
 /**
@@ -753,17 +881,11 @@ export class FileManager {
  * @public
  */
 export interface FileStats {
-    /**
-     * @public
-     */
+    /** @public */
     ctime: number;
-    /**
-     * @public
-     */
+    /** @public */
     mtime: number;
-    /**
-     * @public
-     */
+    /** @public */
     size: number;
 }
 
@@ -808,11 +930,12 @@ export class FileSystemAdapter implements DataAdapter {
     /**
      * @public
      */
-    write(normalizedPath: string, data: string, immediate?: () => any): Promise<void>;
+    write(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
     /**
      * @public
      */
-    writeBinary(normalizedPath: string, data: ArrayBuffer, immediate?: () => any): Promise<void>;
+    writeBinary(normalizedPath: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
+    
     /**
      * @public
      */
@@ -821,6 +944,7 @@ export class FileSystemAdapter implements DataAdapter {
      * @public
      */
     remove(normalizedPath: string): Promise<void>;
+    
     /**
      * @public
      */
@@ -829,14 +953,6 @@ export class FileSystemAdapter implements DataAdapter {
      * @public
      */
     copy(normalizedPath: string, normalizedNewPath: string): Promise<void>;
-    /**
-     * @public
-     */
-    setCtime(normalizedPath: string, ctime: number): Promise<void>;
-    /**
-     * @public
-     */
-    setMtime(normalizedPath: string, mtime: number): Promise<void>;
     /**
      * @public
      */
@@ -922,11 +1038,7 @@ export abstract class FileView extends ItemView {
 /**
  * @public
  */
-export interface FrontMatterCache {
-    /**
-     * @public
-     */
-    position: Pos;
+export interface FrontMatterCache extends CacheItem {
     /**
      * @public
      */
@@ -991,11 +1103,7 @@ export function getLinkpath(linktext: string): string;
 /**
  * @public
  */
-export interface HeadingCache {
-    /**
-     * @public
-     */
-    position: Pos;
+export interface HeadingCache extends CacheItem {
     /**
      * @public
      */
@@ -1084,6 +1192,9 @@ export interface ISuggestOwner<T> {
  */
 export abstract class ItemView extends View {
 
+    /** @public */
+    contentEl: HTMLElement;
+
     /**
      * @public
      */
@@ -1161,13 +1272,9 @@ export interface LinkCache extends ReferenceCache {
  * @public
  */
 export interface ListedFiles {
-    /**
-     * @public
-     */
+    /** @public */
     files: string[];
-    /**
-     * @public
-     */
+    /** @public */
     folders: string[];
 }
 
@@ -1187,6 +1294,46 @@ export interface Loc {
      * @public
      */
     offset: number;
+}
+
+/**
+ * This is the editor for Obsidian Mobile as well as the upcoming WYSIWYG editor.
+ * @public
+ */
+export class MarkdownEditView implements MarkdownSubView, HoverParent {
+
+    /**
+     * @public
+     */
+    constructor(view: MarkdownView);
+
+    /**
+     * @public
+     */
+    clear(): void;
+    /**
+     * @public
+     */
+    get(): string;
+    /**
+     * @public
+     */
+    set(data: string, clear: boolean): void;
+
+    /**
+     * @public
+     */
+    getSelection(): string;
+
+    /**
+     * @public
+     */
+    getScroll(): number;
+    /**
+     * @public
+     */
+    applyScroll(scroll: number): void;
+
 }
 
 /**
@@ -1219,7 +1366,8 @@ export interface MarkdownPostProcessorContext {
      * @public
      */
     docId: string;
-    
+    /** @public */
+    sourcePath: string;
     /** @public */
     frontmatter: any | null | undefined;
     
@@ -1328,6 +1476,10 @@ export class MarkdownSourceView implements MarkdownSubView, HoverParent {
      * @public
      */
     cmEditor: CodeMirror.Editor;
+    /**
+     * @public
+     */
+    editor: Editor;
 
     /**
      * @public
@@ -1396,6 +1548,10 @@ export class MarkdownView extends TextFileView {
     /**
      * @public
      */
+    editor: Editor;
+    /**
+     * @public
+     */
     sourceMode: MarkdownSourceView;
     
     /**
@@ -1457,8 +1613,8 @@ export class Menu extends Component {
     /**
      * @public
      */
-    constructor();
-    
+    constructor(app: App);
+
     /**
      * @public
      */
@@ -1876,10 +2032,6 @@ export abstract class PluginSettingTab extends SettingTab {
      * @public
      */
     constructor(app: App, plugin: Plugin_2);
-    /**
-     * @public
-     */
-    load(): void;
 }
 
 /**
@@ -1937,7 +2089,7 @@ export function prepareQuery(query: string): PreparedQuery;
 /**
  * @public
  */
-export interface Rect {
+export interface Rect_2 {
     /**
      * @public
      */
@@ -1959,11 +2111,7 @@ export interface Rect {
 /**
  * @public
  */
-export interface ReferenceCache {
-    /**
-     * @public
-     */
-    position: Pos;
+export interface ReferenceCache extends CacheItem {
     /**
      * @public
      */
@@ -2175,22 +2323,6 @@ export abstract class SettingTab {
     /**
      * @public
      */
-    load(): void;
-    /**
-     * @public
-     */
-    unload(): void;
-    /**
-     * @public
-     */
-    open(): void;
-    /**
-     * @public
-     */
-    close(): void;
-    /**
-     * @public
-     */
     abstract display(): void;
 }
 
@@ -2347,11 +2479,7 @@ export abstract class TAbstractFile {
 /**
  * @public
  */
-export interface TagCache {
-    /**
-     * @public
-     */
-    position: Pos;
+export interface TagCache extends CacheItem {
     /**
      * @public
      */
@@ -2420,6 +2548,7 @@ export abstract class TextFileView extends EditableFileView {
      * @public
      */
     requestSave: () => void;
+    
     /**
      * @public
      */
@@ -2581,11 +2710,11 @@ export class Vault extends Events {
     /**
      * @public
      */
-    create(path: string, data: string): Promise<TFile>;
+    create(path: string, data: string, options?: DataWriteOptions): Promise<TFile>;
     /**
      * @public
      */
-    createBinary(path: string, data: ArrayBuffer): Promise<TFile>;
+    createBinary(path: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<TFile>;
     /**
      * @public
      */
@@ -2627,17 +2756,15 @@ export class Vault extends Events {
     /**
      * @public
      */
-    modify(file: TFile, data: string): Promise<void>;
+    modify(file: TFile, data: string, options?: DataWriteOptions): Promise<void>;
     /**
      * @public
      */
-    modifyBinary(file: TFile, data: ArrayBuffer): Promise<void>;
-
+    modifyBinary(file: TFile, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
     /**
      * @public
      */
     copy(file: TFile, newPath: string): Promise<TFile>;
-
     /**
      * @public
      */
@@ -2804,11 +2931,11 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    leftSplit: WorkspaceSidedock;
+    leftSplit: WorkspaceSidedock | WorkspaceMobileDrawer;
     /**
      * @public
      */
-    rightSplit: WorkspaceSidedock;
+    rightSplit: WorkspaceSidedock | WorkspaceMobileDrawer;
     /**
      * @public
      */
@@ -3005,6 +3132,7 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'quit', callback: (tasks: Tasks) => any, ctx?: any): EventRef;
+
 }
 
 /**
@@ -3099,6 +3227,13 @@ export class WorkspaceLeaf extends WorkspaceItem {
      * @public
      */
     on(name: 'group-change', callback: (group: string) => any, ctx?: any): EventRef;
+}
+
+/**
+ * @public
+ */
+export class WorkspaceMobileDrawer extends WorkspaceParent {
+
 }
 
 /**
