@@ -1,12 +1,14 @@
 {
-  "name": "obsidian",
-  "version": "0.11.7",
-  "description": "Definitions for the latest Obsidian API (https://obsidian.md)",
-  "types": "obsidian.d.ts",
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "@types/codemirror": "0.0.98"
-  }
+    "name": "obsidian",
+    "version": "0.11.11",
+    "description": "Definitions for the latest Obsidian API (https://obsidian.md)",
+    "types": "obsidian.d.ts",
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "@types/codemirror": "0.0.108",
+        "moment": "2.29.1",
+        "yaml": "2.0.0-4"
+    }
 }

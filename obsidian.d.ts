@@ -1,4 +1,5 @@
 import * as CodeMirror from 'codemirror';
+import * as Moment from 'moment';
 
 declare global {
     interface ObjectConstructor {
@@ -672,7 +673,15 @@ export abstract class Editor {
     /** @public */
     abstract getValue(): string;
     /** @public */
+    abstract setValue(content: string): void;
+    /** @public */
     abstract getLine(line: number): string;
+    /** @public */
+    abstract setLine(n: number, text: string): void;
+    /** @public */
+    abstract lineCount(): number;
+    /** @public */
+    abstract lastLine(): number;
     /** @public */
     abstract getSelection(): string;
     /** @public */
@@ -687,6 +696,8 @@ export abstract class Editor {
     abstract getCursor(string?: 'from' | 'to' | 'head' | 'anchor'): EditorPosition;
     /** @public */
     abstract listSelections(): EditorSelection[];
+    /** @public */
+    setCursor(pos: EditorPosition | number, ch?: number): void;
     /** @public */
     abstract setSelection(anchor: EditorPosition, head?: EditorPosition): void;
     /** @public */
@@ -1474,6 +1485,9 @@ export class MarkdownSourceView implements MarkdownSubView, HoverParent {
 
     /**
      * @deprecated - Please use {@link MarkdownView#editor} instead.
+     * If you have to use this because you're augmenting specific CodeMirror 5 implementations,
+     * be aware that it will only work in source code mode on the desktop app, and it will
+     * not work on Mobile, or once WYSIWYG mode is released.
      * @public
      */
     cmEditor: CodeMirror.Editor;
@@ -1789,6 +1803,18 @@ export class Modal {
 }
 
 /**
+ * Mod = Cmd on MacOS and Ctrl on other OS
+ * Ctrl = Ctrl key for every OS
+ * Meta = Cmd on MacOS and Win key on other OS
+ * @public
+ */
+export type Modifier = 'Mod' | 'Ctrl' | 'Meta' | 'Shift' | 'Alt';
+
+/** @public */
+export const moment_2: typeof Moment;
+export { moment_2 as moment }
+
+/**
  * @public
  */
 export class MomentFormatComponent extends TextComponent {
@@ -1895,6 +1921,9 @@ export function parseLinktext(linktext: string): {
      */
     subpath: string;
 };
+
+/** @public */
+export function parseYaml(yaml: string): any;
 
 /**
  * @public
@@ -2150,7 +2179,7 @@ export class Scope {
      * @param key - Keycode from https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
      * @param func - the callback
      */
-    register(modifiers: string[], key: string | null, func: KeymapEventListener): KeymapEventHandler;
+    register(modifiers: Modifier[], key: string | null, func: KeymapEventListener): KeymapEventHandler;
     /**
      * @public
      */
@@ -2166,6 +2195,7 @@ export class SearchComponent extends AbstractTextComponent<HTMLInputElement> {
      * @public
      */
     clearButtonEl: HTMLElement;
+    
     /**
      * @public
      */
@@ -2689,6 +2719,13 @@ export class Vault extends Events {
     adapter: DataAdapter;
 
     /**
+     * Gets the path to the config folder.
+     * This value is typically `.obsidian` but it could be different.
+     * @public
+     */
+    configDir: string;
+
+    /**
      * Gets the name of the vault
      * @public
      */
@@ -2697,7 +2734,7 @@ export class Vault extends Events {
     /**
      * @public
      */
-    getAbstractFileByPath(path: string): TAbstractFile;
+    getAbstractFileByPath(path: string): TAbstractFile | null;
 
     /**
      * @public
