@@ -1,6 +1,6 @@
 ## Obsidian API
 
-Definitions for the latest [Obsidian](https://obsidian.md) API.
+Type definitions for the latest [Obsidian](https://obsidian.md) API.
 
 **Warning:** The Obsidian API is still in early alpha and is subject to change at any time!
 
@@ -8,6 +8,8 @@ Definitions for the latest [Obsidian](https://obsidian.md) API.
 
 All API documentation is located in the file `obsidian.d.ts`.
 This will include types, properties, methods and comments explaining what everything does.
+
+For a full example on how to create Obsidian plugins, use the template at https://github.com/obsidianmd/obsidian-sample-plugin 
 
 ### Plugin structure
 

@@ -285,9 +285,7 @@ export abstract class BaseComponent {
  * @public
  */
 export interface BlockCache extends CacheItem {
-    /**
-     * @public
-     */
+    /** @public */
     id: string;
 }
 
@@ -395,6 +393,13 @@ export interface CacheItem {
      */
     position: Pos;
     
+}
+
+/** @public */
+export interface CloseableComponent {
+    
+    /** @public */
+    close(): any;
 }
 
 /**
@@ -677,7 +682,7 @@ export abstract class Editor {
     /** @public */
     abstract getLine(line: number): string;
     /** @public */
-    abstract setLine(n: number, text: string): void;
+    setLine(n: number, text: string): void;
     /** @public */
     abstract lineCount(): number;
     /** @public */
@@ -1147,14 +1152,19 @@ export interface HeadingSubpathResult extends SubpathResult {
  * @public
  */
 export interface Hotkey {
-
+    /** @public */
+    modifiers: Modifier[];
+    /** @public */
+    key: string;
+    
 }
 
 /**
  * @public
  */
 export interface HoverParent {
-    
+    /** @public */
+    hoverPopover: HoverPopover | null;
 }
 
 /**
@@ -1752,7 +1762,7 @@ export class MetadataCache extends Events {
 /**
  * @public
  */
-export class Modal {
+export class Modal implements CloseableComponent {
     /**
      * @public
      */
@@ -1800,6 +1810,7 @@ export class Modal {
      * @public
      */
     onClose(): void;
+
 }
 
 /**
@@ -3003,7 +3014,11 @@ export class Workspace extends Events {
      */
     requestSaveHistory: () => void;
 
-    /** @public */
+    /**
+     * Runs the callback function right away if layout is already ready,
+     * or push it to a queue to be called later when layout is ready.
+     * @public
+     * */
     onLayoutReady(callback: () => any): void;
     /**
      * @public
@@ -3161,12 +3176,12 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'codemirror', callback: (cm: CodeMirror.Editor) => any, ctx?: any): EventRef;
-    
+
     /**
      * @public
      */
     on(name: 'quit', callback: (tasks: Tasks) => any, ctx?: any): EventRef;
-
+    
 }
 
 /**
