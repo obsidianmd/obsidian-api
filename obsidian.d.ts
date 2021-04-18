@@ -375,13 +375,22 @@ export interface CachedMetadata {
      */
     headings?: HeadingCache[];
     /**
+     * Sections are root level markdown blocks, which can be used to divide the document up.
      * @public
      */
-    blocks?: Record<string, BlockCache>;
+    sections?: SectionCache[];
+    /**
+     * @public
+     */
+    listItems?: ListItemCache[];
     /**
      * @public
      */
     frontmatter?: FrontMatterCache;
+    /**
+     * @public
+     */
+    blocks?: Record<string, BlockCache>;
 }
 
 /**
@@ -478,12 +487,12 @@ export class Component {
      * Adds a child component, loading it if this component is loaded
      * @public
      */
-    addChild(component: Component): void;
+    addChild<T extends Component>(component: T): T;
     /**
      * Removes a child component, unloading it
      * @public
      */
-    removeChild(component: Component): void;
+    removeChild<T extends Component>(component: T): T;
     /**
      * Registers a callback to be called when unloading
      * @public
@@ -784,6 +793,11 @@ export interface EditorTransaction {
     replaceSelection?: string;
     /** @public */
     changes?: EditorChange[];
+    /**
+     * Multiple selections, overrides `selection`.
+     * @public
+     */
+    selections?: EditorRangeOrCaret[];
     /** @public */
     selection?: EditorRangeOrCaret;
 }
@@ -887,9 +901,10 @@ export class FileManager {
      * @param file - the file to link to.
      * @param sourcePath - where the link is stored in, used to compute relative links.
      * @param subpath - A subpath, starting with `#`, used for linking to headings or blocks.
+     * @param alias - The display text if it's to be different than the file name. Pass empty string to use file name.
      * @public
      */
-    generateMarkdownLink(file: TFile, sourcePath: string, subpath?: string): string;
+    generateMarkdownLink(file: TFile, sourcePath: string, subpath?: string, alias?: string): string;
     
 }
 
@@ -1302,6 +1317,35 @@ export interface ListedFiles {
 /**
  * @public
  */
+export interface ListItemCache extends CacheItem {
+    /**
+     * The block ID of this list item, if defined.
+     * @public
+     */
+    id?: string | undefined;
+    /**
+     * A single character indicating the checked status of a task.
+     * The space character `' '` is interpreted as an incomplete task.
+     * An other character is interpreted as completed task.
+     * `undefined` if this item isn't a task.
+     * @public
+     */
+    task?: string | undefined;
+    /**
+     * Line number of the parent list item (position.start.line).
+     * If this item has no parent (e.g. it's a root level list),
+     * then this value is the negative of the line number of the first list item (start of the list).
+     *
+     * Can be used to deduce which list items belongs to the same group (item1.parent === item2.parent).
+     * Can be used to reconstruct hierarchy information (parentItem.position.start.line === childItem.parent).
+     * @public
+     */
+    parent: number;
+}
+
+/**
+ * @public
+ */
 export interface Loc {
     /**
      * @public
@@ -1322,6 +1366,9 @@ export interface Loc {
  * @public
  */
 export class MarkdownEditView implements MarkdownSubView, HoverParent {
+
+    /** @public */
+    hoverPopover: HoverPopover;
 
     /**
      * @public
@@ -1400,6 +1447,13 @@ export interface MarkdownPostProcessorContext {
      * @public
      */
     addChild(child: MarkdownRenderChild): void;
+    /**
+     * Gets the section information of this element at this point in time.
+     * Only call this function right before you need this information to get the most up-to-date version.
+     * This function may also return null in many circumstances; if you use it, you must be prepared to deal with nulls.
+     * @public
+     */
+    getSectionInfo(el: HTMLElement): MarkdownSectionInformation | null;
 
 }
 
@@ -1470,12 +1524,23 @@ export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSub
 export class MarkdownRenderChild extends Component {
     /** @public */
     containerEl: HTMLElement;
+    /**
+     * @param containerEl - This HTMLElement will be used to test whether this component is still alive.
+     * It should be a child of the markdown preview sections, and when it's no longer attached
+     * (for example, when it is replaced with a new version because the user edited the markdown source code),
+     * this component will be unloaded.
+     * @public
+     */
+    constructor(containerEl: HTMLElement);
 }
 
 /**
  * @public
  */
 export abstract class MarkdownRenderer extends MarkdownRenderChild implements MarkdownPreviewEvents, HoverParent {
+
+    /** @public */
+    hoverPopover: HoverPopover;
 
     /**
      * Renders markdown string to an HTML element.
@@ -1486,6 +1551,16 @@ export abstract class MarkdownRenderer extends MarkdownRenderChild implements Ma
      * @public
      */
     static renderMarkdown(markdown: string, el: HTMLElement, sourcePath: string, component: Component): Promise<void>;
+}
+
+/** @public */
+export interface MarkdownSectionInformation {
+    /** @public */
+    text: string;
+    /** @public */
+    lineStart: number;
+    /** @public */
+    lineEnd: number;
 }
 
 /**
@@ -1501,6 +1576,9 @@ export class MarkdownSourceView implements MarkdownSubView, HoverParent {
      * @public
      */
     cmEditor: CodeMirror.Editor;
+
+    /** @public */
+    hoverPopover: HoverPopover;
 
     /**
      * @public
@@ -1767,7 +1845,10 @@ export class Modal implements CloseableComponent {
      * @public
      */
     app: App;
-    
+    /**
+     * @public
+     */
+    scope: Scope;
     /**
      * @public
      */
@@ -2247,6 +2328,22 @@ export interface SearchResultContainer {
 }
 
 /**
+ * @public
+ */
+export interface SectionCache extends CacheItem {
+    /**
+     * The block ID of this section, if defined.
+     * @public
+     */
+    id?: string | undefined;
+    /**
+     * The type string generated by the parser.
+     * @public
+     */
+    type: string;
+}
+
+/**
  *
  * @param parent - the HTML element to insert the icon
  * @param iconId - the icon ID
@@ -2307,7 +2404,6 @@ export class Setting {
      * @public
      */
     addExtraButton(cb: (component: ExtraButtonComponent) => any): this;
-    
     /**
      * @public
      */
@@ -3090,12 +3186,12 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    getLeftLeaf(shouldSplit: boolean): WorkspaceLeaf;
+    getLeftLeaf(split: boolean): WorkspaceLeaf;
     /**
      * @public
      */
-    getRightLeaf(shouldSplit: boolean): WorkspaceLeaf;
-    
+    getRightLeaf(split: boolean): WorkspaceLeaf;
+
     /**
      * @public
      */

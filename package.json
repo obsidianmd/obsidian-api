@@ -1,6 +1,6 @@
 {
     "name": "obsidian",
-    "version": "0.11.13",
+    "version": "0.12.0",
     "description": "Type definitions for the latest Obsidian API (https://obsidian.md)",
     "keywords": ["obsdmd"],
     "homepage": "https://obsidian.md",
@@ -13,7 +13,6 @@
     "types": "obsidian.d.ts",
     "dependencies": {
         "@types/codemirror": "0.0.108",
-        "moment": "2.29.1",
-        "yaml": "2.0.0-4"
+        "moment": "2.29.1"
     }
 }
