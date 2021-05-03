@@ -89,6 +89,7 @@ declare global {
         show(): void;
         hide(): void;
         toggle(show: boolean): void;
+        toggleVisibility(visible: boolean): void;
     }
 }
 declare global {
@@ -243,23 +244,15 @@ export function addIcon(iconId: string, svgContent: string): void;
  */
 export class App {
 
-    /**
-     * @public
-     */
+    /** @public */
     workspace: Workspace;
 
-    /**
-     * @public
-     */
+    /** @public */
     vault: Vault;
-    /**
-     * @public
-     */
+    /** @public */
     metadataCache: MetadataCache;
 
-    /**
-     * @public
-     */
+    /** @public */
     fileManager: FileManager;
 
 }
@@ -426,6 +419,13 @@ export interface Command {
      */
     name: string;
     /**
+     * Icon ID to be used in the toolbar.
+     * @public
+     */
+    icon?: string;
+    /** @public */
+    mobileOnly?: boolean;
+    /**
      * Simple callback, triggered globally.
      * @public
      */
@@ -443,18 +443,26 @@ export interface Command {
      * @returns Whether this command can be executed at the moment.
      * @public
      */
-    checkCallback?: CommandCheckCallback;
+    checkCallback?: (checking: boolean) => boolean | void;
+    
+    /**
+     * A command callback that is only triggered when the user is in an editor.
+     * Overrides `callback` and `checkCallback`
+     * @public
+     */
+    editorCallback?: (editor: Editor, view: MarkdownView) => any;
+    /**
+     * A command callback that is only triggered when the user is in an editor.
+     * Overrides `editorCallback`, `callback` and `checkCallback`
+     * @public
+     */
+    editorCheckCallback?: (checking: boolean, editor: Editor, view: MarkdownView) => boolean | void;
     /**
      * Sets the default hotkey
      * @public
      */
     hotkeys?: Hotkey[];
 }
-
-/**
- * @public
- */
-export type CommandCheckCallback = (checking: boolean) => boolean | void;
 
 /**
  * @public
@@ -544,6 +552,10 @@ export interface DataAdapter {
      * @public
      */
     exists(normalizedPath: string, sensitive?: boolean): Promise<boolean>;
+    /**
+     * @public
+     */
+    stat(normalizedPath: string): Promise<Stat | null>;
     /**
      * @public
      */
@@ -736,7 +748,7 @@ export abstract class Editor {
     /** @public */
     abstract redo(): void;
     /** @public */
-    abstract exec(command: EditorCommand): void;
+    abstract exec(command: EditorCommandName): void;
     /** @public */
     abstract transaction(tx: EditorTransaction): void;
     /** @public */
@@ -753,7 +765,7 @@ export interface EditorChange extends EditorRangeOrCaret {
 }
 
 /** @public */
-export type EditorCommand = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goStart' | 'goEnd' | 'indentMore' | 'indentLess' | 'newlineAndIndent';
+export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goStart' | 'goEnd' | 'indentMore' | 'indentLess' | 'newlineAndIndent' | 'swapLineUp' | 'swapLineDown' | 'deleteLine' | 'toggleFold' | 'foldAll' | 'unfoldAll';
 
 /** @public */
 export interface EditorPosition {
@@ -989,6 +1001,10 @@ export class FileSystemAdapter implements DataAdapter {
      */
     exists(normalizedPath: string, sensitive?: boolean): Promise<boolean>;
     
+    /**
+     * @public
+     */
+    stat(normalizedPath: string): Promise<Stat | null>;
     /**
      * @public
      */
@@ -1768,6 +1784,10 @@ export class MenuItem {
     /**
      * @public
      */
+    setIsLabel(isLabel: boolean): this;
+    /**
+     * @public
+     */
     onClick(callback: (evt: MouseEvent) => any): this;
 }
 
@@ -2016,6 +2036,52 @@ export function parseLinktext(linktext: string): {
 
 /** @public */
 export function parseYaml(yaml: string): any;
+
+/** @public */
+export const Platform: {
+    /**
+     * The UI is in desktop mode.
+     * @public
+     */
+    isDesktop: boolean;
+    /**
+     * The UI is in mobile mode.
+     * @public
+     */
+    isMobile: boolean;
+    /**
+     * We're running the electron-based desktop app.
+     * @public
+     */
+    isDesktopApp: boolean;
+    /**
+     * We're running the capacitor-js mobile app.
+     * @public
+     */
+    isMobileApp: boolean;
+    /**
+     * We're running the iOS app.
+     * @public
+     */
+    isIosApp: boolean;
+    /**
+     * We're running the Android app.
+     * @public
+     */
+    isAndroidApp: boolean;
+    /**
+     * We're on a macOS device, or a device that pretends to be one (like iPhones and iPads).
+     * Typically used to detect whether to use command-based hotkeys vs ctrl-based hotkeys.
+     * @public
+     */
+    isMacOS: boolean;
+    /**
+     * We're running in Safari.
+     * Typically used to provide workarounds for Safari bugs.
+     * @public
+     */
+    isSafari: boolean;
+};
 
 /**
  * @public
@@ -2457,7 +2523,11 @@ export abstract class SettingTab {
     /**
      * @public
      */
-    abstract display(): void;
+    abstract display(): any;
+    /**
+     * @public
+     */
+    hide(): any;
 }
 
 /**
@@ -2516,6 +2586,18 @@ export function sortSearchResults(results: SearchResultContainer[]): void;
  * @public
  */
 export type SplitDirection = 'vertical' | 'horizontal';
+
+/** @public */
+export interface Stat {
+    /** @public */
+    type: 'file' | 'folder';
+    /** @public */
+    ctime: number;
+    /** @public */
+    mtime: number;
+    /** @public */
+    size: number;
+}
 
 /**
  * @public
