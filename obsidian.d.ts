@@ -700,11 +700,17 @@ export abstract class Editor {
     abstract getValue(): string;
     /** @public */
     abstract setValue(content: string): void;
-    /** @public */
+    /**
+     * Get the text at line (0-indexed)
+     * @public
+     */
     abstract getLine(line: number): string;
     /** @public */
     setLine(n: number, text: string): void;
-    /** @public */
+    /**
+     * Gets the number of lines in the document
+     * @public
+     */
     abstract lineCount(): number;
     /** @public */
     abstract lastLine(): number;
@@ -1216,6 +1222,12 @@ export class HoverPopover extends Component {
 }
 
 /**
+ * Converts HTML to Markdown using Turndown Service.
+ * @public
+ */
+export function htmlToMarkdown(html: string): string;
+
+/**
  * @public
  */
 export interface Instruction {
@@ -1521,7 +1533,7 @@ export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSub
     /**
      * @public
      */
-    rerender(): void;
+    rerender(full?: boolean): void;
 
     /**
      * @public
@@ -1805,7 +1817,7 @@ export class MetadataCache extends Events {
      * Get the best match for a linkpath.
      * @public
      */
-    getFirstLinkpathDest(linkpath: string, sourcePath: string): TFile;
+    getFirstLinkpathDest(linkpath: string, sourcePath: string): TFile | null;
 
     /**
      * @public
