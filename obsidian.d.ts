@@ -515,7 +515,17 @@ export class Component {
      * Registers an DOM event to be detached when unloading
      * @public
      */
-    registerDomEvent<K extends keyof HTMLElementEventMap>(el: HTMLElement | Document | Window, type: K, callback: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any): void;
+    registerDomEvent<K extends keyof WindowEventMap>(el: Window, type: K, callback: (this: HTMLElement, ev: WindowEventMap[K]) => any): void;
+    /**
+     * Registers an DOM event to be detached when unloading
+     * @public
+     */
+    registerDomEvent<K extends keyof DocumentEventMap>(el: Document, type: K, callback: (this: HTMLElement, ev: DocumentEventMap[K]) => any): void;
+    /**
+     * Registers an DOM event to be detached when unloading
+     * @public
+     */
+    registerDomEvent<K extends keyof HTMLElementEventMap>(el: HTMLElement, type: K, callback: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any): void;
     /**
      * Registers an key event to be detached when unloading
      * @public
@@ -3348,6 +3358,7 @@ export class Workspace extends Events {
     on(name: 'file-open', callback: (file: TFile | null) => any, ctx?: any): EventRef;
     /**
      * @public
+     * @deprecated See `onLayoutReady` for a better way to initialize on layout ready.
      */
     on(name: 'layout-ready', callback: () => any, ctx?: any): EventRef;
     /**
