@@ -933,7 +933,7 @@ export class FileManager {
      * @public
      */
     generateMarkdownLink(file: TFile, sourcePath: string, subpath?: string, alias?: string): string;
-    
+
 }
 
 /**
@@ -1764,6 +1764,10 @@ export class Menu extends Component {
      * @public
      */
     addSeparator(): this;
+    /**
+     * @public
+     */
+    showAtMouseEvent(evt: MouseEvent): this;
     /**
      * @public
      */
@@ -3196,7 +3200,7 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    activeLeaf: WorkspaceLeaf;
+    activeLeaf: WorkspaceLeaf | null;
     /**
      * @public
      */
@@ -3356,11 +3360,7 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'file-open', callback: (file: TFile | null) => any, ctx?: any): EventRef;
-    /**
-     * @public
-     * @deprecated See `onLayoutReady` for a better way to initialize on layout ready.
-     */
-    on(name: 'layout-ready', callback: () => any, ctx?: any): EventRef;
+    
     /**
      * @public
      */
@@ -3373,6 +3373,11 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'file-menu', callback: (menu: Menu, file: TAbstractFile, source: string, leaf?: WorkspaceLeaf) => any, ctx?: any): EventRef;
+    
+    /**
+     * @public
+     */
+    on(name: 'editor-menu', callback: (menu: Menu, editor: Editor, view: MarkdownView) => any, ctx?: any): EventRef;
     /**
      * @public
      */
