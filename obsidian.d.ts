@@ -171,10 +171,10 @@ declare global {
     }
     interface Document {
         _EVENTS?: {
-            [K in keyof HTMLElementEventMap]?: EventListenerInfo[];
+            [K in keyof DocumentEventMap]?: EventListenerInfo[];
         };
-        on<K extends keyof HTMLElementEventMap>(this: Document, type: K, selector: string, listener: (this: Document, ev: HTMLElementEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
-        off<K extends keyof HTMLElementEventMap>(this: Document, type: K, selector: string, listener: (this: Document, ev: HTMLElementEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
+        on<K extends keyof DocumentEventMap>(this: Document, type: K, selector: string, listener: (this: Document, ev: DocumentEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
+        off<K extends keyof DocumentEventMap>(this: Document, type: K, selector: string, listener: (this: Document, ev: DocumentEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
     }
 }
 export interface AjaxOptions {
@@ -743,6 +743,8 @@ export abstract class Editor {
     /** @public */
     abstract setSelection(anchor: EditorPosition, head?: EditorPosition): void;
     /** @public */
+    abstract setSelections(ranges: EditorSelectionOrCaret[], main?: number): void;
+    /** @public */
     abstract focus(): void;
     /** @public */
     abstract blur(): void;
@@ -813,6 +815,14 @@ export interface EditorSelection {
     anchor: EditorPosition;
     /** @public */
     head: EditorPosition;
+}
+
+/** @public */
+export interface EditorSelectionOrCaret {
+    /** @public */
+    anchor: EditorPosition;
+    /** @public */
+    head?: EditorPosition;
 }
 
 /** @public */
@@ -1516,6 +1526,10 @@ export class MarkdownPreviewRenderer {
      */
     static unregisterPostProcessor(postProcessor: MarkdownPostProcessor): void;
 
+    /**
+     * @public
+     */
+    static createCodeBlockPostProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void): (el: HTMLElement, ctx: MarkdownPostProcessorContext) => void;
 }
 
 /**
@@ -1794,11 +1808,12 @@ export class MenuItem {
     /**
      * @public
      */
-    setTitle(title: string): this;
+    setTitle(title: string | DocumentFragment): this;
     /**
      * @public
      */
     setIcon(icon: string | null, size?: number): this;
+    
     /**
      * @public
      */
@@ -1998,6 +2013,7 @@ export class Notice {
      * @public
      */
     constructor(message: string, timeout?: number);
+    
     /**
      * @public
      */
@@ -2157,14 +2173,14 @@ export abstract class Plugin_2 extends Component {
     /**
      * @public
      */
-    registerMarkdownPostProcessor(postProcessor: MarkdownPostProcessor): void;
+    registerMarkdownPostProcessor(postProcessor: MarkdownPostProcessor): MarkdownPostProcessor;
     /**
      * Register a special post processor that handles fenced code given a language and a handler.
      * This special post processor takes care of removing the <pre><code> and create a <div> that
      * will be passed to your handler, and is expected to be filled with your custom elements.
      * @public
      */
-    registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void): void;
+    registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void): MarkdownPostProcessor;
     /**
      * Runs callback on all currently loaded instances of CodeMirror,
      * then registers the callback for all future CodeMirror instances.
@@ -2346,6 +2362,21 @@ export function renderMatches(el: HTMLElement, text: string, matches: SearchMatc
  * @public
  */
 export function renderResults(el: HTMLElement, text: string, result: SearchResult, offset?: number): void;
+
+/** @public */
+export function request(request: RequestParam): Promise<string>;
+
+/** @public */
+export interface RequestParam {
+    /** @public */
+    url: string;
+    /** @public */
+    method?: string;
+    /** @public */
+    contentType?: string;
+    /** @public */
+    body?: string;
+}
 
 /**
  * @public
@@ -2625,6 +2656,9 @@ export interface Stat {
     size: number;
 }
 
+/** @public */
+export function stringifyYaml(obj: any): string;
+
 /**
  * @public
  */
@@ -2688,11 +2722,11 @@ export abstract class SuggestModal<T> extends Modal implements ISuggestOwner<T> 
     /**
      * @public
      */
-    abstract renderSuggestion(value: T, el: HTMLElement): void;
+    abstract renderSuggestion(value: T, el: HTMLElement): any;
     /**
      * @public
      */
-    abstract onChooseSuggestion(item: T, evt: MouseEvent | KeyboardEvent): void;
+    abstract onChooseSuggestion(item: T, evt: MouseEvent | KeyboardEvent): any;
 }
 
 /**
@@ -3378,6 +3412,7 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'editor-menu', callback: (menu: Menu, editor: Editor, view: MarkdownView) => any, ctx?: any): EventRef;
+
     /**
      * @public
      */
@@ -3489,6 +3524,18 @@ export class WorkspaceLeaf extends WorkspaceItem {
  */
 export class WorkspaceMobileDrawer extends WorkspaceParent {
 
+    /** @public */
+    collapsed: boolean;
+
+    /** @public */
+    expand(): void;
+    
+    /** @public */
+    collapse(): void;
+    
+    /** @public */
+    toggle(): void;
+
 }
 
 /**
@@ -3509,6 +3556,16 @@ export class WorkspaceRibbon {
  * @public
  */
 export class WorkspaceSidedock extends WorkspaceSplit {
+
+    /** @public */
+    collapsed: boolean;
+
+    /** @public */
+    toggle(): void;
+    /** @public */
+    collapse(): void;
+    /** @public */
+    expand(): void;
 
 }
 
