@@ -51,7 +51,7 @@ declare global {
 declare global {
     interface Element {
         getText(): string;
-        setText(val: string): void;
+        setText(val: string | DocumentFragment): void;
     }
 }
 declare global {
@@ -731,7 +731,7 @@ export abstract class Editor {
     /** @public */
     abstract getRange(from: EditorPosition, to: EditorPosition): string;
     /** @public */
-    abstract replaceSelection(replacement: string): void;
+    abstract replaceSelection(replacement: string, origin?: string): void;
     /** @public */
     abstract replaceRange(replacement: string, from: EditorPosition, to?: EditorPosition, origin?: string): void;
     /** @public */
@@ -1109,6 +1109,12 @@ export abstract class FileView extends ItemView {
 }
 
 /**
+ * Flush the MathJax stylesheet.
+ * @public
+ */
+export function finishRenderMath(): Promise<void>;
+
+/**
  * @public
  */
 export interface FrontMatterCache extends CacheItem {
@@ -1390,6 +1396,33 @@ export interface ListItemCache extends CacheItem {
      */
     parent: number;
 }
+
+/**
+ * Load MathJax.
+ * @public
+ */
+export function loadMathJax(): Promise<void>;
+
+/**
+ * Load Mermaid and return a promise to the global mermaid object.
+ * Can also use `mermaid` after this promise resolves to get the same reference.
+ * @public
+ */
+export function loadMermaid(): Promise<any>;
+
+/**
+ * Load PDF.js and return a promise to the global pdfjsLib object.
+ * Can also use `window.pdfjsLib` after this promise resolves to get the same reference.
+ * @public
+ */
+export function loadPdfJs(): Promise<any>;
+
+/**
+ * Load Prism.js and return a promise to the global Prism object.
+ * Can also use `Prism` after this promise resolves to get the same reference.
+ * @public
+ */
+export function loadPrism(): Promise<any>;
 
 /**
  * @public
@@ -1794,6 +1827,7 @@ export class Menu extends Component {
      * @public
      */
     onHide(callback: () => any): void;
+
 }
 
 /**
@@ -1829,7 +1863,8 @@ export class MenuItem {
     /**
      * @public
      */
-    onClick(callback: (evt: MouseEvent) => any): this;
+    onClick(callback: (evt: MouseEvent | KeyboardEvent) => any): this;
+    
 }
 
 /**
@@ -2356,7 +2391,14 @@ export interface ReferenceCache extends CacheItem {
 /**
  * @public
  */
-export function renderMatches(el: HTMLElement, text: string, matches: SearchMatches | null, offset?: number): void;
+export function renderMatches(el: HTMLElement | DocumentFragment, text: string, matches: SearchMatches | null, offset?: number): void;
+
+/**
+ * Render some LaTeX math using the MathJax engine. Returns an HTMLElement.
+ * Requires calling `finishRenderMath` when rendering is all done to flush the MathJax stylesheet.
+ * @public
+ */
+export function renderMath(source: string, display: boolean): HTMLElement;
 
 /**
  * @public
@@ -2376,6 +2418,8 @@ export interface RequestParam {
     contentType?: string;
     /** @public */
     body?: string;
+    /** @public */
+    headers?: Record<string, string>;
 }
 
 /**
@@ -2498,7 +2542,7 @@ export class Setting {
     /**
      * @public
      */
-    setName(name: string): this;
+    setName(name: string | DocumentFragment): this;
     /**
      * @public
      */
@@ -2658,6 +2702,12 @@ export interface Stat {
 
 /** @public */
 export function stringifyYaml(obj: any): string;
+
+/**
+ * This function normalizes headings for link matching by stripping out special characters and shrinking consecutive spaces.
+ * @public
+ */
+export function stripHeading(heading: string): string;
 
 /**
  * @public
@@ -2939,6 +2989,9 @@ export class ToggleComponent extends ValueComponent<boolean> {
      */
     onChange(callback: (value: boolean) => any): this;
 }
+
+/** @public */
+export type UserEvent = MouseEvent | KeyboardEvent | TouchEvent | PointerEvent;
 
 /**
  * @public
