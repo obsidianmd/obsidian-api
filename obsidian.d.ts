@@ -120,7 +120,7 @@ declare global {
         /**
          * The textContent to be assigned.
          */
-        text?: string;
+        text?: string | DocumentFragment;
         /**
          * HTML attributes to be added.
          */
@@ -595,6 +595,10 @@ export interface DataAdapter {
     /**
      * @public
      */
+    append(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
+     */
     getResourcePath(normalizedPath: string): string;
     /**
      * @public
@@ -766,7 +770,7 @@ export abstract class Editor {
     /** @public */
     abstract scrollTo(x?: number | null, y?: number | null): void;
     /** @public */
-    abstract scrollIntoView(range: EditorRange, margin?: number): void;
+    abstract scrollIntoView(range: EditorRange, center?: boolean): void;
     /** @public */
     abstract undo(): void;
     /** @public */
@@ -774,7 +778,9 @@ export abstract class Editor {
     /** @public */
     abstract exec(command: EditorCommandName): void;
     /** @public */
-    abstract transaction(tx: EditorTransaction): void;
+    abstract transaction(tx: EditorTransaction, origin?: string): void;
+    /** @public */
+    abstract wordAt(pos: EditorPosition): EditorRange | null;
     /** @public */
     abstract posToOffset(pos: EditorPosition): number;
     /** @public */
@@ -846,6 +852,10 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
     limit: number;
     /** @public */
     constructor(app: App);
+    /**
+     * @public
+     */
+    setInstructions(instructions: Instruction[]): void;
     
     /**
      * Based on the editor line and cursor position, determine if this EditorSuggest should be triggered at this moment.
@@ -1072,6 +1082,10 @@ export class FileSystemAdapter implements DataAdapter {
      * @public
      */
     writeBinary(normalizedPath: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
+     */
+    append(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
     
     /**
      * @public
@@ -2129,12 +2143,12 @@ export class Notice {
     /**
      * @public
      */
-    constructor(message: string, timeout?: number);
+    constructor(message: string | DocumentFragment, timeout?: number);
     /**
      * Change the message of this notice.
      * @public
      */
-    setMessage(message: string): this;
+    setMessage(message: string | DocumentFragment): this;
     /**
      * @public
      */
@@ -2557,6 +2571,9 @@ export interface RequestParam {
  * @public
  */
 export function resolveSubpath(cache: CachedMetadata, subpath: string): HeadingSubpathResult | BlockSubpathResult;
+
+/** @public */
+export function sanitizeHTMLToDom(html: string): DocumentFragment;
 
 /**
  * @public
@@ -3228,6 +3245,10 @@ export class Vault extends Events {
      * @public
      */
     modifyBinary(file: TFile, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
+     */
+    append(file: TFile, data: string, options?: DataWriteOptions): Promise<void>;
     /**
      * @public
      */
