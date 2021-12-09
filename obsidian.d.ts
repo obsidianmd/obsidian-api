@@ -1,3 +1,5 @@
+import { Extension, StateField } from '@codemirror/state';
+import { EditorView } from '@codemirror/view';
 import * as CodeMirror from 'codemirror';
 import * as Moment from 'moment';
 
@@ -185,6 +187,7 @@ export interface AjaxOptions {
     data?: object | string | ArrayBuffer;
     headers?: Record<string, string>;
     withCredentials?: boolean;
+    req?: XMLHttpRequest;
 }
 declare global {
     function ajax(options: AjaxOptions): void;
@@ -464,7 +467,8 @@ export interface Command {
      */
     editorCheckCallback?: (checking: boolean, editor: Editor, view: MarkdownView) => boolean | void;
     /**
-     * Sets the default hotkey
+     * Sets the default hotkey. It is recommended for plugins to avoid setting default hotkeys if possible,
+     * to avoid conflicting hotkeys with one that's set by the user, even though customized hotkeys have higher priority.
      * @public
      */
     hotkeys?: Hotkey[];
@@ -542,7 +546,7 @@ export class Component {
      * Use {@link window.setInterval} instead of {@link setInterval} to avoid TypeScript confusing between NodeJS vs Browser API
      * @public
      */
-    registerInterval(id: number): void;
+    registerInterval(id: number): number;
 }
 
 /**
@@ -797,6 +801,12 @@ export interface EditorChange extends EditorRangeOrCaret {
 /** @public */
 export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goStart' | 'goEnd' | 'indentMore' | 'indentLess' | 'newlineAndIndent' | 'swapLineUp' | 'swapLineDown' | 'deleteLine' | 'toggleFold' | 'foldAll' | 'unfoldAll';
 
+/**
+ * Use this StateField to get a reference to the EditorView
+ * @public
+ */
+export const editorEditorField: StateField<EditorView>;
+
 /** @public */
 export interface EditorPosition {
     /** @public */
@@ -917,6 +927,12 @@ export interface EditorTransaction {
     /** @public */
     selection?: EditorRangeOrCaret;
 }
+
+/**
+ * Use this StateField to get a reference to the MarkdownView
+ * @public
+ */
+export const editorViewField: StateField<MarkdownView>;
 
 /**
  * @public
@@ -1638,9 +1654,7 @@ export interface MarkdownPostProcessorContext {
 
 }
 
-/**
- * @public
- */
+/** @public **/
 export interface MarkdownPreviewEvents extends Component {
 
 }
@@ -1663,6 +1677,7 @@ export class MarkdownPreviewRenderer {
      * @public
      */
     static createCodeBlockPostProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void): (el: HTMLElement, ctx: MarkdownPostProcessorContext) => void;
+    
 }
 
 /**
@@ -1843,7 +1858,7 @@ export class MarkdownView extends TextFileView {
      * @public
      */
     currentMode: MarkdownSubView;
-    
+
     /**
      * @public
      */
@@ -1883,7 +1898,7 @@ export class MarkdownView extends TextFileView {
 /**
  * @public
  */
-export type MarkdownViewModeType = 'source' | 'preview' | 'live';
+export type MarkdownViewModeType = 'source' | 'preview';
 
 /**
  * @public
@@ -2308,20 +2323,26 @@ export abstract class Plugin_2 extends Component {
     /**
      * @public
      */
-    registerMarkdownPostProcessor(postProcessor: MarkdownPostProcessor): MarkdownPostProcessor;
+    registerMarkdownPostProcessor(postProcessor: MarkdownPostProcessor, sortOrder?: number): MarkdownPostProcessor;
     /**
      * Register a special post processor that handles fenced code given a language and a handler.
      * This special post processor takes care of removing the <pre><code> and create a <div> that
      * will be passed to your handler, and is expected to be filled with your custom elements.
      * @public
      */
-    registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void): MarkdownPostProcessor;
+    registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void, sortOrder?: number): MarkdownPostProcessor;
     /**
      * Runs callback on all currently loaded instances of CodeMirror,
      * then registers the callback for all future CodeMirror instances.
      * @public
      */
     registerCodeMirror(callback: (cm: CodeMirror.Editor) => any): void;
+    /**
+     * Registers a CodeMirror 6 extension.
+     * @param extension - must be a CodeMirror 6 `Extension`, or an array of Extensions.
+     * @public
+     */
+    registerEditorExtension(extension: Extension): void;
     /**
      * Register a handler for obsidian:// URLs.
      * @param action - the action string. For example, "open" corresponds to `obsidian://open`.
@@ -2752,6 +2773,10 @@ export class Setting {
      * @public
      */
     then(cb: (setting: this) => any): this;
+    /**
+     * @public
+     */
+    clear(): this;
 }
 
 /**
@@ -3496,7 +3521,7 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    duplicateLeaf(leaf: WorkspaceLeaf, direction?: SplitDirection): Promise<void>;
+    duplicateLeaf(leaf: WorkspaceLeaf, direction?: SplitDirection): Promise<WorkspaceLeaf>;
     /**
      * @public
      */
