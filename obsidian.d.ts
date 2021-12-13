@@ -246,7 +246,12 @@ export function addIcon(iconId: string, svgContent: string): void;
  * @public
  */
 export class App {
-
+    
+    /** @public */
+    keymap: Keymap;
+    /** @public */
+    scope: Scope;
+    
     /** @public */
     workspace: Workspace;
 
@@ -1421,6 +1426,11 @@ export function iterateRefs(refs: ReferenceCache[], cb: (ref: ReferenceCache) =>
 
 /** @public */
 export class Keymap {
+
+    /** @public */
+    pushScope(scope: Scope): void;
+    /** @public */
+    popScope(scope: Scope): void;
 
     /**
      * Checks whether the modifier key is pressed during this event
@@ -2601,6 +2611,11 @@ export function sanitizeHTMLToDom(html: string): DocumentFragment;
  */
 export class Scope {
 
+    /**
+     * @public
+     */
+    constructor(parent?: Scope);
+    
     /**
      * @public
      * @param modifiers - `Mod`, `Ctrl`, `Meta`, `Shift`, or `Alt`. `Mod` translates to `Meta` on macOS and `Ctrl` otherwise.
