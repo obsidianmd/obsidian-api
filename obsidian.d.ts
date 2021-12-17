@@ -92,6 +92,13 @@ declare global {
         hide(): void;
         toggle(show: boolean): void;
         toggleVisibility(visible: boolean): void;
+        /**
+         * Returns whether this element is shown, when the element is attached to the DOM and
+         * none of the parent and ancestor elements are hidden with `display: none`.
+         *
+         * Exception: Does not work on <body> and <html>, or on elements with `position: fixed`.
+         */
+        isShown(): boolean;
     }
 }
 declare global {
@@ -169,6 +176,12 @@ declare global {
         on<K extends keyof HTMLElementEventMap>(this: HTMLElement, type: K, selector: string, listener: (this: HTMLElement, ev: HTMLElementEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
         off<K extends keyof HTMLElementEventMap>(this: HTMLElement, type: K, selector: string, listener: (this: HTMLElement, ev: HTMLElementEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
         onClickEvent(this: HTMLElement, listener: (this: HTMLElement, ev: MouseEvent) => any, options?: boolean | AddEventListenerOptions): void;
+        /**
+         * @param listener - the callback to call when this node is inserted into the DOM.
+         * @param once - if true, this will only fire once and then unhook itself.
+         * @returns destroy - a function to remove the event handler to avoid memory leaks.
+         */
+        onNodeInserted(this: HTMLElement, listener: () => any, once?: boolean): () => void;
         trigger(eventType: string): void;
     }
     interface Document {
@@ -2039,7 +2052,7 @@ export class MetadataCache extends Events {
      * Called when a file has been indexed, and its (updated) cache is now available.
      * @public
      */
-    on(name: 'changed', callback: (file: TFile) => any, ctx?: any): EventRef;
+    on(name: 'changed', callback: (file: TFile, data: string, cache: CachedMetadata) => any, ctx?: any): EventRef;
 
     /**
      * Called when a file has been resolved for `resolvedLinks` and `unresolvedLinks`.
