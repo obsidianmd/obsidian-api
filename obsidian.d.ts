@@ -256,6 +256,13 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
 export function addIcon(iconId: string, svgContent: string): void;
 
 /**
+ * This is the API version of the app, which follows the release cycle of the desktop app.
+ * Example: "0.13.21"
+ * @public
+ */
+export let apiVersion: string;
+
+/**
  * @public
  */
 export class App {
@@ -824,6 +831,12 @@ export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goSt
  * @public
  */
 export const editorEditorField: StateField<EditorView>;
+
+/**
+ * Use this StateField to check whether Live Preview is active
+ * @public
+ */
+export const editorLivePreviewField: StateField<boolean>;
 
 /** @public */
 export interface EditorPosition {
@@ -1725,6 +1738,7 @@ export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSub
      * @public
      */
     clear(): void;
+    
     /**
      * @public
      */
@@ -2362,6 +2376,8 @@ export abstract class Plugin_2 extends Component {
     registerCodeMirror(callback: (cm: CodeMirror.Editor) => any): void;
     /**
      * Registers a CodeMirror 6 extension.
+     * To reconfigure cm6 extensions for your plugin on the fly, you can pass an array here and dynamically
+     * modify it. Once this array is modified, call `Workspace.updateOptions()` to have the changes applied.
      * @param extension - must be a CodeMirror 6 `Extension`, or an array of Extensions.
      * @public
      */
@@ -2610,6 +2626,14 @@ export interface RequestParam {
     /** @public */
     headers?: Record<string, string>;
 }
+
+/**
+ * Returns true if the API version is equal or higher than the requested version.
+ * Use this to limit functionality that require specific API versions to avoid
+ * crashing on older Obsidian builds.
+ * @public
+ */
+export function requireApiVersion(version: string): boolean;
 
 /**
  * @public
@@ -3626,6 +3650,12 @@ export class Workspace extends Events {
      * @public
      */
     getLastOpenFiles(): string[];
+    /**
+     * Calling this function will update/reconfigure the options of all markdown panes.
+     * It is fairly expensive, so it should not be called frequently.
+     * @public
+     */
+    updateOptions(): void;
 
     /**
      * @public
@@ -3643,7 +3673,7 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    on(name: 'click', callback: () => any, ctx?: any): EventRef;
+    on(name: 'click', callback: (evt: MouseEvent) => any, ctx?: any): EventRef;
     /**
      * @public
      */
