@@ -78,7 +78,7 @@ declare global {
 }
 declare global {
     interface Element extends Node {
-        setAttr(qualifiedName: string, value: string | number | boolean): void;
+        setAttr(qualifiedName: string, value: string | number | boolean | null): void;
         setAttrs(obj: {
             [key: string]: string | number | boolean | null;
         }): void;
@@ -328,6 +328,10 @@ export interface BlockSubpathResult extends SubpathResult {
      * @public
      */
     block: BlockCache;
+    /**
+     * @public
+     */
+    list?: ListItemCache;
 }
 
 /**
@@ -814,6 +818,9 @@ export abstract class Editor {
     abstract posToOffset(pos: EditorPosition): number;
     /** @public */
     abstract offsetToPos(offset: number): EditorPosition;
+
+    /** @public */
+    processLines<T>(read: (line: number, lineText: string) => T | null, write: (line: number, lineText: string, value: T | null) => EditorChange | void, ignoreEmpty?: boolean): void;
 
 }
 
@@ -2610,11 +2617,21 @@ export function renderMath(source: string, display: boolean): HTMLElement;
  */
 export function renderResults(el: HTMLElement, text: string, result: SearchResult, offset?: number): void;
 
-/** @public */
-export function request(request: RequestParam): Promise<string>;
+/**
+ * Similar to `fetch()`, request a URL using HTTP/HTTPS, without any CORS restrictions.
+ * Returns the text value of the response.
+ * @public
+ */
+export function request(request: RequestUrlParam): Promise<string>;
+
+/**
+ * Similar to `fetch()`, request a URL using HTTP/HTTPS, without any CORS restrictions.
+ * @public
+ */
+export function requestUrl(request: RequestUrlParam): Promise<RequestUrlResponse>;
 
 /** @public */
-export interface RequestParam {
+export interface RequestUrlParam {
     /** @public */
     url: string;
     /** @public */
@@ -2622,9 +2639,23 @@ export interface RequestParam {
     /** @public */
     contentType?: string;
     /** @public */
-    body?: string;
+    body?: string | ArrayBuffer;
     /** @public */
     headers?: Record<string, string>;
+}
+
+/** @public */
+export interface RequestUrlResponse {
+    /** @public */
+    status: number;
+    /** @public */
+    headers: Record<string, string>;
+    /** @public */
+    arrayBuffer: ArrayBuffer;
+    /** @public */
+    json: any;
+    /** @public */
+    text: string;
 }
 
 /**
@@ -2993,7 +3024,7 @@ export abstract class SuggestModal<T> extends Modal implements ISuggestOwner<T> 
     /**
      * @public
      */
-    abstract getSuggestions(query: string): T[];
+    abstract getSuggestions(query: string): T[] | Promise<T[]>;
     /**
      * @public
      */
@@ -3005,6 +3036,7 @@ export abstract class SuggestModal<T> extends Modal implements ISuggestOwner<T> 
 }
 
 /**
+ * This can be either a `TFile` or a `TFolder`.
  * @public
  */
 export abstract class TAbstractFile {
