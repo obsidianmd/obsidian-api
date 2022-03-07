@@ -592,6 +592,7 @@ export interface Constructor<T> {
  * @public
  */
 export interface DataAdapter {
+    
     /**
      * @public
      */
@@ -2074,6 +2075,12 @@ export class MetadataCache extends Events {
      * @public
      */
     on(name: 'changed', callback: (file: TFile, data: string, cache: CachedMetadata) => any, ctx?: any): EventRef;
+    /**
+     * Called when a file has been deleted. A best-effort previous version of the cached metadata is presented,
+     * but it could be null in case the file was not successfully cached previously.
+     * @public
+     */
+    on(name: 'deleted', callback: (file: TFile, prevCache: CachedMetadata | null) => any, ctx?: any): EventRef;
 
     /**
      * Called when a file has been resolved for `resolvedLinks` and `unresolvedLinks`.
@@ -3428,6 +3435,7 @@ export abstract class View extends Component {
      * @public
      */
     containerEl: HTMLElement;
+    
     /**
      * @public
      */
