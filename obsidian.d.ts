@@ -87,6 +87,11 @@ declare global {
     }
 }
 declare global {
+    interface Element extends Node {
+        getCssPropertyValue(property: string, pseudoElement?: string): string;
+    }
+}
+declare global {
     interface HTMLElement extends Element {
         show(): void;
         hide(): void;
@@ -119,6 +124,10 @@ declare global {
         findAll(selector: string): HTMLElement[];
         findAllSelf(selector: string): HTMLElement[];
     }
+    interface DocumentFragment extends Node, NonElementParentNode, ParentNode {
+        find(selector: string): HTMLElement;
+        findAll(selector: string): HTMLElement[];
+    }
 }
 declare global {
     interface DomElementInfo {
@@ -147,6 +156,7 @@ declare global {
         value?: string;
         type?: string;
         prepend?: boolean;
+        placeholder?: string;
         href?: string;
     }
     interface Node {
@@ -206,6 +216,7 @@ declare global {
     function ajax(options: AjaxOptions): void;
     function ajaxPromise(options: AjaxOptions): Promise<any>;
     function ready(fn: () => any): void;
+    function sleep(ms: number): Promise<void>;
 }
 
 /**
@@ -1147,6 +1158,11 @@ export class FileSystemAdapter implements DataAdapter {
      */
     getResourcePath(normalizedPath: string): string;
     /**
+     * Returns the file:// path of this file
+     * @public
+     */
+    getFilePath(normalizedPath: string): string;
+    /**
      * @public
      */
     remove(normalizedPath: string): Promise<void>;
@@ -1951,9 +1967,10 @@ export type MarkdownViewModeType = 'source' | 'preview';
 export class Menu extends Component {
 
     /**
+     * As of 0.14.3, the `app` parameter is no longer required.
      * @public
      */
-    constructor(app: App);
+    constructor(app?: any);
 
     /**
      * @public
