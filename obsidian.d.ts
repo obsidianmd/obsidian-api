@@ -303,6 +303,15 @@ export class App {
 
 }
 
+/** @public */
+export function arrayBufferToBase64(buffer: ArrayBuffer): string;
+
+/** @public */
+export function arrayBufferToHex(data: ArrayBuffer): string;
+
+/** @public */
+export function base64ToArrayBuffer(base64: string): ArrayBuffer;
+
 /**
  * @public
  */
@@ -1365,6 +1374,9 @@ export interface HeadingSubpathResult extends SubpathResult {
     next: HeadingCache;
 }
 
+/** @public */
+export function hexToArrayBuffer(hex: string): ArrayBuffer;
+
 /**
  * @public
  */
@@ -2030,10 +2042,12 @@ export class MenuItem {
      * @public
      */
     setDisabled(disabled: boolean): this;
+
     /**
      * @public
      */
     setIsLabel(isLabel: boolean): this;
+
     /**
      * @public
      */
@@ -2064,7 +2078,7 @@ export class MetadataCache extends Events {
     /**
      * @public
      */
-    getCache(path: string): CachedMetadata;
+    getCache(path: string): CachedMetadata | null;
 
     /**
      * Generates a linktext for a file.
@@ -2258,7 +2272,14 @@ export type ObsidianProtocolHandler = (params: ObsidianProtocolData) => any;
  * @public
  */
 export interface OpenViewState {
-
+    /** @public */
+    state?: any;
+    /** @public */
+    eState?: any;
+    /** @public */
+    active?: boolean;
+    /** @public */
+    group?: WorkspaceLeaf;
 }
 
 /**
