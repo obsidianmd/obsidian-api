@@ -1337,6 +1337,9 @@ export abstract class FuzzySuggestModal<T> extends SuggestModal<FuzzyMatch<T>> {
  */
 export function getAllTags(cache: CachedMetadata): string[] | null;
 
+/** @public */
+export function getBlobArrayBuffer(blob: Blob): Promise<ArrayBuffer>;
+
 /**
  * @public
  */
