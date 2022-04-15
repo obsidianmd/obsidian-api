@@ -2093,6 +2093,11 @@ export class MetadataCache extends Events {
     fileToLinktext(file: TFile, sourcePath: string, omitMdExtension?: boolean): string;
 
     /**
+     * @public
+     */
+    getBacklinksForFile(file: TAbstractFile): { data: Record<string, LinkCache[]> };
+
+    /**
      * Contains all resolved links. This object maps each source file's path to an object of destination file paths with the link count.
      * Source and destination paths are all vault absolute paths that comes from `TFile.path` and can be used with `Vault.getAbstractFileByPath(path)`.
      * @public
