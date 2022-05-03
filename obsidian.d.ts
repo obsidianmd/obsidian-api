@@ -575,17 +575,17 @@ export class Component {
      * Registers an DOM event to be detached when unloading
      * @public
      */
-    registerDomEvent<K extends keyof WindowEventMap>(el: Window, type: K, callback: (this: HTMLElement, ev: WindowEventMap[K]) => any): void;
+    registerDomEvent<K extends keyof WindowEventMap>(el: Window, type: K, callback: (this: HTMLElement, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     /**
      * Registers an DOM event to be detached when unloading
      * @public
      */
-    registerDomEvent<K extends keyof DocumentEventMap>(el: Document, type: K, callback: (this: HTMLElement, ev: DocumentEventMap[K]) => any): void;
+    registerDomEvent<K extends keyof DocumentEventMap>(el: Document, type: K, callback: (this: HTMLElement, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     /**
      * Registers an DOM event to be detached when unloading
      * @public
      */
-    registerDomEvent<K extends keyof HTMLElementEventMap>(el: HTMLElement, type: K, callback: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any): void;
+    registerDomEvent<K extends keyof HTMLElementEventMap>(el: HTMLElement, type: K, callback: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     /**
      * Registers an key event to be detached when unloading
      * @public
@@ -853,7 +853,7 @@ export interface EditorChange extends EditorRangeOrCaret {
 }
 
 /** @public */
-export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goStart' | 'goEnd' | 'indentMore' | 'indentLess' | 'newlineAndIndent' | 'swapLineUp' | 'swapLineDown' | 'deleteLine' | 'toggleFold' | 'foldAll' | 'unfoldAll';
+export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goStart' | 'goEnd' | 'goWordLeft' | 'goWordRight' | 'indentMore' | 'indentLess' | 'newlineAndIndent' | 'swapLineUp' | 'swapLineDown' | 'deleteLine' | 'toggleFold' | 'foldAll' | 'unfoldAll';
 
 /**
  * Use this StateField to get a reference to the EditorView
@@ -1986,7 +1986,7 @@ export class Menu extends Component {
      * As of 0.14.3, the `app` parameter is no longer required.
      * @public
      */
-    constructor(app?: App);
+    constructor(app?: any);
 
     /**
      * @public
