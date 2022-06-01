@@ -15,6 +15,6 @@
         "@codemirror/state": "^0.19.6",
         "@codemirror/view": "^0.19.31",
         "@types/codemirror": "0.0.108",
-        "moment": "2.29.2"
+        "moment": "2.29.3"
     }
 }
