@@ -105,6 +105,14 @@ declare global {
          * Exception: Does not work on <body> and <html>, or on elements with `position: fixed`.
          */
         isShown(): boolean;
+        /**
+         * Get the inner width of this element without padding.
+         */
+        readonly innerWidth: number;
+        /**
+         * Get the inner height of this element without padding.
+         */
+        readonly innerHeight: number;
     }
 }
 declare global {
@@ -219,7 +227,35 @@ declare global {
     function ready(fn: () => any): void;
     function sleep(ms: number): Promise<void>;
 }
-
+declare global {
+    /**
+     * The actively focused Window object. This is usually the same as `window` but
+     * it will be different when using popout windows.
+     */
+    let activeWindow: Window;
+    /**
+     * The actively focused Document object. This is usually the same as `document` but
+     * it will be different when using popout windows.
+     */
+    let activeDocument: Document;
+    interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandlers, WindowEventHandlers, WindowLocalStorage, WindowOrWorkerGlobalScope, WindowSessionStorage {
+        /**
+         * The actively focused Window object. This is usually the same as `window` but
+         * it will be different when using popout windows.
+         */
+        activeWindow: Window;
+        /**
+         * The actively focused Document object. This is usually the same as `document` but
+         * it will be different when using popout windows.
+         */
+        activeDocument: Document;
+    }
+}
+declare global {
+    interface Touch {
+        touchType: 'stylus' | 'direct';
+    }
+}
 /**
  * @public
  */
@@ -484,6 +520,11 @@ export interface Command {
     icon?: string;
     /** @public */
     mobileOnly?: boolean;
+    /**
+     * Whether holding the hotkey should repeatedly trigger this command. Defaults to false.
+     * @public
+     */
+    repeatable?: boolean;
     /**
      * Simple callback, triggered globally.
      * @public
@@ -767,6 +808,7 @@ export abstract class EditableFileView extends FileView {
  * @public
  */
 export abstract class Editor {
+
     /** @public */
     getDoc(): this;
     /** @public */
@@ -889,6 +931,22 @@ export interface EditorRangeOrCaret {
     from: EditorPosition;
     /** @public */
     to?: EditorPosition;
+}
+
+/** @public */
+export interface EditorScrollInfo {
+    /** @public */
+    left: number;
+    /** @public */
+    top: number;
+    /** @public */
+    width: number;
+    /** @public */
+    height: number;
+    /** @public */
+    clientWidth: number;
+    /** @public */
+    clientHeight: number;
 }
 
 /** @public */
@@ -1404,6 +1462,10 @@ export interface HoverParent {
  */
 export class HoverPopover extends Component {
 
+    /**
+     * @public
+     */
+    hoverEl: HTMLElement;
     /**
      * @public
      */
@@ -2007,7 +2069,7 @@ export class Menu extends Component {
     /**
      * @public
      */
-    showAtPosition(position: Point): this;
+    showAtPosition(position: Point, doc?: Document): this;
     /**
      * @public
      */
@@ -3597,10 +3659,22 @@ export class Workspace extends Events {
      * @public
      */
     rootSplit: WorkspaceSplit;
+
     /**
+     * Indicates the currently focused leaf, if one exists.
+     *
+     * Please avoid using `activeLeaf` directly, especially without checking whether
+     * `activeLeaf` is null.
+     *
+     * The recommended alternatives are:
+     * - If you need information about the current view, use {@link getActiveViewOfType}.
+     * - If you need to open a new file or navigate a view, use {@link getLeaf}.
+     *
      * @public
+     * @deprecated - The use of this field is discouraged.
      */
     activeLeaf: WorkspaceLeaf | null;
+
     /**
      * @public
      */
@@ -3663,9 +3737,13 @@ export class Workspace extends Events {
      */
     getUnpinnedLeaf(type?: string): WorkspaceLeaf;
     /**
+     * Ignores pinned leaves and leaves that shouldn't be navigated.
+     * Will automatically create a new leaf if one isn't available, or if
+     * `newLeaf` is set to true.
      * @public
      */
     getLeaf(newLeaf?: boolean): WorkspaceLeaf;
+
     /**
      * @public
      */
@@ -3687,6 +3765,7 @@ export class Workspace extends Events {
      * @public
      */
     getGroupLeaves(group: string): WorkspaceLeaf[];
+
     /**
      * @public
      */
@@ -3710,10 +3789,12 @@ export class Workspace extends Events {
     getActiveFile(): TFile | null;
 
     /**
+     * Iterate through all leaves in the main area of the workspace.
      * @public
      */
     iterateRootLeaves(callback: (leaf: WorkspaceLeaf) => any): void;
     /**
+     * Iterate through all leaves.
      * @public
      */
     iterateAllLeaves(callback: (leaf: WorkspaceLeaf) => any): void;

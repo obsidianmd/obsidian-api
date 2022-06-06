@@ -1,6 +1,6 @@
 {
     "name": "obsidian",
-    "version": "0.14.8",
+    "version": "0.15.0",
     "description": "Type definitions for the latest Obsidian API (https://obsidian.md)",
     "keywords": ["obsdmd"],
     "homepage": "https://obsidian.md",
@@ -12,9 +12,11 @@
     "main": "",
     "types": "obsidian.d.ts",
     "dependencies": {
-        "@codemirror/state": "^0.19.6",
-        "@codemirror/view": "^0.19.31",
         "@types/codemirror": "0.0.108",
         "moment": "2.29.3"
+    },
+    "peerDependencies": {
+        "@codemirror/state": "^6.0.0",
+        "@codemirror/view": "^6.0.0"
     }
 }
