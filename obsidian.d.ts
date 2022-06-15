@@ -1285,6 +1285,12 @@ export abstract class FileView extends ItemView {
      */
     file: TFile;
     /**
+     * @inheritDoc
+     * File views can be navigated by default.
+     * @public
+     */
+    navigation: boolean;
+    /**
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
@@ -3530,6 +3536,12 @@ export abstract class View extends Component {
      */
     icon: string;
     /**
+     * Whether or not the view is intended for navigation.
+     * If your view is a static view that is not intended to be navigated away, set this to false.
+     * (For example: File explorer, calendar, etc.)
+     * If your view opens a file or can be otherwise navigated, set this to true.
+     * (For example: Markdown editor view, Kanban view, PDF view, etc.)
+     *
      * @public
      */
     navigation: boolean;
@@ -3722,27 +3734,30 @@ export class Workspace extends Events {
     createLeafBySplit(leaf: WorkspaceLeaf, direction?: SplitDirection, before?: boolean): WorkspaceLeaf;
     /**
      * @public
+     * @deprecated - You should use {@link getLeaf|getLeaf(true)} instead which does the same thing.
      */
     splitActiveLeaf(direction?: SplitDirection): WorkspaceLeaf;
-    /**
-     * @public
-     */
-    splitLeafOrActive(leaf?: WorkspaceLeaf, direction?: SplitDirection): WorkspaceLeaf;
+
     /**
      * @public
      */
     duplicateLeaf(leaf: WorkspaceLeaf, direction?: SplitDirection): Promise<WorkspaceLeaf>;
     /**
      * @public
+     * @deprecated - You should use {@link getLeaf|getLeaf(false)} instead which does the same thing.
      */
     getUnpinnedLeaf(type?: string): WorkspaceLeaf;
     /**
-     * Ignores pinned leaves and leaves that shouldn't be navigated.
-     * Will automatically create a new leaf if one isn't available, or if
-     * `newLeaf` is set to true.
+     * Returns a leaf that can be used for navigation.
+     *
+     * If newLeaf is true, then a new leaf will be created in a preferred location within
+     * the root split and returned.
+     *
+     * If newLeaf is false (or not set), then an existing leaf which can be navigated will be returned,
+     * or a new leaf will be created if there was no leaf available.
      * @public
      */
-    getLeaf(newLeaf?: boolean): WorkspaceLeaf;
+    getLeaf(newLeaf?: boolean, direction?: SplitDirection): WorkspaceLeaf;
 
     /**
      * @public
