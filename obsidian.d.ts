@@ -1285,8 +1285,8 @@ export abstract class FileView extends ItemView {
      */
     file: TFile;
     /**
-     * @inheritDoc
      * File views can be navigated by default.
+     * @inheritDoc
      * @public
      */
     navigation: boolean;
@@ -2068,6 +2068,7 @@ export class Menu extends Component {
      * @public
      */
     addSeparator(): this;
+
     /**
      * @public
      */
@@ -3670,7 +3671,7 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    rootSplit: WorkspaceSplit;
+    rootSplit: WorkspaceRoot;
 
     /**
      * Indicates the currently focused leaf, if one exists.
@@ -3784,7 +3785,7 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    getMostRecentLeaf(): WorkspaceLeaf;
+    getMostRecentLeaf(root?: WorkspaceParent): WorkspaceLeaf;
     /**
      * @public
      */
@@ -3920,12 +3921,38 @@ export class Workspace extends Events {
 /**
  * @public
  */
+export interface WorkspaceContainer {
+    /** @public */
+    win: Window;
+    /** @public */
+    doc: Document;
+}
+
+/**
+ * @public
+ */
+export class WorkspaceFloating extends WorkspaceParent {
+
+}
+
+/**
+ * @public
+ */
 export abstract class WorkspaceItem extends Events {
 
     /**
      * @public
      */
     getRoot(): WorkspaceItem;
+    /**
+     * Get the root container parent item, which can be one of:
+     * - {@link WorkspaceRoot}
+     * - {@link WorkspaceWindow}
+     * - {@link WorkspaceSidedock}
+     * - {@link WorkspaceMobileDrawer}
+     * @public
+     */
+    getContainer(): WorkspaceContainer | null;
 
 }
 
@@ -4014,7 +4041,12 @@ export class WorkspaceLeaf extends WorkspaceItem {
 /**
  * @public
  */
-export class WorkspaceMobileDrawer extends WorkspaceParent {
+export class WorkspaceMobileDrawer extends WorkspaceParent implements WorkspaceContainer {
+
+    /** @public */
+    win: Window;
+    /** @public */
+    doc: Document;
 
     /** @public */
     collapsed: boolean;
@@ -4047,8 +4079,23 @@ export class WorkspaceRibbon {
 /**
  * @public
  */
-export class WorkspaceSidedock extends WorkspaceSplit {
+export class WorkspaceRoot extends WorkspaceSplit implements WorkspaceContainer {
 
+    /** @public */
+    win: Window;
+    /** @public */
+    doc: Document;
+}
+
+/**
+ * @public
+ */
+export class WorkspaceSidedock extends WorkspaceSplit implements WorkspaceContainer {
+
+    /** @public */
+    win: Window;
+    /** @public */
+    doc: Document;
     /** @public */
     collapsed: boolean;
 
@@ -4072,6 +4119,18 @@ export class WorkspaceSplit extends WorkspaceParent {
  * @public
  */
 export class WorkspaceTabs extends WorkspaceParent {
+
+}
+
+/**
+ * @public
+ */
+export class WorkspaceWindow extends WorkspaceSplit implements WorkspaceContainer {
+
+    /** @public */
+    win: Window;
+    /** @public */
+    doc: Document;
 
 }
 
