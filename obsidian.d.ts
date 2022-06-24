@@ -1,5 +1,5 @@
 import { Extension, StateField } from '@codemirror/state';
-import { EditorView } from '@codemirror/view';
+import { EditorView, ViewPlugin } from '@codemirror/view';
 import * as CodeMirror from 'codemirror';
 import * as Moment from 'moment';
 
@@ -9,11 +9,7 @@ declare global {
         each<T>(object: {
             [key: string]: T;
         }, callback: (value: T, key?: string) => boolean | void, context?: any): boolean;
-        assign(target: any, ...sources: any): any;
-        entries(obj: any): any[];
     }
-}
-declare global {
     interface Array<T> {
         first(): T | undefined;
         last(): T | undefined;
@@ -22,14 +18,10 @@ declare global {
         shuffle(): this;
         unique(): T[];
     }
-}
-declare global {
     interface Math {
         clamp(value: number, min: number, max: number): number;
         square(value: number): number;
     }
-}
-declare global {
     interface StringConstructor {
         isString(obj: any): obj is string;
     }
@@ -39,35 +31,9 @@ declare global {
         endsWith(target: string, length?: number): boolean;
         format(...args: string[]): string;
     }
-}
-declare global {
     interface NumberConstructor {
         isNumber(obj: any): obj is number;
     }
-}
-declare global {
-    interface Window {
-        isBoolean(obj: any): obj is boolean;
-    }
-    function isBoolean(obj: any): obj is boolean;
-}
-declare global {
-    interface Element {
-        getText(): string;
-        setText(val: string | DocumentFragment): void;
-    }
-}
-declare global {
-    interface Element {
-        addClass(...classes: string[]): void;
-        addClasses(classes: string[]): void;
-        removeClass(...classes: string[]): void;
-        removeClasses(classes: string[]): void;
-        toggleClass(classes: string | string[], value: boolean): void;
-        hasClass(cls: string): boolean;
-    }
-}
-declare global {
     interface Node {
         detach(): void;
         empty(): void;
@@ -75,24 +41,41 @@ declare global {
         indexOf(other: Node): number;
         setChildrenInPlace(children: Node[]): void;
         appendText(val: string): void;
+        /**
+         * Cross-window capable instanceof check, a drop-in replacement
+         * for instanceof checks on DOM Nodes. Remember to also check
+         * for nulls when necessary.
+         * @param type
+         */
+        instanceOf<T>(type: {
+            new (): T;
+        }): this is T;
+        /**
+         * The document this node belongs to, or the global document.
+         */
+        doc: Document;
+        /**
+         * The window object this node belongs to, or the global window.
+         */
+        win: Window;
     }
-}
-declare global {
     interface Element extends Node {
+        getText(): string;
+        setText(val: string | DocumentFragment): void;
+        addClass(...classes: string[]): void;
+        addClasses(classes: string[]): void;
+        removeClass(...classes: string[]): void;
+        removeClasses(classes: string[]): void;
+        toggleClass(classes: string | string[], value: boolean): void;
+        hasClass(cls: string): boolean;
         setAttr(qualifiedName: string, value: string | number | boolean | null): void;
         setAttrs(obj: {
             [key: string]: string | number | boolean | null;
         }): void;
         getAttr(qualifiedName: string): string | null;
         matchParent(selector: string, lastParent?: Element): Element | null;
-    }
-}
-declare global {
-    interface Element extends Node {
         getCssPropertyValue(property: string, pseudoElement?: string): string;
     }
-}
-declare global {
     interface HTMLElement extends Element {
         show(): void;
         hide(): void;
@@ -114,15 +97,9 @@ declare global {
          */
         readonly innerHeight: number;
     }
-}
-declare global {
+    function isBoolean(obj: any): obj is boolean;
     function fish(selector: string): HTMLElement | null;
     function fishAll(selector: string): HTMLElement[];
-    interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandlers, WindowEventHandlers, WindowLocalStorage, WindowOrWorkerGlobalScope, WindowSessionStorage {
-        fish(selector: string): HTMLElement | null;
-        fishAll(selector: string): HTMLElement[];
-        ElementList: any;
-    }
     interface Element extends Node {
         find(selector: string): Element | null;
         findAll(selector: string): HTMLElement[];
@@ -137,8 +114,6 @@ declare global {
         find(selector: string): HTMLElement;
         findAll(selector: string): HTMLElement[];
     }
-}
-declare global {
     interface DomElementInfo {
         /**
          * The class to be assigned. Can be a space-separated string or an array of strings.
@@ -180,14 +155,12 @@ declare global {
     function createDiv(o?: DomElementInfo | string, callback?: (el: HTMLDivElement) => void): HTMLDivElement;
     function createSpan(o?: DomElementInfo | string, callback?: (el: HTMLSpanElement) => void): HTMLSpanElement;
     function createFragment(callback?: (el: DocumentFragment) => void): DocumentFragment;
-}
-interface EventListenerInfo {
-    selector: string;
-    listener: Function;
-    options?: boolean | AddEventListenerOptions;
-    callback: Function;
-}
-declare global {
+    interface EventListenerInfo {
+        selector: string;
+        listener: Function;
+        options?: boolean | AddEventListenerOptions;
+        callback: Function;
+    }
     interface HTMLElement extends Element {
         _EVENTS?: {
             [K in keyof HTMLElementEventMap]?: EventListenerInfo[];
@@ -201,6 +174,11 @@ declare global {
          * @returns destroy - a function to remove the event handler to avoid memory leaks.
          */
         onNodeInserted(this: HTMLElement, listener: () => any, once?: boolean): () => void;
+        /**
+         * @param listener - the callback to call when this node has been migrated to another window.
+         * @returns destroy - a function to remove the event handler to avoid memory leaks.
+         */
+        onWindowMigrated(this: HTMLElement, listener: (win: Window) => any): () => void;
         trigger(eventType: string): void;
     }
     interface Document {
@@ -210,24 +188,33 @@ declare global {
         on<K extends keyof DocumentEventMap>(this: Document, type: K, selector: string, listener: (this: Document, ev: DocumentEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
         off<K extends keyof DocumentEventMap>(this: Document, type: K, selector: string, listener: (this: Document, ev: DocumentEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
     }
-}
-export interface AjaxOptions {
-    method?: 'GET' | 'POST';
-    url: string;
-    success?: (response: any, req: XMLHttpRequest) => any;
-    error?: (error: any, req: XMLHttpRequest) => any;
-    data?: object | string | ArrayBuffer;
-    headers?: Record<string, string>;
-    withCredentials?: boolean;
-    req?: XMLHttpRequest;
-}
-declare global {
+    interface UIEvent extends Event {
+        targetNode: Node | null;
+        win: Window;
+        doc: Document;
+        /**
+         * Cross-window capable instanceof check, a drop-in replacement
+         * for instanceof checks on UIEvents.
+         * @param type
+         */
+        instanceOf<T>(type: {
+            new (...data: any[]): T;
+        }): this is T;
+    }
+    interface AjaxOptions {
+        method?: 'GET' | 'POST';
+        url: string;
+        success?: (response: any, req: XMLHttpRequest) => any;
+        error?: (error: any, req: XMLHttpRequest) => any;
+        data?: object | string | ArrayBuffer;
+        headers?: Record<string, string>;
+        withCredentials?: boolean;
+        req?: XMLHttpRequest;
+    }
     function ajax(options: AjaxOptions): void;
     function ajaxPromise(options: AjaxOptions): Promise<any>;
     function ready(fn: () => any): void;
     function sleep(ms: number): Promise<void>;
-}
-declare global {
     /**
      * The actively focused Window object. This is usually the same as `window` but
      * it will be different when using popout windows.
@@ -1656,6 +1643,23 @@ export interface ListItemCache extends CacheItem {
      */
     parent: number;
 }
+
+/**
+ * @public
+ */
+export interface LivePreviewState {
+    /**
+     * True if the left mouse is currently held down in the editor
+     * (for example, when drag-to-select text).
+     * @public
+     */
+    mousedown: boolean;
+}
+
+/**
+ * @public
+ */
+export const livePreviewState: ViewPlugin<LivePreviewState>;
 
 /**
  * Load MathJax.
@@ -3868,6 +3872,14 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'layout-change', callback: () => any, ctx?: any): EventRef;
+    /**
+     * @public
+     */
+    on(name: 'window-open', callback: (win: WorkspaceWindow, window: Window) => any, ctx?: any): EventRef;
+    /**
+     * @public
+     */
+    on(name: 'window-close', callback: (win: WorkspaceWindow, window: Window) => any, ctx?: any): EventRef;
     /**
      * Triggered when the CSS of the app has changed.
      * @public
