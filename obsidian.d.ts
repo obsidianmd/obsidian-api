@@ -1307,14 +1307,6 @@ export abstract class FileView extends ItemView {
      * @public
      */
     onUnloadFile(file: TFile): Promise<void>;
-    /**
-     * @public
-     */
-    onMoreOptionsMenu(menu: Menu): void;
-    /**
-     * @public
-     */
-    onHeaderMenu(menu: Menu): void;
 
     /**
      * @public
@@ -1519,17 +1511,8 @@ export abstract class ItemView extends View {
     /**
      * @public
      */
-    onMoreOptionsMenu(menu: Menu): void;
-
-    /**
-     * @public
-     */
     addAction(icon: string, title: string, callback: (evt: MouseEvent) => any, size?: number): HTMLElement;
 
-    /**
-     * @public
-     */
-    onHeaderMenu(menu: Menu): void;
 }
 
 /**
@@ -2055,10 +2038,9 @@ export type MarkdownViewModeType = 'source' | 'preview';
 export class Menu extends Component {
 
     /**
-     * As of 0.14.3, the `app` parameter is no longer required.
      * @public
      */
-    constructor(app?: any);
+    constructor();
 
     /**
      * @public
@@ -2098,9 +2080,10 @@ export class Menu extends Component {
 export class MenuItem {
 
     /**
+     * Private constructor. Use {@link Menu.addItem} instead.
      * @public
      */
-    constructor(menu: Menu);
+    private constructor();
     /**
      * @public
      */
@@ -2128,6 +2111,21 @@ export class MenuItem {
      * @public
      */
     onClick(callback: (evt: MouseEvent | KeyboardEvent) => any): this;
+
+    /**
+     * Sets the section this menu item should belong in.
+     * To find the section IDs of an existing menu, inspect the DOM elements
+     * to see their `data-section` attribute.
+     * @public
+     */
+    setSection(section: string): this;
+
+}
+
+/**
+ * @public
+ */
+export class MenuSeparator {
 
 }
 
@@ -3606,9 +3604,12 @@ export abstract class View extends Component {
      */
     abstract getDisplayText(): string;
     /**
+     * Populates the pane menu.
+     *
+     * (Replaces the previously removed `onHeaderMenu` and `onMoreOptionsMenu`)
      * @public
      */
-    onHeaderMenu(menu: Menu): void;
+    onPaneMenu(menu: Menu, source: 'more-options' | 'tab-header' | string): void;
 
 }
 
@@ -3996,6 +3997,7 @@ export class WorkspaceLeaf extends WorkspaceItem {
      * @public
      */
     setViewState(viewState: ViewState, eState?: any): Promise<void>;
+
     /**
      * @public
      */
