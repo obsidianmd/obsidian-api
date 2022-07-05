@@ -627,15 +627,8 @@ export class Component {
     registerInterval(id: number): number;
 }
 
-/**
- * @public
- */
-export interface Constructor<T> {
-    /**
-     * @public
-     */
-    new (...args: any[]): T;
-}
+/** @public */
+export type Constructor<T> = abstract new (...args: any[]) => T;
 
 /**
  * @public
@@ -2694,11 +2687,11 @@ export interface Rect_2 {
     /**
      * @public
      */
-    w: number;
+    width: number;
     /**
      * @public
      */
-    h: number;
+    height: number;
 }
 
 /**
@@ -3692,7 +3685,6 @@ export class Workspace extends Events {
      * @deprecated - The use of this field is discouraged.
      */
     activeLeaf: WorkspaceLeaf | null;
-
     /**
      * @public
      */
@@ -3764,7 +3756,19 @@ export class Workspace extends Events {
      * @public
      */
     getLeaf(newLeaf?: boolean, direction?: SplitDirection): WorkspaceLeaf;
+    /**
+     * Migrates this leaf to a new popout window.
+     * Only works on the desktop app.
+     * @public
+     */
+    moveLeafToPopout(leaf: WorkspaceLeaf, data?: WorkspaceWindowInitData): WorkspaceWindow;
 
+    /**
+     * Open a new popout window with a single new leaf and return that leaf.
+     * Only works on the desktop app.
+     * @public
+     */
+    openPopoutLeaf(data?: WorkspaceWindowInitData): WorkspaceLeaf;
     /**
      * @public
      */
@@ -3790,7 +3794,7 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    getMostRecentLeaf(root?: WorkspaceParent): WorkspaceLeaf;
+    getMostRecentLeaf(root?: WorkspaceParent): WorkspaceLeaf | null;
     /**
      * @public
      */
@@ -3805,6 +3809,10 @@ export class Workspace extends Events {
      */
     getActiveViewOfType<T extends View>(type: Constructor<T>): T | null;
     /**
+     * Returns the file for the current view if it's a FileView.
+     *
+     * Otherwise, it will recent the most recently active file.
+     *
      * @public
      */
     getActiveFile(): TFile | null;
@@ -3815,7 +3823,7 @@ export class Workspace extends Events {
      */
     iterateRootLeaves(callback: (leaf: WorkspaceLeaf) => any): void;
     /**
-     * Iterate through all leaves.
+     * Iterate through all leaves, including main area leaves, floating leaves, and sidebar leaves.
      * @public
      */
     iterateAllLeaves(callback: (leaf: WorkspaceLeaf) => any): void;
@@ -3934,11 +3942,13 @@ export class Workspace extends Events {
 /**
  * @public
  */
-export interface WorkspaceContainer {
+export abstract class WorkspaceContainer extends WorkspaceSplit {
+
     /** @public */
-    win: Window;
+    abstract win: Window;
     /** @public */
-    doc: Document;
+    abstract doc: Document;
+
 }
 
 /**
@@ -3961,11 +3971,9 @@ export abstract class WorkspaceItem extends Events {
      * Get the root container parent item, which can be one of:
      * - {@link WorkspaceRoot}
      * - {@link WorkspaceWindow}
-     * - {@link WorkspaceSidedock}
-     * - {@link WorkspaceMobileDrawer}
      * @public
      */
-    getContainer(): WorkspaceContainer | null;
+    getContainer(): WorkspaceContainer;
 
 }
 
@@ -3980,6 +3988,9 @@ export class WorkspaceLeaf extends WorkspaceItem {
     view: View;
 
     /**
+     * By default, `openFile` will also make the leaf active.
+     * Pass in `{ active: false }` to override.
+     *
      * @public
      */
     openFile(file: TFile, openState?: OpenViewState): Promise<void>;
@@ -4055,12 +4066,7 @@ export class WorkspaceLeaf extends WorkspaceItem {
 /**
  * @public
  */
-export class WorkspaceMobileDrawer extends WorkspaceParent implements WorkspaceContainer {
-
-    /** @public */
-    win: Window;
-    /** @public */
-    doc: Document;
+export class WorkspaceMobileDrawer extends WorkspaceParent {
 
     /** @public */
     collapsed: boolean;
@@ -4093,8 +4099,7 @@ export class WorkspaceRibbon {
 /**
  * @public
  */
-export class WorkspaceRoot extends WorkspaceSplit implements WorkspaceContainer {
-
+export class WorkspaceRoot extends WorkspaceContainer {
     /** @public */
     win: Window;
     /** @public */
@@ -4104,12 +4109,8 @@ export class WorkspaceRoot extends WorkspaceSplit implements WorkspaceContainer 
 /**
  * @public
  */
-export class WorkspaceSidedock extends WorkspaceSplit implements WorkspaceContainer {
+export class WorkspaceSidedock extends WorkspaceSplit {
 
-    /** @public */
-    win: Window;
-    /** @public */
-    doc: Document;
     /** @public */
     collapsed: boolean;
 
@@ -4139,13 +4140,30 @@ export class WorkspaceTabs extends WorkspaceParent {
 /**
  * @public
  */
-export class WorkspaceWindow extends WorkspaceSplit implements WorkspaceContainer {
+export class WorkspaceWindow extends WorkspaceContainer {
 
     /** @public */
     win: Window;
     /** @public */
     doc: Document;
 
+}
+
+/**
+ * @public
+ */
+export interface WorkspaceWindowInitData {
+
+    /**
+     * The suggested size
+     * @public
+     */
+    size?: {
+        /** @public */
+        width: number;
+        /** @public */
+        height: number;
+    };
 }
 
 export { }
