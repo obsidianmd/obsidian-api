@@ -13,7 +13,7 @@
     "types": "obsidian.d.ts",
     "dependencies": {
         "@types/codemirror": "0.0.108",
-        "moment": "2.29.3"
+        "moment": "2.29.4"
     },
     "peerDependencies": {
         "@codemirror/state": "^6.0.0",
