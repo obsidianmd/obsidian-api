@@ -2418,6 +2418,7 @@ export const Platform: {
      * @public
      */
     isAndroidApp: boolean;
+
     /**
      * We're on a macOS device, or a device that pretends to be one (like iPhones and iPads).
      * Typically used to detect whether to use command-based hotkeys vs ctrl-based hotkeys.
@@ -2675,7 +2676,7 @@ export function prepareSimpleSearch(query: string): (text: string) => SearchResu
 /**
  * @public
  */
-export interface Rect_2 {
+export interface Rect {
     /**
      * @public
      */
