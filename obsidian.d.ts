@@ -2736,13 +2736,13 @@ export function renderResults(el: HTMLElement, text: string, result: SearchResul
  * Returns the text value of the response.
  * @public
  */
-export function request(request: RequestUrlParam): Promise<string>;
+export function request(request: RequestUrlParam | string): Promise<string>;
 
 /**
  * Similar to `fetch()`, request a URL using HTTP/HTTPS, without any CORS restrictions.
  * @public
  */
-export function requestUrl(request: RequestUrlParam): Promise<RequestUrlResponse>;
+export function requestUrl(request: RequestUrlParam | string): RequestUrlResponsePromise;
 
 /** @public */
 export interface RequestUrlParam {
@@ -2756,7 +2756,11 @@ export interface RequestUrlParam {
     body?: string | ArrayBuffer;
     /** @public */
     headers?: Record<string, string>;
-    /** @public */
+    /**
+     * Whether to throw an error when the status code is >= 400
+     * Defaults to true
+     * @public
+     */
     throw?: boolean;
 }
 
@@ -2772,6 +2776,16 @@ export interface RequestUrlResponse {
     json: any;
     /** @public */
     text: string;
+}
+
+/** @public */
+export interface RequestUrlResponsePromise extends Promise<RequestUrlResponse> {
+    /** @public */
+    arrayBuffer: Promise<ArrayBuffer>;
+    /** @public */
+    json: Promise<any>;
+    /** @public */
+    text: Promise<string>;
 }
 
 /**
@@ -3757,6 +3771,7 @@ export class Workspace extends Events {
      * @public
      */
     getLeaf(newLeaf?: boolean, direction?: SplitDirection): WorkspaceLeaf;
+
     /**
      * Migrates this leaf to a new popout window.
      * Only works on the desktop app.
@@ -3774,6 +3789,7 @@ export class Workspace extends Events {
      * @public
      */
     openLinkText(linktext: string, sourcePath: string, newLeaf?: boolean, openViewState?: OpenViewState): Promise<void>;
+
     /**
      * Sets the active leaf
      * @param leaf - The new active leaf
@@ -3809,6 +3825,7 @@ export class Workspace extends Events {
      * @public
      */
     getActiveViewOfType<T extends View>(type: Constructor<T>): T | null;
+
     /**
      * Returns the file for the current view if it's a FileView.
      *
