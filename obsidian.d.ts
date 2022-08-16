@@ -1300,6 +1300,10 @@ export abstract class FileView extends ItemView {
      * @public
      */
     onUnloadFile(file: TFile): Promise<void>;
+    /**
+     * @public
+     */
+    onRename(file: TFile): Promise<void>;
 
     /**
      * @public
