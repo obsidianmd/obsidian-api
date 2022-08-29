@@ -285,7 +285,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
 /**
  * Adds an icon to the library
  * @param iconId - the icon ID
- * @param svgContent - the content of the SVG, without the <svg>. Must fit viewBox="0 0 100 100".
+ * @param svgContent - the content of the SVG.
  * @public
  */
 export function addIcon(iconId: string, svgContent: string): void;
@@ -484,6 +484,48 @@ export interface CloseableComponent {
 
     /** @public */
     close(): any;
+}
+
+/**
+ * Color picker component. Values are by default 6-digit hash-prefixed hex strings like `#000000`.
+ * @public
+ */
+export class ColorComponent extends ValueComponent<string> {
+
+    /**
+     * @public
+     */
+    constructor(containerEl: HTMLElement);
+    /**
+     * @public
+     */
+    getValue(): HexString;
+    /**
+     * @public
+     */
+    getValueRgb(): RGB;
+    /**
+     * @public
+     */
+    getValueHsl(): HSL;
+
+    /**
+     * @public
+     */
+    setValue(value: HexString): this;
+    /**
+     * @public
+     */
+    setValueRgb(rgb: RGB): this;
+    /**
+     * @public
+     */
+    setValueHsl(hsl: HSL): this;
+
+    /**
+     * @public
+     */
+    onChange(callback: (value: string) => any): this;
 }
 
 /**
@@ -727,14 +769,15 @@ export interface DataWriteOptions {
  * @returns a debounced function that takes the same parameter as the original function.
  * @public
  */
-export function debounce<T extends unknown[]>(cb: (...args: [...T]) => any, timeout?: number, resetTimer?: boolean): Debouncer<T>;
+export function debounce<T extends unknown[], V>(cb: (...args: [...T]) => V, timeout?: number, resetTimer?: boolean): Debouncer<T, V>;
 
 /** @public */
-export interface Debouncer<T extends unknown[]> {
+export interface Debouncer<T extends unknown[], V> {
     /** @public */
-    (...args: [...T]): void;
+    (...args: [...T]): this;
     /** @public */
     cancel(): this;
+
 }
 
 /**
@@ -884,6 +927,12 @@ export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goSt
 export const editorEditorField: StateField<EditorView>;
 
 /**
+ * Use this StateField to get information about this markdown editor, such as the associated file, or the Editor.
+ * @public
+ */
+export const editorInfoField: StateField<MarkdownFileInfo>;
+
+/**
  * Use this StateField to check whether Live Preview is active
  * @public
  */
@@ -1027,8 +1076,11 @@ export interface EditorTransaction {
 }
 
 /**
- * Use this StateField to get a reference to the MarkdownView
+ * Use this StateField to get a reference to the MarkdownView.
+ * This is now deprecated because it is possible for an editor to not be associated with a MarkdownView.
+ * @see {@link editorInfoField} - for the new recommended field to use.
  * @public
+ * @deprecated
  */
 export const editorViewField: StateField<MarkdownView>;
 
@@ -1381,6 +1433,14 @@ export function getAllTags(cache: CachedMetadata): string[] | null;
 export function getBlobArrayBuffer(blob: Blob): Promise<ArrayBuffer>;
 
 /**
+ * Create an SVG from an iconId. Returns null if no icon associated with the iconId.
+ * @param iconId - the icon ID
+ * @param size - the width and height to use
+ * @public
+ */
+export function getIcon(iconId: string, size?: number): SVGSVGElement | null;
+
+/**
  * @public
  */
 export function getLinkpath(linktext: string): string;
@@ -1416,6 +1476,13 @@ export interface HeadingSubpathResult extends SubpathResult {
      */
     next: HeadingCache;
 }
+
+/**
+ * Hex strings are 6-digit hash-prefixed rgb strings in lowercase form.
+ * Example: #ffffff
+ * @public
+ */
+export type HexString = string;
 
 /** @public */
 export function hexToArrayBuffer(hex: string): ArrayBuffer;
@@ -1461,6 +1528,27 @@ export class HoverPopover extends Component {
 }
 
 /**
+ * @public
+ */
+export interface HSL {
+    /**
+     * Hue integer value between 0 and 360
+     * @public
+     */
+    h: number;
+    /**
+     * Saturation integer value between 0 and 100
+     * @public
+     */
+    s: number;
+    /**
+     * Lightness integer value between 0 and 100
+     * @public
+     */
+    l: number;
+}
+
+/**
  * Converts HTML to Markdown using Turndown Service.
  * @public
  */
@@ -1490,6 +1578,7 @@ export interface ISuggestOwner<T> {
      * @public
      */
     selectSuggestion(value: T, evt: MouseEvent | KeyboardEvent): void;
+
 }
 
 /**
@@ -1540,10 +1629,13 @@ export class Keymap {
     static isModifier(evt: MouseEvent | TouchEvent | KeyboardEvent, modifier: Modifier): boolean;
 
     /**
-     * Returns true if the modifier key Cmd/Ctrl is pressed OR if this is a middle-click MouseEvent.
+     * Translates an event into the type of pane that should open.
+     * Returns 'tab' if the modifier key Cmd/Ctrl is pressed OR if this is a middle-click MouseEvent.
+     * Returns 'split' if Cmd/Ctrl+Alt is pressed.
+     * Returns 'window' if Cmd/Ctrl+Alt+Shift is pressed.
      * @public
      * */
-    static isModEvent(evt?: UserEvent | null): boolean;
+    static isModEvent(evt?: UserEvent | null): PaneType | boolean;
 }
 
 /**
@@ -1567,7 +1659,7 @@ export interface KeymapEventHandler extends KeymapInfo {
  * Return `false` to automatically preventDefault
  * @public
  */
-export type KeymapEventListener = (evt: KeyboardEvent, ctx: KeymapContext) => boolean | void;
+export type KeymapEventListener = (evt: KeyboardEvent, ctx: KeymapContext) => false | any;
 
 /**
  * @public
@@ -1690,7 +1782,10 @@ export interface Loc {
  * This is the editor for Obsidian Mobile as well as the upcoming WYSIWYG editor.
  * @public
  */
-export class MarkdownEditView implements MarkdownSubView, HoverParent {
+export class MarkdownEditView implements MarkdownSubView, HoverParent, MarkdownFileInfo {
+
+    /** @public */
+    app: App;
 
     /** @public */
     hoverPopover: HoverPopover;
@@ -1713,6 +1808,9 @@ export class MarkdownEditView implements MarkdownSubView, HoverParent {
      */
     set(data: string, clear: boolean): void;
 
+    /** @public */
+    get file(): TFile;
+
     /**
      * @public
      */
@@ -1727,6 +1825,24 @@ export class MarkdownEditView implements MarkdownSubView, HoverParent {
      */
     applyScroll(scroll: number): void;
 
+}
+
+/**
+ * @public
+ */
+export interface MarkdownFileInfo extends HoverParent {
+    /**
+     * @public
+     */
+    app: App;
+    /**
+     * @public
+     */
+    get file(): TFile;
+    /**
+     * @public
+     */
+    editor?: Editor;
 }
 
 /**
@@ -1821,6 +1937,11 @@ export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSub
     /**
      * @public
      */
+    get file(): TFile;
+
+    /**
+     * @public
+     */
     get(): string;
     /**
      * @public
@@ -1866,10 +1987,15 @@ export class MarkdownRenderChild extends Component {
 /**
  * @public
  */
-export abstract class MarkdownRenderer extends MarkdownRenderChild implements MarkdownPreviewEvents, HoverParent {
+export abstract class MarkdownRenderer extends MarkdownRenderChild implements MarkdownPreviewEvents, HoverParent, MarkdownFileInfo {
+    /** @public */
+    app: App;
 
     /** @public */
     hoverPopover: HoverPopover;
+
+    /** @public */
+    abstract get file(): TFile;
 
     /**
      * Renders markdown string to an HTML element.
@@ -1895,7 +2021,9 @@ export interface MarkdownSectionInformation {
 /**
  * @public
  */
-export class MarkdownSourceView implements MarkdownSubView, HoverParent {
+export class MarkdownSourceView implements MarkdownSubView, HoverParent, MarkdownFileInfo {
+    /** @public */
+    app: App;
 
     /**
      * @deprecated - Please use {@link MarkdownView#editor} instead.
@@ -1926,6 +2054,9 @@ export class MarkdownSourceView implements MarkdownSubView, HoverParent {
      * @public
      */
     set(data: string, clear: boolean): void;
+
+    /** @public */
+    get file(): TFile;
 
     /**
      * @public
@@ -2044,6 +2175,12 @@ export class Menu extends Component {
      */
     setNoIcon(): this;
     /**
+     * Force this menu to use native or DOM.
+     * (Only works on the desktop app)
+     * @public
+     */
+    setUseNativeMenu(useNativeMenu: boolean): this;
+    /**
      * @public
      */
     addItem(cb: (item: MenuItem) => any): this;
@@ -2093,7 +2230,7 @@ export class MenuItem {
     /**
      * @public
      */
-    setActive(active: boolean): this;
+    setChecked(checked: boolean | null): this;
     /**
      * @public
      */
@@ -2175,6 +2312,10 @@ export class MetadataCache extends Events {
 
     /**
      * Called when a file has been indexed, and its (updated) cache is now available.
+     *
+     * Note: This is not called when a file is renamed for performance reasons.
+     * You must hook the vault rename event for those.
+     * (Details: https://github.com/obsidianmd/obsidian-api/issues/77)
      * @public
      */
     on(name: 'changed', callback: (file: TFile, data: string, cache: CachedMetadata) => any, ctx?: any): EventRef;
@@ -2352,6 +2493,12 @@ export interface OpenViewState {
     /** @public */
     group?: WorkspaceLeaf;
 }
+
+/**
+ * @public
+ */
+export type PaneType = 'tab' | 'split' | 'window';
+
 
 /**
  * @public
@@ -2805,6 +2952,27 @@ export function requireApiVersion(version: string): boolean;
  */
 export function resolveSubpath(cache: CachedMetadata, subpath: string): HeadingSubpathResult | BlockSubpathResult;
 
+/**
+ * @public
+ */
+export interface RGB {
+    /**
+     * Red integer value between 0 and 255
+     * @public
+     */
+    r: number;
+    /**
+     * Green integer value between 0 and 255
+     * @public
+     */
+    g: number;
+    /**
+     * Blue integer value between 0 and 255
+     * @public
+     */
+    b: number;
+}
+
 /** @public */
 export function sanitizeHTMLToDom(html: string): DocumentFragment;
 
@@ -2897,7 +3065,7 @@ export interface SectionCache extends CacheItem {
 }
 
 /**
- *
+ * Insert an SVG into the element from an iconId. Does nothing if no icon associated with the iconId.
  * @param parent - the HTML element to insert the icon
  * @param iconId - the icon ID
  * @param size - the pixel size for width and height, defaults to 16
@@ -2949,6 +3117,7 @@ export class Setting {
      * @public
      */
     setDisabled(disabled: boolean): this;
+
     /**
      * @public
      */
@@ -2981,6 +3150,10 @@ export class Setting {
      * @public
      */
     addDropdown(cb: (component: DropdownComponent) => any): this;
+    /**
+     * @public
+     */
+    addColorPicker(cb: (component: ColorComponent) => any): this;
     /**
      * @public
      */
@@ -3367,6 +3540,7 @@ export class ToggleComponent extends ValueComponent<boolean> {
      * @public
      */
     setValue(on: boolean): this;
+
     /**
      * @public
      */
@@ -3704,6 +3878,7 @@ export class Workspace extends Events {
      * @deprecated - The use of this field is discouraged.
      */
     activeLeaf: WorkspaceLeaf | null;
+
     /**
      * @public
      */
@@ -3715,11 +3890,11 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    requestSaveLayout: () => void;
+    requestSaveLayout: Debouncer<[], Promise<void>>;
     /**
      * @public
      */
-    requestSaveHistory: () => void;
+    requestSaveHistory: Debouncer<[], void>;
 
     /**
      * Runs the callback function right away if layout is already ready,
@@ -3741,10 +3916,7 @@ export class Workspace extends Events {
      * @public
      */
     createLeafInParent(parent: WorkspaceSplit, index: number): WorkspaceLeaf;
-    /**
-     * @public
-     */
-    splitLeaf(source: WorkspaceItem, newLeaf: WorkspaceItem, direction?: SplitDirection, before?: boolean): void;
+
     /**
      * @public
      */
@@ -3765,16 +3937,27 @@ export class Workspace extends Events {
      */
     getUnpinnedLeaf(type?: string): WorkspaceLeaf;
     /**
-     * Returns a leaf that can be used for navigation.
+     * Creates a new leaf in a leaf adjacent to the currently active leaf.
+     * If direction is `'vertical'`, the leaf will appear to the right.
+     * If direction is `'horizontal'`, the leaf will appear below the current leaf.
      *
-     * If newLeaf is true, then a new leaf will be created in a preferred location within
-     * the root split and returned.
-     *
-     * If newLeaf is false (or not set), then an existing leaf which can be navigated will be returned,
-     * or a new leaf will be created if there was no leaf available.
      * @public
      */
-    getLeaf(newLeaf?: boolean, direction?: SplitDirection): WorkspaceLeaf;
+    getLeaf(newLeaf?: 'split', direction?: SplitDirection): WorkspaceLeaf;
+    /**
+     * If newLeaf is false (or not set) then an existing leaf which can be navigated
+     * is returned, or a new leaf will be created if there was no leaf available.
+     *
+     * If newLeaf is `'tab'` or `true` then a new leaf will be created in the preferred
+     * location within the root split and returned.
+     *
+     * If newLeaf is `'split'` then a new leaf will be created adjacent to the currently active leaf.
+     *
+     * If newLeaf is `'window'` then a popout window will be created with a new leaf inside.
+     *
+     * @public
+     */
+    getLeaf(newLeaf?: PaneType | boolean): WorkspaceLeaf;
 
     /**
      * Migrates this leaf to a new popout window.
@@ -3792,7 +3975,7 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    openLinkText(linktext: string, sourcePath: string, newLeaf?: boolean, openViewState?: OpenViewState): Promise<void>;
+    openLinkText(linktext: string, sourcePath: string, newLeaf?: PaneType | boolean, openViewState?: OpenViewState): Promise<void>;
 
     /**
      * Sets the active leaf
