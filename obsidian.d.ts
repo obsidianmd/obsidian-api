@@ -1326,6 +1326,7 @@ export abstract class FileView extends ItemView {
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
+
     /**
      * @public
      */
@@ -2022,9 +2023,9 @@ export interface MarkdownSectionInformation {
  * @public
  */
 export class MarkdownSourceView implements MarkdownSubView, HoverParent, MarkdownFileInfo {
+
     /** @public */
     app: App;
-
     /**
      * @deprecated - Please use {@link MarkdownView#editor} instead.
      * If you have to use this because you're augmenting specific CodeMirror 5 implementations,
@@ -2181,10 +2182,12 @@ export class Menu extends Component {
      */
     setUseNativeMenu(useNativeMenu: boolean): this;
     /**
+     * Adds a menu item. Only works when menu is not shown yet.
      * @public
      */
     addItem(cb: (item: MenuItem) => any): this;
     /**
+     * Adds a separator. Only works when menu is not shown yet.
      * @public
      */
     addSeparator(): this;
@@ -2498,7 +2501,6 @@ export interface OpenViewState {
  * @public
  */
 export type PaneType = 'tab' | 'split' | 'window';
-
 
 /**
  * @public
@@ -3273,6 +3275,12 @@ export function stringifyYaml(obj: any): string;
 export function stripHeading(heading: string): string;
 
 /**
+ * This function prepares headings for linking. It strips out some bad combinations of special characters that could break links.
+ * @public
+ */
+export function stripHeadingForLink(heading: string): string;
+
+/**
  * @public
  */
 export interface SubpathResult {
@@ -3891,10 +3899,6 @@ export class Workspace extends Events {
      * @public
      */
     requestSaveLayout: Debouncer<[], Promise<void>>;
-    /**
-     * @public
-     */
-    requestSaveHistory: Debouncer<[], void>;
 
     /**
      * Runs the callback function right away if layout is already ready,
@@ -3976,15 +3980,21 @@ export class Workspace extends Events {
      * @public
      */
     openLinkText(linktext: string, sourcePath: string, newLeaf?: PaneType | boolean, openViewState?: OpenViewState): Promise<void>;
-
     /**
      * Sets the active leaf
      * @param leaf - The new active leaf
-     * @param pushHistory - Whether to push the navigation history, or replace the current navigation history.
-     * @param focus - Whether to ask the leaf to focus.
+     * @param params
      * @public
      */
-    setActiveLeaf(leaf: WorkspaceLeaf, pushHistory?: boolean, focus?: boolean): void;
+    setActiveLeaf(leaf: WorkspaceLeaf, params?: {
+        /** @public */
+        focus?: boolean;
+    }): void;
+    /**
+     * @deprecated - function signature changed. Use other form instead
+     * @public
+     */
+    setActiveLeaf(leaf: WorkspaceLeaf, pushHistory: boolean, focus: boolean): void;
 
     /**
      * @public
@@ -4222,7 +4232,6 @@ export class WorkspaceLeaf extends WorkspaceItem {
      * @public
      */
     setEphemeralState(state: any): void;
-
     /**
      * @public
      */
@@ -4266,6 +4275,7 @@ export class WorkspaceLeaf extends WorkspaceItem {
      * @public
      */
     on(name: 'group-change', callback: (group: string) => any, ctx?: any): EventRef;
+
 }
 
 /**
