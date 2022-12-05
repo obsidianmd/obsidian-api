@@ -10,6 +10,9 @@ declare global {
             [key: string]: T;
         }, callback: (value: T, key?: string) => boolean | void, context?: any): boolean;
     }
+    interface ArrayConstructor {
+        combine<T>(arrays: T[][]): T[];
+    }
     interface Array<T> {
         first(): T | undefined;
         last(): T | undefined;
@@ -37,7 +40,7 @@ declare global {
     interface Node {
         detach(): void;
         empty(): void;
-        insertAfter(other: Node): void;
+        insertAfter<T extends Node>(node: T, child: Node | null): T;
         indexOf(other: Node): number;
         setChildrenInPlace(children: Node[]): void;
         appendText(val: string): void;
@@ -58,6 +61,7 @@ declare global {
          * The window object this node belongs to, or the global window.
          */
         win: Window;
+        constructorWin: Window;
     }
     interface Element extends Node {
         getText(): string;
@@ -75,6 +79,7 @@ declare global {
         getAttr(qualifiedName: string): string | null;
         matchParent(selector: string, lastParent?: Element): Element | null;
         getCssPropertyValue(property: string, pseudoElement?: string): string;
+        isActiveElement(): boolean;
     }
     interface HTMLElement extends Element {
         show(): void;
@@ -143,6 +148,23 @@ declare global {
         placeholder?: string;
         href?: string;
     }
+    interface SvgElementInfo {
+        /**
+         * The class to be assigned. Can be a space-separated string or an array of strings.
+         */
+        cls?: string | string[];
+        /**
+         * HTML attributes to be added.
+         */
+        attr?: {
+            [key: string]: string | number | boolean | null;
+        };
+        /**
+         * The parent element to be assigned to.
+         */
+        parent?: Node;
+        prepend?: boolean;
+    }
     interface Node {
         /**
          * Create an element and append it to this node.
@@ -150,10 +172,12 @@ declare global {
         createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo | string, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
         createDiv(o?: DomElementInfo | string, callback?: (el: HTMLDivElement) => void): HTMLDivElement;
         createSpan(o?: DomElementInfo | string, callback?: (el: HTMLSpanElement) => void): HTMLSpanElement;
+        createSvg<K extends keyof SVGElementTagNameMap>(tag: K, o?: SvgElementInfo | string, callback?: (el: SVGElementTagNameMap[K]) => void): SVGElementTagNameMap[K];
     }
     function createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo | string, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
     function createDiv(o?: DomElementInfo | string, callback?: (el: HTMLDivElement) => void): HTMLDivElement;
     function createSpan(o?: DomElementInfo | string, callback?: (el: HTMLSpanElement) => void): HTMLSpanElement;
+    function createSvg<K extends keyof SVGElementTagNameMap>(tag: K, o?: SvgElementInfo | string, callback?: (el: SVGElementTagNameMap[K]) => void): SVGElementTagNameMap[K];
     function createFragment(callback?: (el: DocumentFragment) => void): DocumentFragment;
     interface EventListenerInfo {
         selector: string;
@@ -410,7 +434,7 @@ export class ButtonComponent extends BaseComponent {
     /**
      * @public
      */
-    setTooltip(tooltip: string): this;
+    setTooltip(tooltip: string, options?: TooltipOptions): this;
     /**
      * @public
      */
@@ -418,7 +442,7 @@ export class ButtonComponent extends BaseComponent {
     /**
      * @public
      */
-    setIcon(icon: string): this;
+    setIcon(icon: IconName): this;
     /**
      * @public
      */
@@ -481,7 +505,6 @@ export interface CacheItem {
 
 /** @public */
 export interface CloseableComponent {
-
     /** @public */
     close(): any;
 }
@@ -546,7 +569,7 @@ export interface Command {
      * Icon ID to be used in the toolbar.
      * @public
      */
-    icon?: string;
+    icon?: IconName;
     /** @public */
     mobileOnly?: boolean;
     /**
@@ -579,13 +602,13 @@ export interface Command {
      * Overrides `callback` and `checkCallback`
      * @public
      */
-    editorCallback?: (editor: Editor, view: MarkdownView) => any;
+    editorCallback?: (editor: Editor, ctx: MarkdownView | MarkdownFileInfo) => any;
     /**
      * A command callback that is only triggered when the user is in an editor.
      * Overrides `editorCallback`, `callback` and `checkCallback`
      * @public
      */
-    editorCheckCallback?: (checking: boolean, editor: Editor, view: MarkdownView) => boolean | void;
+    editorCheckCallback?: (checking: boolean, editor: Editor, ctx: MarkdownView | MarkdownFileInfo) => boolean | void;
     /**
      * Sets the default hotkey. It is recommended for plugins to avoid setting default hotkeys if possible,
      * to avoid conflicting hotkeys with one that's set by the user, even though customized hotkeys have higher priority.
@@ -714,6 +737,10 @@ export interface DataAdapter {
      * @public
      */
     append(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
+     */
+    process(normalizedPath: string, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
     /**
      * @public
      */
@@ -1144,11 +1171,11 @@ export class ExtraButtonComponent extends BaseComponent {
     /**
      * @public
      */
-    setTooltip(tooltip: string): this;
+    setTooltip(tooltip: string, options?: TooltipOptions): this;
     /**
      * @public
      */
-    setIcon(icon: string): this;
+    setIcon(icon: IconName): this;
     /**
      * @public
      */
@@ -1188,6 +1215,19 @@ export class FileManager {
      */
     generateMarkdownLink(file: TFile, sourcePath: string, subpath?: string, alias?: string): string;
 
+    /**
+     * Atomically read, modify, and save the frontmatter of a note.
+     * The frontmatter is passed in as a JS object, and should be mutated directly to achieve the desired result.
+     *
+     * Remember to handle errors thrown by this method.
+     *
+     * @param file - the file to be modified. Must be a markdown file.
+     * @param fn - a callback function which mutates the frontMatter object synchronously.
+     * @throws YAMLParseError if the YAML parsing fails
+     * @throws any errors that your callback function throws
+     * @public
+     */
+    processFrontMatter(file: TFile, fn: (frontMatter: any) => void): Promise<void>;
 }
 
 /**
@@ -1252,6 +1292,10 @@ export class FileSystemAdapter implements DataAdapter {
      * @public
      */
     append(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
+     */
+    process(normalizedPath: string, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
 
     /**
      * @public
@@ -1436,10 +1480,15 @@ export function getBlobArrayBuffer(blob: Blob): Promise<ArrayBuffer>;
 /**
  * Create an SVG from an iconId. Returns null if no icon associated with the iconId.
  * @param iconId - the icon ID
- * @param size - the width and height to use
  * @public
  */
-export function getIcon(iconId: string, size?: number): SVGSVGElement | null;
+export function getIcon(iconId: string): SVGSVGElement | null;
+
+/**
+ * Get the list of registered icons
+ * @public
+ */
+export function getIconIds(): IconName[];
 
 /**
  * @public
@@ -1497,6 +1546,22 @@ export interface Hotkey {
     /** @public */
     key: string;
 
+}
+
+/**
+ * @public
+ */
+export interface HoverLinkSource {
+    /**
+     * The string that will be displayed in the 'Page preview' plugin settings. It should match your plugin's display name.
+     * @public
+     */
+    display: string;
+    /**
+     * Whether or not the `hover-link` event requires the 'Mod' key to be pressed to trigger.
+     * @public
+     */
+    defaultMod: boolean;
 }
 
 /**
@@ -1598,7 +1663,7 @@ export abstract class ItemView extends View {
     /**
      * @public
      */
-    addAction(icon: string, title: string, callback: (evt: MouseEvent) => any, size?: number): HTMLElement;
+    addAction(icon: IconName, title: string, callback: (evt: MouseEvent) => any): HTMLElement;
 
 }
 
@@ -1839,7 +1904,8 @@ export interface MarkdownFileInfo extends HoverParent {
     /**
      * @public
      */
-    get file(): TFile;
+    get file(): TFile | null;
+
     /**
      * @public
      */
@@ -1988,7 +2054,7 @@ export class MarkdownRenderChild extends Component {
 /**
  * @public
  */
-export abstract class MarkdownRenderer extends MarkdownRenderChild implements MarkdownPreviewEvents, HoverParent, MarkdownFileInfo {
+export abstract class MarkdownRenderer extends MarkdownRenderChild implements MarkdownPreviewEvents, HoverParent {
     /** @public */
     app: App;
 
@@ -2103,23 +2169,19 @@ export interface MarkdownSubView {
 /**
  * @public
  */
-export class MarkdownView extends TextFileView {
+export class MarkdownView extends TextFileView implements MarkdownFileInfo {
 
-    /**
-     * @public
-     */
+    /** @public */
     editor: Editor;
 
-    /**
-     * @public
-     */
+    /** @public */
     previewMode: MarkdownPreviewView;
 
-    /**
-     * @public
-     */
+    /** @public */
     currentMode: MarkdownSubView;
 
+    /** @public */
+    hoverPopover: HoverPopover | null;
     /**
      * @public
      */
@@ -2164,7 +2226,7 @@ export type MarkdownViewModeType = 'source' | 'preview';
 /**
  * @public
  */
-export class Menu extends Component {
+export class Menu extends Component implements CloseableComponent {
 
     /**
      * @public
@@ -2199,11 +2261,13 @@ export class Menu extends Component {
     /**
      * @public
      */
-    showAtPosition(position: Point, doc?: Document): this;
+    showAtPosition(position: MenuPositionDef, doc?: Document): this;
     /**
      * @public
      */
     hide(): this;
+    /** @public */
+    close(): void;
     /**
      * @public
      */
@@ -2228,7 +2292,7 @@ export class MenuItem {
     /**
      * @public
      */
-    setIcon(icon: string | null, size?: number): this;
+    setIcon(icon: IconName | null): this;
 
     /**
      * @public
@@ -2257,6 +2321,20 @@ export class MenuItem {
      */
     setSection(section: string): this;
 
+}
+
+/** @public */
+export interface MenuPositionDef {
+    /** @public */
+    x: number;
+    /** @public */
+    y: number;
+    /** @public */
+    width?: number;
+    /** @public */
+    overlap?: boolean;
+    /** @public */
+    left?: boolean;
 }
 
 /**
@@ -2354,6 +2432,7 @@ export class Modal implements CloseableComponent {
      * @public
      */
     scope: Scope;
+
     /**
      * @public
      */
@@ -2578,12 +2657,14 @@ export const Platform: {
      * @public
      */
     isMacOS: boolean;
+
     /**
      * We're running in Safari.
      * Typically used to provide workarounds for Safari bugs.
      * @public
      */
     isSafari: boolean;
+
 };
 
 /**
@@ -2609,7 +2690,7 @@ export abstract class Plugin_2 extends Component {
      * @param callback - The `click` callback.
      * @public
      */
-    addRibbonIcon(icon: string, title: string, callback: (evt: MouseEvent) => any): HTMLElement;
+    addRibbonIcon(icon: IconName, title: string, callback: (evt: MouseEvent) => any): HTMLElement;
     /**
      * @public
      */
@@ -2627,6 +2708,11 @@ export abstract class Plugin_2 extends Component {
      * @public
      */
     registerView(type: string, viewCreator: ViewCreator): void;
+    /**
+     * Register your view with the 'Page preview' core plugin as an emitter of the 'hover-link' on the event.
+     * @public
+     */
+    registerHoverLinkSource(id: string, info: HoverLinkSource): void;
     /**
      * @public
      */
@@ -2717,6 +2803,7 @@ export interface PluginManifest {
      * @public
      */
     authorUrl?: string;
+
     /**
      * @public
      */
@@ -2829,28 +2916,6 @@ export function prepareSimpleSearch(query: string): (text: string) => SearchResu
 /**
  * @public
  */
-export interface Rect {
-    /**
-     * @public
-     */
-    x: number;
-    /**
-     * @public
-     */
-    y: number;
-    /**
-     * @public
-     */
-    width: number;
-    /**
-     * @public
-     */
-    height: number;
-}
-
-/**
- * @public
- */
 export interface ReferenceCache extends CacheItem {
     /**
      * @public
@@ -2866,6 +2931,13 @@ export interface ReferenceCache extends CacheItem {
      */
     displayText?: string;
 }
+
+/**
+ * Remove a custom icon from the library
+ * @param iconId - the icon ID
+ * @public
+ */
+export function removeIcon(iconId: string): void;
 
 /**
  * @public
@@ -3070,10 +3142,9 @@ export interface SectionCache extends CacheItem {
  * Insert an SVG into the element from an iconId. Does nothing if no icon associated with the iconId.
  * @param parent - the HTML element to insert the icon
  * @param iconId - the icon ID
- * @param size - the pixel size for width and height, defaults to 16
  * @public
  */
-export function setIcon(parent: HTMLElement, iconId: string, size?: number): void;
+export function setIcon(parent: HTMLElement, iconId: IconName): void;
 
 /**
  * @public
@@ -3110,7 +3181,7 @@ export class Setting {
     /**
      * @public
      */
-    setTooltip(tooltip: string): this;
+    setTooltip(tooltip: string, options?: TooltipOptions): this;
     /**
      * @public
      */
@@ -3311,6 +3382,7 @@ export abstract class SuggestModal<T> extends Modal implements ISuggestOwner<T> 
      * @public
      */
     inputEl: HTMLInputElement;
+
     /**
      * @public
      */
@@ -3552,7 +3624,7 @@ export class ToggleComponent extends ValueComponent<boolean> {
     /**
      * @public
      */
-    setTooltip(tooltip: string): this;
+    setTooltip(tooltip: string, options?: TooltipOptions): this;
     /**
      * @public
      */
@@ -3562,6 +3634,16 @@ export class ToggleComponent extends ValueComponent<boolean> {
      */
     onChange(callback: (value: boolean) => any): this;
 }
+
+/** @public */
+export interface TooltipOptions {
+    /** @public */
+    placement?: TooltipPlacement;
+
+}
+
+/** @public */
+export type TooltipPlacement = 'bottom' | 'right' | 'left' | 'top';
 
 /** @public */
 export type UserEvent = MouseEvent | KeyboardEvent | TouchEvent | PointerEvent;
@@ -3675,6 +3757,15 @@ export class Vault extends Events {
      */
     append(file: TFile, data: string, options?: DataWriteOptions): Promise<void>;
     /**
+     * Atomically read, modify, and save the contents of a note.
+     * @param file - the file to be read and modified.
+     * @param fn - a callback function which returns the new content of the note synchronously.
+     * @param options - write options.
+     * @returns string - the text value of the note that was written.
+     * @public
+     */
+    process(file: TFile, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
+    /**
      * @public
      */
     copy(file: TFile, newPath: string): Promise<TFile>;
@@ -3731,7 +3822,7 @@ export abstract class View extends Component {
     /**
      * @public
      */
-    icon: string;
+    icon: IconName;
     /**
      * Whether or not the view is intended for navigation.
      * If your view is a static view that is not intended to be navigated away, set this to false.
@@ -3787,7 +3878,7 @@ export abstract class View extends Component {
     /**
      * @public
      */
-    getIcon(): string;
+    getIcon(): IconName;
     /**
      * Called when the size of this view is changed.
      * @public
@@ -3933,8 +4024,13 @@ export class Workspace extends Events {
 
     /**
      * @public
+     * @deprecated
      */
     duplicateLeaf(leaf: WorkspaceLeaf, direction?: SplitDirection): Promise<WorkspaceLeaf>;
+    /**
+     * @public
+     */
+    duplicateLeaf(leaf: WorkspaceLeaf, leafType: PaneType | boolean, direction?: SplitDirection): Promise<WorkspaceLeaf>;
     /**
      * @public
      * @deprecated - You should use {@link getLeaf|getLeaf(false)} instead which does the same thing.
@@ -4119,26 +4215,26 @@ export class Workspace extends Events {
      * Triggered when the user opens the context menu on an editor.
      * @public
      */
-    on(name: 'editor-menu', callback: (menu: Menu, editor: Editor, view: MarkdownView) => any, ctx?: any): EventRef;
+    on(name: 'editor-menu', callback: (menu: Menu, editor: Editor, info: MarkdownView | MarkdownFileInfo) => any, ctx?: any): EventRef;
     /**
      * Triggered when changes to an editor has been applied, either programmatically or from a user event.
      * @public
      */
-    on(name: 'editor-change', callback: (editor: Editor, markdownView: MarkdownView) => any, ctx?: any): EventRef;
+    on(name: 'editor-change', callback: (editor: Editor, info: MarkdownView | MarkdownFileInfo) => any, ctx?: any): EventRef;
     /**
      * Triggered when the editor receives a paste event.
      * Check for `evt.defaultPrevented` before attempting to handle this event, and return if it has been already handled.
      * Use `evt.preventDefault()` to indicate that you've handled the event.
      * @public
      */
-    on(name: 'editor-paste', callback: (evt: ClipboardEvent, editor: Editor, markdownView: MarkdownView) => any, ctx?: any): EventRef;
+    on(name: 'editor-paste', callback: (evt: ClipboardEvent, editor: Editor, info: MarkdownView | MarkdownFileInfo) => any, ctx?: any): EventRef;
     /**
      * Triggered when the editor receives a drop event.
      * Check for `evt.defaultPrevented` before attempting to handle this event, and return if it has been already handled.
      * Use `evt.preventDefault()` to indicate that you've handled the event.
      * @public
      */
-    on(name: 'editor-drop', callback: (evt: DragEvent, editor: Editor, markdownView: MarkdownView) => any, ctx?: any): EventRef;
+    on(name: 'editor-drop', callback: (evt: DragEvent, editor: Editor, info: MarkdownView | MarkdownFileInfo) => any, ctx?: any): EventRef;
 
     /**
      * @public
@@ -4256,7 +4352,7 @@ export class WorkspaceLeaf extends WorkspaceItem {
     /**
      * @public
      */
-    getIcon(): string;
+    getIcon(): IconName;
     /**
      * @public
      */
@@ -4391,3 +4487,7 @@ declare global {
 	 */
 	var app: App;
 }
+
+/** @public */
+type IconName = string;
+
