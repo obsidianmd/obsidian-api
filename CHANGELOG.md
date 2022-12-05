@@ -54,6 +54,6 @@ _[Changes since v0.15.9](https://github.com/obsidianmd/obsidian-api/compare/ff12
 
 ### Notable Changes
 
-- Workspace information is no longer saved to the `.obsidian/workspace` file. It is now saved to workspace.json.
+- Workspace information is no longer saved to the `.obsidian/workspace` file. It is now saved to `workspace.json`.
 - Added `.has-active-menu` class to file explorer item that received the right-click.
 - Added `.list-bullet` class to HTML markup for unordered list items.
