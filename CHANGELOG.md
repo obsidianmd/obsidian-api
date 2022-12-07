@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.1.1 (2022-12-07 — Insider build)
+
+<!-- _[Changes since v1.0](https://github.com/obsidianmd/obsidian-api/compare/32fe4c3f...TODO)_ -->
+
+- [`file-open`](https://github.com/obsidianmd/obsidian-api/blob/ec589e9762a1d7e2faad01f894cb34c41b10ecaf/obsidian.d.ts#L4189) event is now fired when focusing a Canvas file card.
+
 ## v1.1.0 (2022-12-05 — Insider build)
 
 _[Changes since v1.0](https://github.com/obsidianmd/obsidian-api/compare/1b4f6e2...32fe4c3f)_
