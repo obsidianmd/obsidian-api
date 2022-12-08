@@ -3992,6 +3992,13 @@ export class Workspace extends Events {
     requestSaveLayout: Debouncer<[], Promise<void>>;
 
     /**
+     * A component managing the current editor. This can be null
+     * if the active view has no editor.
+     * @public
+     */
+    activeEditor: MarkdownFileInfo | null;
+
+    /**
      * Runs the callback function right away if layout is already ready,
      * or push it to a queue to be called later when layout is ready.
      * @public
