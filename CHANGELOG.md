@@ -1,10 +1,35 @@
 # Changelog
 
-## v1.1.1 (2022-12-07 — Insider build)
+## v1.1.1 (2022-12-8 — Insider build)
 
 <!-- _[Changes since v1.0](https://github.com/obsidianmd/obsidian-api/compare/32fe4c3f...TODO)_ -->
 
 - [`file-open`](https://github.com/obsidianmd/obsidian-api/blob/ec589e9762a1d7e2faad01f894cb34c41b10ecaf/obsidian.d.ts#L4189) event is now fired when focusing a Canvas file card.
+- Exposed the `activeEditor` on the Workspace. When a markdown view is active, this will point to the underlying `MarkdownEditView`. If a canvas view is active, this will be an EmbeddedEditor component.
+
+With these two changes, plugins should be able to adapt to the new Canvas view quite easily. Custom
+views that react the the currently focused views will automatically respond to the user clicking 
+on file cards in the canvas. If a plugin is currently accessing the `Editor` using the following
+approach:
+
+```ts
+let view = app.workspace.getActiveViewOfType(MarkdownView);
+
+if (view) {
+    let editor = view.editor;
+    // or
+    let file = view.file;
+}
+```
+
+Instead you can access the `editor` or `file` by looking under the `activeEditor`:
+```ts
+let { activeEditor } = app.workspace;
+if (activeEditor) {
+    let editor = activeEditor.editor;
+    let file = activeEditor.file;
+}
+```
 
 ## v1.1.0 (2022-12-05 — Insider build)
 
