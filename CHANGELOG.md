@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.1.3 (2022-12-9 — Insider build)
+
+- Updated the [Canvas spec](https://github.com/obsidianmd/obsidian-api/blob/master/canvas.d.ts) to indicate that colors can be stored in 1 or 2 formats:
+  - as a hex string (i.e. "#FFFFFF")
+  - as a number "1", "2", etc.
+
+  If it's a number, this refers to the palette position. It can be themed via CSS variables.
+
+
 ## v1.1.1 (2022-12-8 — Insider build)
 
 _[Changes since v1.0](https://github.com/obsidianmd/obsidian-api/compare/32fe4c3f...6161bf59)_
