@@ -2,7 +2,7 @@
 
 ## v1.1.1 (2022-12-8 — Insider build)
 
-<!-- _[Changes since v1.0](https://github.com/obsidianmd/obsidian-api/compare/32fe4c3f...TODO)_ -->
+_[Changes since v1.0](https://github.com/obsidianmd/obsidian-api/compare/32fe4c3f...6161bf59)_
 
 - [`file-open`](https://github.com/obsidianmd/obsidian-api/blob/ec589e9762a1d7e2faad01f894cb34c41b10ecaf/obsidian.d.ts#L4189) event is now fired when focusing a Canvas file card.
 - Exposed the `activeEditor` on the Workspace. When a markdown view is active, this will point to the underlying `MarkdownEditView`. If a canvas view is active, this will be an EmbeddedEditor component.
