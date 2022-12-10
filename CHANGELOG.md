@@ -9,6 +9,80 @@
   If it's a number, this refers to the palette position. It can be themed via CSS variables.
 
 
+### Theme Changes
+
+There are some new CSS variables related to canvas and callouts in 1.1.3+. All the extended palette colors now have an RGB variant that is used for callouts and canvas colors. The hex values are primarily used for syntax highlighting.
+
+```css
+body {
+    --callout-bug: var(--color-red-rgb);
+    --callout-default: var(--color-blue-rgb);
+    --callout-error: var(--color-red-rgb);
+    --callout-example: var(--color-purple-rgb);
+    --callout-fail: var(--color-red-rgb);
+    --callout-important: var(--color-cyan-rgb);
+    --callout-info: var(--color-blue-rgb);
+    --callout-question: var(--color-yellow-rgb);
+    --callout-success: var(--color-green-rgb);
+    --callout-summary: var(--color-cyan-rgb);
+    --callout-tip: var(--color-cyan-rgb);
+    --callout-todo: var(--color-blue-rgb);
+    --callout-warning: var(--color-orange-rgb);
+    --callout-quote: 158, 158, 158;
+}
+.theme-light {
+    --color-red-rgb: 228, 55, 75;
+    --color-red: #E4374B;
+
+    --color-orange-rgb: 217, 108, 0;
+    --color-orange: #d96c00;
+
+    --color-yellow-rgb: 189, 142, 55;
+    --color-yellow: #BD8E37;
+
+    --color-green-rgb: 12, 181, 79;
+    --color-green: #0cb54f;
+
+    --color-cyan-rgb: 45, 183, 181;
+    --color-cyan: #2db7b5;
+
+    --color-blue-rgb: 8, 109, 221;
+    --color-blue: #086DDD;
+
+    --color-purple-rgb: 135, 107, 224;
+    --color-purple: #876be0;
+
+    --color-pink-rgb: 195, 43, 116;
+    --color-pink: #C32B74;
+}
+.theme-dark {
+    --color-red-rgb: 251, 70, 76;
+    --color-red: #fb464c;
+
+    --color-orange-rgb: 233, 151, 63;
+    --color-orange: #E9973F;
+
+    --color-yellow-rgb: 224, 222, 113;
+    --color-yellow: #E0DE71;
+
+    --color-green-rgb: 68, 207, 110;
+    --color-green: #44CF6E;
+
+    --color-cyan-rgb: 83, 223, 221;
+    --color-cyan: #53DFDD;
+
+    --color-blue-rgb: 2, 122, 255;
+    --color-blue: #027aff;
+
+    --color-purple-rgb: 168, 130, 255;
+    --color-purple: #a882ff;
+
+    --color-pink-rgb: 250, 153, 205;
+    --color-pink: #FA99CD;
+}
+```
+
+
 ## v1.1.1 (2022-12-8 — Insider build)
 
 _[Changes since v1.0](https://github.com/obsidianmd/obsidian-api/compare/32fe4c3f...6161bf59)_
