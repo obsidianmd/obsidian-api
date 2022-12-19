@@ -93,6 +93,8 @@ declare global {
          * Exception: Does not work on <body> and <html>, or on elements with `position: fixed`.
          */
         isShown(): boolean;
+        setCssStyles(styles: Partial<CSSStyleDeclaration>): void;
+        setCssProps(props: Record<string, string>): void;
         /**
          * Get the inner width of this element without padding.
          */
@@ -101,6 +103,10 @@ declare global {
          * Get the inner height of this element without padding.
          */
         readonly innerHeight: number;
+    }
+    interface SVGElement extends Element {
+        setCssStyles(styles: Partial<CSSStyleDeclaration>): void;
+        setCssProps(props: Record<string, string>): void;
     }
     function isBoolean(obj: any): obj is boolean;
     function fish(selector: string): HTMLElement | null;
@@ -239,6 +245,7 @@ declare global {
     function ajaxPromise(options: AjaxOptions): Promise<any>;
     function ready(fn: () => any): void;
     function sleep(ms: number): Promise<void>;
+    function nextFrame(): Promise<void>;
     /**
      * The actively focused Window object. This is usually the same as `window` but
      * it will be different when using popout windows.
@@ -260,6 +267,8 @@ declare global {
          * it will be different when using popout windows.
          */
         activeDocument: Document;
+        sleep(ms: number): Promise<void>;
+        nextFrame(): Promise<void>;
     }
 }
 declare global {
@@ -1228,6 +1237,7 @@ export class FileManager {
      * @public
      */
     processFrontMatter(file: TFile, fn: (frontMatter: any) => void): Promise<void>;
+
 }
 
 /**
@@ -2432,7 +2442,6 @@ export class Modal implements CloseableComponent {
      * @public
      */
     scope: Scope;
-
     /**
      * @public
      */
@@ -3240,6 +3249,7 @@ export class Setting {
      * @public
      */
     clear(): this;
+
 }
 
 /**
