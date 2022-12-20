@@ -1,4 +1,3 @@
-
 // A color used to encode color data for nodes and edges
 // can be a number (like "1") representing one of the (currently 6) supported colors.
 // or can be a custom color using the hex format "#FFFFFFF".
@@ -6,7 +5,7 @@ export type CanvasColor = string;
 
 // The overall canvas file's JSON
 export interface CanvasData {
-    nodes: (CanvasFileData | CanvasTextData | CanvasLinkData)[];
+    nodes: AllCanvasNodeData[];
     edges: CanvasEdgeData[];
 }
 
@@ -23,10 +22,14 @@ export interface CanvasNodeData {
     color?: CanvasColor;
 }
 
+export type AllCanvasNodeData = CanvasFileData | CanvasTextData | CanvasLinkData | CanvasGroupData;
+
 // A node that is a file, where the file is located somewhere in the vault.
 export interface CanvasFileData extends CanvasNodeData {
     type: 'file';
     file: string;
+    // An optional subpath which links to a heading or a block. Always starts with a `#`.
+    subpath?: string;
 }
 
 // A node that is plaintext.
@@ -39,6 +42,12 @@ export interface CanvasTextData extends CanvasNodeData {
 export interface CanvasLinkData extends CanvasNodeData {
     type: 'link';
     url: string;
+}
+
+// A node that represents a group.
+export interface CanvasGroupData extends CanvasNodeData {
+    type: 'group';
+    label?: string;
 }
 
 // The side of the node that a connection is connected to
