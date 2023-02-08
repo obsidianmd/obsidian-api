@@ -161,7 +161,7 @@ All changes made within the callback block will be applied at once.
 
 ### Notable Changes
 
-- Added support for an optional `donation` field the plugin manifest. The donation URL will be shown in the plugin gallery entry.
+- Added support for an optional `fundingUrl` field the plugin manifest This is a link for users that want to donate to show appreciation and support plugin development. It's displayed when your plugin is selected in the list of community plugins.
 - Added macOS calendar entitlements. This allow scripts run from within Obsidian to request calendar access.
 
 ## v1.0 (2022-10-13)

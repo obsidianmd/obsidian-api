@@ -21,7 +21,7 @@ For a full example on how to create Obsidian plugins, use the template at https:
 - `description` the long description of your plugin.
 - `isDesktopOnly` whether your plugin uses NodeJS or Electron APIs.
 - `authorUrl` (optional) a URL to your own website.
-- `donation` (optional) a link for users to donation to show appreciation and support plugin development.
+- `fundingUrl` (optional) a link for users to donation to show appreciation and support plugin development.
 
 `main.js`
 
