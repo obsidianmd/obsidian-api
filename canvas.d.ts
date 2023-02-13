@@ -44,14 +44,25 @@ export interface CanvasLinkData extends CanvasNodeData {
     url: string;
 }
 
+// The background image rendering style
+export type BackgroundStyle = 'cover' | 'ratio' | 'repeat';
+
 // A node that represents a group.
 export interface CanvasGroupData extends CanvasNodeData {
     type: 'group';
+    // Optional label to display on top of the group.
     label?: string;
+    // Optional background image, stores the path to the image file in the vault.
+    background?: string;
+    // Optional background image rendering style; defaults to 'cover'.
+    backgroundStyle?: BackgroundStyle;
 }
 
 // The side of the node that a connection is connected to
 export type NodeSide = 'top' | 'right' | 'bottom' | 'left';
+
+// What to display at the end of an edge
+export type EdgeEnd = 'none' | 'arrow';
 
 // An edge
 export interface CanvasEdgeData {
@@ -60,9 +71,13 @@ export interface CanvasEdgeData {
     // The node ID and side where this edge starts
     fromNode: string;
     fromSide: NodeSide;
+    // The starting edge end; defaults to 'none'
+    fromEnd?: EdgeEnd;
     // The node ID and side where this edge ends
     toNode: string;
     toSide: NodeSide;
+    // The ending edge end; defaults to 'arrow'
+    toEnd?: EdgeEnd;
     // The color of this edge
     color?: CanvasColor;
     // The text label of this edge, if available

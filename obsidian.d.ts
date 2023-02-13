@@ -1059,7 +1059,7 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
      * Keep it simple, and return null as early as possible if you determine that it is not the right time.
      * @public
      */
-    abstract onTrigger(cursor: EditorPosition, editor: Editor, file: TFile): EditorSuggestTriggerInfo | null;
+    abstract onTrigger(cursor: EditorPosition, editor: Editor, file: TFile | null): EditorSuggestTriggerInfo | null;
     /**
      * Generate suggestion items based on this context. Can be async, but preferably sync.
      * When generating async suggestions, you should pass the context along.
@@ -1202,9 +1202,11 @@ export class FileManager {
      * @param sourcePath - The path to the current open/focused file,
      * used when the user wants new files to be created "in the same folder".
      * Use an empty string if there is no active file.
+     * @param newFilePath - The path to the file that will be newly created,
+     * used to infer what settings to use based on the path's extension.
      * @public
      */
-    getNewFileParent(sourcePath: string): TFolder;
+    getNewFileParent(sourcePath: string, newFilePath?: string): TFolder;
 
     /**
      * Rename or move a file safely, and update all links to it depending on the user's preferences.
@@ -3452,7 +3454,7 @@ export abstract class TAbstractFile {
     /**
      * @public
      */
-    parent: TFolder;
+    parent: TFolder | null;
 
 }
 
@@ -4172,6 +4174,7 @@ export class Workspace extends Events {
      * @public
      */
     getLastOpenFiles(): string[];
+
     /**
      * Calling this function will update/reconfigure the options of all markdown panes.
      * It is fairly expensive, so it should not be called frequently.

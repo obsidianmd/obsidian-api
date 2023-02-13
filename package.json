@@ -1,6 +1,6 @@
 {
     "name": "obsidian",
-    "version": "1.1.7",
+    "version": "1.1.13",
     "description": "Type definitions for the latest Obsidian API (https://obsidian.md)",
     "keywords": ["obsdmd"],
     "homepage": "https://obsidian.md",
