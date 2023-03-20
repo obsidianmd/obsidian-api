@@ -1233,12 +1233,12 @@ export class FileManager {
      * Remember to handle errors thrown by this method.
      *
      * @param file - the file to be modified. Must be a markdown file.
-     * @param fn - a callback function which mutates the frontMatter object synchronously.
+     * @param fn - a callback function which mutates the frontmatter object synchronously.
      * @throws YAMLParseError if the YAML parsing fails
      * @throws any errors that your callback function throws
      * @public
      */
-    processFrontMatter(file: TFile, fn: (frontMatter: any) => void): Promise<void>;
+    processFrontMatter(file: TFile, fn: (frontmatter: any) => void): Promise<void>;
 
 }
 
