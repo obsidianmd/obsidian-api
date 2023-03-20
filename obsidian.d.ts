@@ -2676,6 +2676,50 @@ export const Platform: {
      */
     isSafari: boolean;
 
+    /**
+     * We're on a Linux device.
+     * @public
+     */
+    isLinux: boolean;
+
+    /**
+     * We're on a phone device.
+     * @public
+     */
+    isPhone: boolean;
+
+    /**
+     * We're on a tablet device.
+     * @public
+     */
+    isTablet: boolean;
+
+    /**
+     * We're on a Windows device.
+     * @public
+     */
+    isWin: boolean;
+
+    /**
+     * Mobile device height.
+     * Returns `0` for desktop devices.
+     * @public
+     */
+    mobileDeviceHeight: number;
+
+    /**
+     * Mobile keyboard device height.
+     * Returns `0` for desktop devices.
+     * @public
+     */
+    mobileKeyboardHeight: number;
+
+    /**
+     * Is mobile keyboard visible.
+     * Returns `false` for desktop devices.
+     * @public
+     */
+    mobileSoftKeyboardVisible: boolean;
 };
 
 /**
