@@ -2743,6 +2743,7 @@ export abstract class Plugin_2 extends Component {
      * Runs callback on all currently loaded instances of CodeMirror,
      * then registers the callback for all future CodeMirror instances.
      * @public
+     * @deprecated Not enabled on CodeMirror 6. In CM6 you create and register extensions and those extensions automatically propagate to all current and future editor instances. You can find documentation on how to use CM6 with Obsidian in the readme here https://github.com/nothingislost/obsidian-cm6-attributes 
      */
     registerCodeMirror(callback: (cm: CodeMirror.Editor) => any): void;
     /**
