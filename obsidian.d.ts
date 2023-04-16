@@ -531,6 +531,10 @@ export class ColorComponent extends ValueComponent<string> {
     /**
      * @public
      */
+    setDisabled(disabled: boolean): this;
+    /**
+     * @public
+     */
     getValue(): HexString;
     /**
      * @public
@@ -688,11 +692,7 @@ export class Component {
      * @public
      */
     registerDomEvent<K extends keyof HTMLElementEventMap>(el: HTMLElement, type: K, callback: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    /**
-     * Registers an key event to be detached when unloading
-     * @public
-     */
-    registerScopeEvent(keyHandler: KeymapEventHandler): void;
+
     /**
      * Registers an interval (from setInterval) to be cancelled when unloading
      * Use {@link window.setInterval} instead of {@link setInterval} to avoid TypeScript confusing between NodeJS vs Browser API
@@ -1238,7 +1238,7 @@ export class FileManager {
      * @throws any errors that your callback function throws
      * @public
      */
-    processFrontMatter(file: TFile, fn: (frontMatter: any) => void): Promise<void>;
+    processFrontMatter(file: TFile, fn: (frontmatter: any) => void): Promise<void>;
 
 }
 
@@ -1515,6 +1515,7 @@ export interface HeadingCache extends CacheItem {
      * @public
      */
     heading: string;
+
     /**
      * @public
      */
@@ -2682,6 +2683,7 @@ export const Platform: {
  * @public
  */
 export abstract class Plugin_2 extends Component {
+
     /**
      * @public
      */
@@ -4195,10 +4197,6 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'resize', callback: () => any, ctx?: any): EventRef;
-    /**
-     * @public
-     */
-    on(name: 'click', callback: (evt: MouseEvent) => any, ctx?: any): EventRef;
     /**
      * @public
      */
