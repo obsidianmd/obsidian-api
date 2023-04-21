@@ -2662,14 +2662,32 @@ export const Platform: {
      * @public
      */
     isAndroidApp: boolean;
-
+    /**
+     * We're in a mobile app that has very limited screen space.
+     * @public
+     */
+    isPhone: boolean;
+    /**
+     * We're in a mobile app that has sufficiently large screen space.
+     * @public
+     */
+    isTablet: boolean;
     /**
      * We're on a macOS device, or a device that pretends to be one (like iPhones and iPads).
      * Typically used to detect whether to use command-based hotkeys vs ctrl-based hotkeys.
      * @public
      */
     isMacOS: boolean;
-
+    /**
+     * We're on a Windows device.
+     * @public
+     */
+    isWin: boolean;
+    /**
+     * We're on a Linux device.
+     * @public
+     */
+    isLinux: boolean;
     /**
      * We're running in Safari.
      * Typically used to provide workarounds for Safari bugs.
@@ -2745,6 +2763,8 @@ export abstract class Plugin_2 extends Component {
      * Runs callback on all currently loaded instances of CodeMirror,
      * then registers the callback for all future CodeMirror instances.
      * @public
+     * @deprecated - This is only used with the legacy editor, which is no longer maintained,
+     * and will be removed in a future update.
      */
     registerCodeMirror(callback: (cm: CodeMirror.Editor) => any): void;
     /**
