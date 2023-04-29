@@ -628,6 +628,7 @@ export interface Command {
      * @public
      */
     hotkeys?: Hotkey[];
+
 }
 
 /**
@@ -2499,8 +2500,8 @@ export class Modal implements CloseableComponent {
 export type Modifier = 'Mod' | 'Ctrl' | 'Meta' | 'Shift' | 'Alt';
 
 /** @public */
-export const moment_2: typeof Moment;
-export { moment_2 as moment }
+export const moment: typeof Moment;
+
 
 /**
  * @public
@@ -2540,14 +2541,21 @@ export class MomentFormatComponent extends TextComponent {
 export function normalizePath(path: string): string;
 
 /**
+ * Notification component. Use to present timely, high-value information.
  * @public
  */
 export class Notice {
-
     /**
      * @public
      */
-    constructor(message: string | DocumentFragment, timeout?: number);
+    noticeEl: HTMLElement;
+    /**
+     * @param message
+     * @param duration - Time in milliseconds to show the notice for. If this is 0, the
+     * Notice will stay visible until the user manually dismisses it.
+     * @public
+     */
+    constructor(message: string | DocumentFragment, duration?: number);
     /**
      * Change the message of this notice.
      * @public
@@ -2700,7 +2708,7 @@ export const Platform: {
 /**
  * @public
  */
-export abstract class Plugin_2 extends Component {
+export abstract class Plugin extends Component {
 
     /**
      * @public
@@ -2798,7 +2806,7 @@ export abstract class Plugin_2 extends Component {
     saveData(data: any): Promise<void>;
 
 }
-export { Plugin_2 as Plugin }
+
 
 /**
  * @public
@@ -2851,7 +2859,7 @@ export abstract class PluginSettingTab extends SettingTab {
     /**
      * @public
      */
-    constructor(app: App, plugin: Plugin_2);
+    constructor(app: App, plugin: Plugin);
 }
 
 /**
