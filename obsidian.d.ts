@@ -279,16 +279,6 @@ declare global {
         touchType: 'stylus' | 'direct';
     }
 }
-/// <reference types="libs/pdfjs" />
-
-import { EditorView } from '@codemirror/view';
-import { Extension } from '@codemirror/state';
-import type * as Moment from 'moment';
-import type { Node as Node_2 } from 'unist';
-import { StateField } from '@codemirror/state';
-import { ViewPlugin } from '@codemirror/view';
-import { ViewUpdate } from '@codemirror/view';
-import { WidgetType } from '@codemirror/view';
 
 /**
  * @public
