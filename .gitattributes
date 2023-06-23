@@ -1,0 +1,3 @@
+# Prevent git from changing line endings
+# See https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+* text=auto
