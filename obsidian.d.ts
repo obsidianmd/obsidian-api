@@ -2384,6 +2384,11 @@ export class MetadataCache extends Events {
     getCache(path: string): CachedMetadata | null;
 
     /**
+     * @public
+     */
+    getBacklinksForFile(file: TFile): { data: Record<string, LinkCache[]> }
+
+    /**
      * Generates a linktext for a file.
      *
      * If file name is unique, use the filename.
