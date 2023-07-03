@@ -12,7 +12,7 @@
     "main": "",
     "types": "obsidian.d.ts",
     "dependencies": {
-        "@types/codemirror": "0.0.108",
+        "@types/codemirror": "5.60.8",
         "moment": "2.29.4"
     },
     "peerDependencies": {
