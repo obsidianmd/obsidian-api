@@ -4423,6 +4423,12 @@ export class Workspace extends Events {
     on(name: 'file-menu', callback: (menu: Menu, file: TAbstractFile, source: string, leaf?: WorkspaceLeaf) => any, ctx?: any): EventRef;
 
     /**
+     * Triggered when the user opens the context menu on a selection of files.
+     * @public
+     */
+    on(name: 'files-menu', callback: (menu: Menu, file: TAbstractFile[], source: string, leaf?: WorkspaceLeaf) => any, ctx?: any): EventRef;
+
+    /**
      * Triggered when the user opens the context menu on an editor.
      * @public
      */
