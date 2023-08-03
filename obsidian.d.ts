@@ -502,6 +502,15 @@ export interface CachedMetadata {
     /**
      * @public
      */
+    frontmatterPosition?: Pos;
+
+    /**
+     * @public
+     */
+    frontmatterLinks?: FrontmatterLinkCache[];
+    /**
+     * @public
+     */
     blocks?: Record<string, BlockCache>;
 }
 
@@ -1457,7 +1466,7 @@ export abstract class FileView extends ItemView {
     /**
      * @public
      */
-    file: TFile;
+    file: TFile | null;
     /**
      * File views can be navigated by default.
      * @inheritDoc
@@ -1515,11 +1524,21 @@ export function finishRenderMath(): Promise<void>;
 /**
  * @public
  */
-export interface FrontMatterCache extends CacheItem {
+export interface FrontMatterCache {
     /**
      * @public
      */
     [key: string]: any;
+}
+
+/**
+ * @public
+ */
+export interface FrontmatterLinkCache extends Reference {
+    /**
+     * @public
+     */
+    key: string;
 }
 
 /**
@@ -1716,7 +1735,7 @@ export interface HSL {
  * Converts HTML to Markdown using Turndown Service.
  * @public
  */
-export function htmlToMarkdown(html: string): string;
+export function htmlToMarkdown(html: string | HTMLElement | Document | DocumentFragment): string;
 
 /**
  * @public
@@ -1769,6 +1788,7 @@ export abstract class ItemView extends View {
  * Iterate links and embeds. If callback returns true, the iteration process will be interrupted.
  * @returns true if callback ever returns true, false otherwise.
  * @public
+ * @deprecated
  */
 export function iterateCacheRefs(cache: CachedMetadata, cb: (ref: ReferenceCache) => boolean | void): boolean;
 
@@ -1776,7 +1796,7 @@ export function iterateCacheRefs(cache: CachedMetadata, cb: (ref: ReferenceCache
  * @returns true if callback ever returns true, false otherwise.
  * @public
  */
-export function iterateRefs(refs: ReferenceCache[], cb: (ref: ReferenceCache) => boolean | void): boolean;
+export function iterateRefs(refs: Reference[], cb: (ref: Reference) => boolean | void): boolean;
 
 /** @public */
 export class Keymap {
@@ -2837,15 +2857,23 @@ export abstract class Plugin extends Component {
      */
     addRibbonIcon(icon: IconName, title: string, callback: (evt: MouseEvent) => any): HTMLElement;
     /**
+     * Adds a status bar item to the bottom of the app.
+     * Not available on mobile.
+     * @see {@link https://docs.obsidian.md/Plugins/User+interface/Status+bar}
+     * @return HTMLElement - element to modify.
      * @public
      */
     addStatusBarItem(): HTMLElement;
     /**
-     * Register a command globally. The command id and name will be automatically prefixed with this plugin's id and name.
+     * Register a command globally.
+     * Registered commands will be available from the @{link https://help.obsidian.md/Plugins/Command+palette Command pallete}.
+     * The command id and name will be automatically prefixed with this plugin's id and name.
      * @public
      */
     addCommand(command: Command): Command;
     /**
+     * Register a settings tab, which allows users to change settings.
+     * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings#Register+a+settings+tab}
      * @public
      */
     addSettingTab(settingTab: PluginSettingTab): void;
@@ -2854,7 +2882,7 @@ export abstract class Plugin extends Component {
      */
     registerView(type: string, viewCreator: ViewCreator): void;
     /**
-     * Register your view with the 'Page preview' core plugin as an emitter of the 'hover-link' on the event.
+     * Registers a view with the 'Page preview' core plugin as an emitter of the 'hover-link' on the event.
      * @public
      */
     registerHoverLinkSource(id: string, info: HoverLinkSource): void;
@@ -2863,13 +2891,16 @@ export abstract class Plugin extends Component {
      */
     registerExtensions(extensions: string[], viewType: string): void;
     /**
+     * Registers a post processor, to change how the document looks in reading mode.
+     * @see {@link https://docs.obsidian.md/Plugins/Editor/Markdown+post+processing}
      * @public
      */
     registerMarkdownPostProcessor(postProcessor: MarkdownPostProcessor, sortOrder?: number): MarkdownPostProcessor;
     /**
      * Register a special post processor that handles fenced code given a language and a handler.
      * This special post processor takes care of removing the <pre><code> and create a <div> that
-     * will be passed to your handler, and is expected to be filled with your custom elements.
+     * will be passed to the handler, and is expected to be filled with custom elements.
+     * @see {@link https://docs.obsidian.md/Plugins/Editor/Markdown+post+processing#Post-process+Markdown+code+blocks}
      * @public
      */
     registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void, sortOrder?: number): MarkdownPostProcessor;
@@ -2883,8 +2914,8 @@ export abstract class Plugin extends Component {
     registerCodeMirror(callback: (cm: CodeMirror.Editor) => any): void;
     /**
      * Registers a CodeMirror 6 extension.
-     * To reconfigure cm6 extensions for your plugin on the fly, you can pass an array here and dynamically
-     * modify it. Once this array is modified, call `Workspace.updateOptions()` to have the changes applied.
+     * To reconfigure cm6 extensions for a plugin on the fly, an array should be passed in, and modified dynamically.
+     * Once this array is modified, calling {@link Workspace.updateOptions} will apply the changes.
      * @param extension - must be a CodeMirror 6 `Extension`, or an array of Extensions.
      * @public
      */
@@ -2892,7 +2923,7 @@ export abstract class Plugin extends Component {
     /**
      * Register a handler for obsidian:// URLs.
      * @param action - the action string. For example, "open" corresponds to `obsidian://open`.
-     * @param handler - the callback to trigger. You will be passed the key-value pair that is decoded from the query.
+     * @param handler - the callback to trigger. A key-value pair that is decoded from the query will be passed in.
      *                  For example, `obsidian://open?key=value` would generate `{"action": "open", "key": "value"}`.
      * @public
      */
@@ -2903,10 +2934,16 @@ export abstract class Plugin extends Component {
      */
     registerEditorSuggest(editorSuggest: EditorSuggest<any>): void;
     /**
+     * Load settings data from disk.
+     * Data is stored in `data.json` in the plugin folder.
+     * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings}
      * @public
      */
     loadData(): Promise<any>;
     /**
+     * Write settings data to disk.
+     * Data is stored in `data.json` in the plugin folder.
+     * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings}
      * @public
      */
     saveData(data: any): Promise<void>;
@@ -2915,49 +2952,62 @@ export abstract class Plugin extends Component {
 
 
 /**
+ * Metadata about a Community plugin.
+ * @see {@link https://docs.obsidian.md/Reference/Manifest}
  * @public
  */
 export interface PluginManifest {
     /**
+     * Vault path to the plugin folder in the config directory.
      * @public
      */
     dir?: string;
     /**
+     * The plugin ID.
      * @public
      */
     id: string;
     /**
+     * The display name.
      * @public
      */
     name: string;
     /**
+     * The author's name.
      * @public
      */
     author: string;
     /**
+     * The current version, using {@link https://semver.org/ Semantic Versioning}.
      * @public
      */
     version: string;
     /**
+     * The minimum required Obsidian version to run this plugin.
      * @public
      */
     minAppVersion: string;
     /**
+     * A description of the plugin.
      * @public
      */
     description: string;
     /**
+     * A URL to the author's website.
      * @public
      */
     authorUrl?: string;
 
     /**
+     * Whether the plugin can be used only on desktop.
      * @public
      */
     isDesktopOnly?: boolean;
 }
 
 /**
+ * Provides a unified interface for users to configure the plugin.
+ * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings#Register+a+settings+tab}
  * @public
  */
 export abstract class PluginSettingTab extends SettingTab {
@@ -3063,7 +3113,7 @@ export function prepareSimpleSearch(query: string): (text: string) => SearchResu
 /**
  * @public
  */
-export interface ReferenceCache extends CacheItem {
+export interface Reference {
     /**
      * @public
      */
@@ -3077,6 +3127,12 @@ export interface ReferenceCache extends CacheItem {
      * @public
      */
     displayText?: string;
+}
+
+/**
+ * @public
+ */
+export interface ReferenceCache extends Reference, CacheItem {
 }
 
 /**
@@ -3393,24 +3449,32 @@ export class Setting {
 
 /**
  * @public
+ * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings#Register+a+settings+tab}
  */
 export abstract class SettingTab {
 
     /**
+     * Reference to the app instance.
      * @public
      */
     app: App;
 
     /**
+     * Outermost HTML element on the setting tab.
      * @public
      */
     containerEl: HTMLElement;
 
     /**
+     * Called when the settings tab should be rendered.
+     * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings#Register+a+settings+tab}
      * @public
      */
     abstract display(): any;
     /**
+     * Hides the contents of the setting tab.
+     * Any registered components should be unloaded when the view is hidden.
+     * Override this if you need to perform additional cleanup.
      * @public
      */
     hide(): any;
@@ -3690,6 +3754,7 @@ export abstract class TextFileView extends EditableFileView {
      * @public
      */
     onLoadFile(file: TFile): Promise<void>;
+
     /**
      * @public
      */
@@ -3885,7 +3950,7 @@ export class Vault extends Events {
      * @throws Error if folder already exists
      * @public
      */
-    createFolder(path: string): Promise<void>;
+    createFolder(path: string): Promise<TFolder>;
     /**
      * Read a plaintext file that is stored inside the vault, directly from disk.
      * Use this if you intend to modify the file content afterwards.
