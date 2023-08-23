@@ -25,6 +25,7 @@ declare global {
         remove(target: T): void;
         shuffle(): this;
         unique(): T[];
+        findLastIndex(predicate: (value: T) => boolean): number;
     }
     interface Math {
         clamp(value: number, min: number, max: number): number;
@@ -897,7 +898,8 @@ export interface Debouncer<T extends unknown[], V> {
     (...args: [...T]): this;
     /** @public */
     cancel(): this;
-
+    /** @public */
+    run(): V | void;
 }
 
 /**
@@ -1320,11 +1322,12 @@ export class FileManager {
      *
      * @param file - the file to be modified. Must be a markdown file.
      * @param fn - a callback function which mutates the frontMatter object synchronously.
+     * @param options - write options.
      * @throws YAMLParseError if the YAML parsing fails
      * @throws any errors that your callback function throws
      * @public
      */
-    processFrontMatter(file: TFile, fn: (frontmatter: any) => void): Promise<void>;
+    processFrontMatter(file: TFile, fn: (frontmatter: any) => void, options?: DataWriteOptions): Promise<void>;
 
 }
 
@@ -3113,6 +3116,26 @@ export function prepareSimpleSearch(query: string): (text: string) => SearchResu
 /**
  * @public
  */
+export class ProgressBarComponent extends ValueComponent<number> {
+
+    /**
+     * @public
+     */
+    constructor(containerEl: HTMLElement);
+    /**
+     * @public
+     */
+    getValue(): number;
+    /**
+     * @param value - The progress amount, a value between 0-100.
+     * @public
+     */
+    setValue(value: number): this;
+}
+
+/**
+ * @public
+ */
 export interface Reference {
     /**
      * @public
@@ -3303,6 +3326,9 @@ export class SearchComponent extends AbstractTextComponent<HTMLInputElement> {
 export type SearchMatches = SearchMatchPart[];
 
 /**
+ * Text position offsets within text file. Represents
+ * a text range [from offset, to offset].
+ *
  * @public
  */
 export type SearchMatchPart = [number, number];
@@ -3434,6 +3460,10 @@ export class Setting {
     /**
      * @public
      */
+    addProgressBar(cb: (component: ProgressBarComponent) => any): this;
+    /**
+     * @public
+     */
     addSlider(cb: (component: SliderComponent) => any): this;
     /**
      * Facilitates chaining
@@ -3479,6 +3509,14 @@ export abstract class SettingTab {
      */
     hide(): any;
 }
+
+/**
+ * @param el - The element to show the tooltip on
+ * @param tooltip - The tooltip text to show
+ * @param options
+ * @public
+ */
+export function setTooltip(el: HTMLElement, tooltip: string, options?: TooltipOptions): void;
 
 /**
  * @public
