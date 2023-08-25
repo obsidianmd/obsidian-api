@@ -1,6 +1,18 @@
 # Changelog
 
-## v1.1.3 (2022-12-9 — Insider build)
+## v1.4.4
+
+We've exposed our helper function for setting tooltips on elements (`setTooltip`) as well as added a new progress bar component.
+
+The `FileManager.processFrontMatter` function now also exposes the DataWriteOptions argument to be consistent with the other `process` and `write` functions.
+
+## v1.4.0
+
+We've made some changes to `CachedMetadata` to support **Properties**. `FrontMatterCache` is now no longer a `CacheItem`—meaning that it doesn't have a position. Instead, is it a _Reference_.
+
+Another big change in v.1.4 is that frontmatter now supports wikilinks. If a value in the frontmatter can be interpreted as a link, it will be cached inside `CachedMetadata.frontmatterLinks`.
+
+## v1.1.3
 
 - Updated the [Canvas spec](https://github.com/obsidianmd/obsidian-api/blob/master/canvas.d.ts) to indicate that colors can be stored in 1 or 2 formats:
   - as a hex string (i.e. "#FFFFFF")
