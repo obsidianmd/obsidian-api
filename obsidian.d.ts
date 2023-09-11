@@ -290,19 +290,29 @@ declare global {
 export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
 
     /**
-     * Limit to the number of elements rendered at once. Set to 0 to disabled.
+     * Limit to the number of elements rendered at once. Set to 0 to disable. Defaults to 100.
      * @public
      */
     limit: number;
-    /** @public */
+    /**
+     * Accepts an `<input>` text box or a contenteditable div.
+     * @public
+     */
     constructor(app: App, textInputEl: HTMLInputElement | HTMLDivElement);
 
-    /** @public */
-    setValue(data: string): void;
-    /** @public */
+    /**
+     * Sets the value into the input element.
+     * @public
+     */
+    setValue(value: string): void;
+    /**
+     * Gets the value from the input element.
+     * @public
+     */
     getValue(): string;
 
     /**
+     * Registers a callback to handle when a suggestion is selected by the user.
      * @public
      */
     onSelect(callback: (value: T, evt: MouseEvent | KeyboardEvent) => any): this;
