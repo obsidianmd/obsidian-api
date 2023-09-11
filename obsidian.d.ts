@@ -3945,6 +3945,8 @@ export interface TooltipOptions {
     /** @public */
     placement?: TooltipPlacement;
 
+    /** @public */
+    delay?: number;
 }
 
 /** @public */
