@@ -861,7 +861,7 @@ export interface DataAdapter {
     /**
      * Remove a directory.
      * @param normalizedPath - path to folder, use {@link normalizePath} to normalize beforehand.
-     * @param recursive - If `true`, delete folders under this folder recursively, if `false´ the folder needs to be empty.
+     * @param recursive - If `true`, delete folders under this folder recursively, if `false` the folder needs to be empty.
      * @public
      */
     rmdir(normalizedPath: string, recursive: boolean): Promise<void>;
