@@ -922,7 +922,7 @@ export interface DataWriteOptions {
  *     console.log(text);
  * }, 1000, true);
  * debounced("Hello world"); // this will not be printed
- * sleep(500);
+ * await sleep(500);
  * debounced("World, hello"); // this will be printed to the console.
  * ```
  * @public
