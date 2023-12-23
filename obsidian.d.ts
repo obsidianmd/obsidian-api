@@ -7,6 +7,7 @@ import { Extension, StateField } from '@codemirror/state';
 import { EditorView, ViewPlugin } from '@codemirror/view';
 import * as CodeMirror from 'codemirror';
 import * as Moment from 'moment';
+import { URL } from 'url';
 
 declare global {
     interface ObjectConstructor {
@@ -1516,7 +1517,7 @@ export class FileSystemAdapter implements DataAdapter {
      * Returns the file:// path of this file
      * @public
      */
-    getFilePath(normalizedPath: string): string;
+    getFilePath(normalizedPath: string): URL;
     /**
      * @public
      */
