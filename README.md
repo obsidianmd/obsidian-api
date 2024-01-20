@@ -4,10 +4,9 @@ Type definitions for the latest [Obsidian](https://obsidian.md) API.
 
 ### Documentation
 
-All API documentation is located in the file `obsidian.d.ts`.
-This will include types, properties, methods, and comments explaining what everything does.
+You can browse our Plugin API documentation at https://docs.obsidian.md/
 
-For a full example on how to create Obsidian plugins, use the template at https://github.com/obsidianmd/obsidian-sample-plugin 
+For a example on how to create Obsidian plugins, use the template at https://github.com/obsidianmd/obsidian-sample-plugin 
 
 ### Plugin structure
 
