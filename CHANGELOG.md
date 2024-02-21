@@ -4,7 +4,7 @@
 
 ### `Plugin.onExternalSettingsChange`
 
-There's a new callback function for plugins to react to when plugin settings (data.json) gets changed on disk. This callback can be used to reload settings when the settings are updated by an external application or when the settings get synced using a file syncing service like Obsidian Sync.
+There's a new callback function for plugins to react to when plugin settings (`data.json`) get changed on disk. This callback can be used to reload settings when they are updated by an external application or when the settings get synced using a file syncing service like Obsidian Sync.
 
 ### New `Vault.getFileByPath` and `Vault.getFolderByPath` utility functions
 
