@@ -311,6 +311,9 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
      */
     getValue(): string;
 
+    /** @public */
+    protected abstract getSuggestions(query: string): T[] | Promise<T[]>;
+
     /**
      * Registers a callback to handle when a suggestion is selected by the user.
      * @public
@@ -1422,14 +1425,25 @@ export class FileManager {
      * Remember to handle errors thrown by this method.
      *
      * @param file - the file to be modified. Must be a markdown file.
-     * @param fn - a callback function which mutates the frontMatter object synchronously.
+     * @param fn - a callback function which mutates the frontmatter object synchronously.
      * @param options - write options.
      * @throws YAMLParseError if the YAML parsing fails
      * @throws any errors that your callback function throws
      * @public
      */
-    processFrontMatter(file: TFile, fn: (frontmatter: any) => void, options?: DataWriteOptions): Promise<void>;
+    processFrontMatter(file: TFile, fn: (frontmatter: Frontmatter) => void, options?: DataWriteOptions): Promise<void>;
 
+    /**
+     * Resolves a unique path for the attachment file being saved.
+     * Ensures that the parent directory exists and dedupes the
+     * filename if the destination filename already exists.
+     *
+     * @param filename Name of the attachment being saved
+     * @param sourcePath The path to the note associated with this attachment, defaults to the workspace's active file.
+     * @returns Full path for where the attachment should be saved, according to the user's settings
+     * @public
+     */
+    getAvailablePathForAttachment(filename: string, sourcePath?: string): Promise<string>;
 }
 
 /**
@@ -1635,6 +1649,20 @@ export interface FrontMatterCache {
     [key: string]: any;
 }
 
+/** @public */
+export interface FrontMatterInfo {
+    /** @public Whether this file has a frontmatter block */
+    exists: boolean;
+    /** @public String representation of the frontmatter */
+    frontmatter: string;
+    /** @public Start of the frontmatter contents (excluding the ---) */
+    from: number;
+    /** @public End of the frontmatter contents (excluding the ---) */
+    to: number;
+    /** @public Offset where the frontmatter block ends (including the ---) */
+    contentStart: number;
+}
+
 /**
  * @public
  */
@@ -1697,6 +1725,14 @@ export function getAllTags(cache: CachedMetadata): string[] | null;
 
 /** @public */
 export function getBlobArrayBuffer(blob: Blob): Promise<ArrayBuffer>;
+
+/**
+ * Given the contents of a file, get information about the frontmatter of the file, including
+ * whether there is a frontmatter block, the offsets of where it starts and ends, and the frontmatter text.
+ *
+ * @public
+ */
+export function getFrontMatterInfo(content: string): FrontMatterInfo;
 
 /**
  * Create an SVG from an iconId. Returns null if no icon associated with the iconId.
@@ -3011,6 +3047,16 @@ export abstract class Plugin extends Component {
      */
     saveData(data: any): Promise<void>;
 
+    /**
+     * Called when the `data.json` file is modified on disk externally from Obsidian.
+     * This usually means that a Sync service or external program has modified
+     * the plugin settings.
+     *
+     * Implement this method to reload plugin settings when they have changed externally.
+     *
+     * @public
+     */
+    onExternalSettingsChange?(): any;
 }
 
 
@@ -4025,7 +4071,24 @@ export class Vault extends Events {
     getName(): string;
 
     /**
-     * Get a file or folder inside the vault. If you need a file, you should test the returned object with `instanceof TFile`. Otherwise, if you need a folder, you should test it with `instanceof TFolder`.
+     * Get a file inside the vault at the given path.
+     * Returns `null` if the file does not exist.
+     *
+     * @param path
+     * @public
+     */
+    getFileByPath(path: string): TFile | null;
+    /**
+     * Get a folder inside the vault at the given path.
+     * Returns `null` if the folder does not exist.
+     *
+     * @param path
+     * @public
+     */
+    getFolderByPath(path: string): TFolder | null;
+    /**
+     * Get a file or folder inside the vault at the given path. To check if the return type is
+     * a file, use `instanceof TFile`. To check if it is a folder, use `instanceof TFolder`.
      * @param path - vault absolute path to the folder or file, with extension, case sensitive.
      * @returns the abstract file, if it's found.
      * @public
@@ -4216,6 +4279,7 @@ export abstract class View extends Component {
      * @public
      */
     navigation: boolean;
+
     /**
      * @public
      */
@@ -4224,7 +4288,18 @@ export abstract class View extends Component {
      * @public
      */
     containerEl: HTMLElement;
-
+    /**
+     * Assign an optional scope to your view to register hotkeys for when the view
+     * is in focus.
+     *
+     * @example
+     * ```ts
+     * this.scope = new Scope(this.app.scope);
+     * ```
+     * @default null
+     * @public
+     */
+    scope: Scope | null;
     /**
      * @public
      */
