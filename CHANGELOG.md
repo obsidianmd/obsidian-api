@@ -1,5 +1,32 @@
 # Changelog
 
+## v.1.5.7
+
+### `Plugin.onExternalSettingsChange`
+
+There's a new callback function for plugins to react to when plugin settings (data.json) gets changed on disk. This callback can be used to reload settings when the settings are updated by an external application or when the settings get synced using a file syncing service like Obsidian Sync.
+
+### New `Vault.getFileByPath` and `Vault.getFolderByPath` utility functions
+
+The `getAbstractFileByPath` has long been a point of confusing with plugin developers. More often than not,
+you are looking for either a file or a folder. And you know which you want at call-time. Instead of using
+`getAbstractFileByPath` then checking if the result is an instance of `TFile` or `TFolder`, now you can just
+use `getFileByPath` or `getFolderByPath` to automatically do this check.
+
+### `View.scope` is now public
+
+Finally `scope` is made public on the `View` class. This means you can assign hotkeys for when your view is
+active and focused.
+
+### New `getFrontMatterInfo` utility
+
+There is now a canonical way to find the offsets of where the frontmatter ends and where the content starts in a file.
+
+### `FileManager.getAvailablePathForAttachment`
+
+If your plugin saves attachments to the vault, you should be using `getAvailablePathForAttachment`. It will generate a safe path for you to use that respects the user's settings for file attachments.
+
+
 ## v1.4.4
 
 We've exposed our helper function for setting tooltips on elements (`setTooltip`) as well as added a new progress bar component.
