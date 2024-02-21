@@ -1431,7 +1431,7 @@ export class FileManager {
      * @throws any errors that your callback function throws
      * @public
      */
-    processFrontMatter(file: TFile, fn: (frontmatter: Frontmatter) => void, options?: DataWriteOptions): Promise<void>;
+    processFrontMatter(file: TFile, fn: (frontmatter: any) => void, options?: DataWriteOptions): Promise<void>;
 
     /**
      * Resolves a unique path for the attachment file being saved.
