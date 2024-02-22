@@ -8,7 +8,7 @@ There's a new callback function for plugins to react to when plugin settings (`d
 
 ### New `Vault.getFileByPath` and `Vault.getFolderByPath` utility functions
 
-The `getAbstractFileByPath` has long been a point of confusing with plugin developers. More often than not,
+The `getAbstractFileByPath` has long been a point of confusion with plugin developers. More often than not,
 you are looking for either a file or a folder. And you know which you want at call-time. Instead of using
 `getAbstractFileByPath` then checking if the result is an instance of `TFile` or `TFolder`, now you can just
 use `getFileByPath` or `getFolderByPath` to automatically do this check.
