@@ -19,5 +19,5 @@ jobs:
             'obsidianmd',
             'obsidian-developer-docs',
             'workflows/build-typescript-docs.yaml',
-            'main',
+            'main'
           });
