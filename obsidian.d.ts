@@ -4279,6 +4279,11 @@ export abstract class View extends Component {
      * @public
      */
     navigation: boolean;
+    /**
+     * The file associated with the view.
+     * @public
+     */
+    file: TFile | null
 
     /**
      * @public
