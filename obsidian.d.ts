@@ -313,7 +313,8 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
 
     /** @public */
     protected abstract getSuggestions(query: string): T[] | Promise<T[]>;
-
+    /** @public */
+    selectSuggestion(value: T, evt: MouseEvent | KeyboardEvent): void;
     /**
      * Registers a callback to handle when a suggestion is selected by the user.
      * @public
@@ -529,6 +530,10 @@ export interface CachedMetadata {
      */
     headings?: HeadingCache[];
     /**
+     * @public
+     */
+    footnotes?: FootnoteCache[];
+    /**
      * Sections are root level markdown blocks, which can be used to divide the document up.
      * @public
      */
@@ -567,7 +572,10 @@ export interface CacheItem {
 
 }
 
-/** @public */
+/**
+ * A closeable component that can get dismissed via the Android 'back' button.
+ * @public
+ */
 export interface CloseableComponent {
     /** @public */
     close(): any;
@@ -1224,6 +1232,7 @@ export interface EditorSelectionOrCaret {
 
 /** @public */
 export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
+
     /**
      * Current suggestion context, containing the result of `onTrigger`.
      * This will be null any time the EditorSuggest is not supposed to run.
@@ -1408,6 +1417,13 @@ export class FileManager {
      */
     renameFile(file: TAbstractFile, newPath: string): Promise<void>;
 
+    /**
+     * Remove a file or a folder from the vault according the user's preferred 'trash'
+     * options (either moving the file to .trash/ or the OS trash bin).
+     * @param file
+     * @public
+     */
+    trashFile(file: TAbstractFile): Promise<void>;
     /**
      * Generate a markdown link based on the user's preferences.
      * @param file - the file to link to.
@@ -1638,6 +1654,17 @@ export abstract class FileView extends ItemView {
  * @public
  */
 export function finishRenderMath(): Promise<void>;
+
+/**
+ * @public
+ */
+export interface FootnoteCache extends CacheItem {
+    /**
+     * @public
+     */
+    id: string;
+}
+
 
 /**
  * @public
@@ -2669,6 +2696,7 @@ export class Modal implements CloseableComponent {
      * @public
      */
     modalEl: HTMLElement;
+
     /**
      * @public
      */
@@ -2691,6 +2719,7 @@ export class Modal implements CloseableComponent {
      * @public
      */
     open(): void;
+
     /**
      * @public
      */
@@ -3653,6 +3682,11 @@ export class SliderComponent extends ValueComponent<number> {
      */
     setDisabled(disabled: boolean): this;
     /**
+     * @param instant whether or not the value should get updated while the slider is dragging
+     * @public
+     */
+    setInstant(instant: boolean): this;
+    /**
      * @public
      */
     setLimits(min: number, max: number, step: number | 'any'): this;
@@ -3764,6 +3798,7 @@ export abstract class SuggestModal<T> extends Modal implements ISuggestOwner<T> 
      * @public
      */
     resultContainerEl: HTMLElement;
+
     /**
      * @public
      */
@@ -4216,6 +4251,12 @@ export class Vault extends Events {
      * @public
      */
     getAllLoadedFiles(): TAbstractFile[];
+    /**
+     * Get all folders in the vault.
+     * @param includeRoot - Should the root folder (`/`) be returned
+     * @public
+     */
+    getAllFolders(includeRoot?: boolean): TFolder[];
 
     /**
      * @public
@@ -4641,6 +4682,7 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'resize', callback: () => any, ctx?: any): EventRef;
+
     /**
      * @public
      */
@@ -4743,6 +4785,12 @@ export class WorkspaceFloating extends WorkspaceParent {
 export abstract class WorkspaceItem extends Events {
 
     /**
+     * The direct parent of the leaf.
+     * @public
+     */
+    abstract parent: WorkspaceParent;
+
+    /**
      * @public
      */
     getRoot(): WorkspaceItem;
@@ -4760,6 +4808,18 @@ export abstract class WorkspaceItem extends Events {
  * @public
  */
 export class WorkspaceLeaf extends WorkspaceItem {
+
+    /**
+     * The direct parent of the leaf.
+     *
+     * On desktop, a leaf is always a child of a `WorkspaceTabs` component.
+     * On mobile, a leaf might be a child of a `WorkspaceMobileDrawer`.
+     * Perform an `instanceof` check before making an assumption about the
+     * `parent`.
+     *
+     * @public
+     */
+    parent: WorkspaceTabs | WorkspaceMobileDrawer;
 
     /**
      * @public
@@ -4932,6 +4992,10 @@ export class WorkspaceWindow extends WorkspaceContainer {
  * @public
  */
 export interface WorkspaceWindowInitData {
+    /** @public */
+    x?: number;
+    /** @public */
+    y?: number;
 
     /**
      * The suggested size
@@ -4948,15 +5012,4 @@ export interface WorkspaceWindowInitData {
 export { }
 
 /** @public */
-declare global {
-	/**
-	 * Global reference to the app.
-	 * @public
-	 * @deprecated - Prefer not to use this value directly.
-	 */
-	var app: App;
-}
-
-/** @public */
 export type IconName = string;
-
