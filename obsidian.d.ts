@@ -4776,7 +4776,8 @@ export abstract class WorkspaceContainer extends WorkspaceSplit {
  * @public
  */
 export class WorkspaceFloating extends WorkspaceParent {
-
+	/** @public */
+	parent: WorkspaceParent;
 }
 
 /**
@@ -4906,6 +4907,8 @@ export class WorkspaceLeaf extends WorkspaceItem {
  * @public
  */
 export class WorkspaceMobileDrawer extends WorkspaceParent {
+	/** @public */
+	parent: WorkspaceParent;
 
     /** @public */
     collapsed: boolean;
@@ -4966,14 +4969,16 @@ export class WorkspaceSidedock extends WorkspaceSplit {
  * @public
  */
 export class WorkspaceSplit extends WorkspaceParent {
-
+	/** @public */
+	parent: WorkspaceParent;
 }
 
 /**
  * @public
  */
 export class WorkspaceTabs extends WorkspaceParent {
-
+	/** @public */
+	parent: WorkspaceSplit;
 }
 
 /**
