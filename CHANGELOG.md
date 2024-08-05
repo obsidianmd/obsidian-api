@@ -1,6 +1,6 @@
 # Changelog
 
-> [!Note] About this changelog
+> [!NOTE] About this changelog
 > This CHANGELOG details any breaking changes to the API or new additions that require additional context. The versions listed below correspond to the versions of the Obsidian app. There may not be a corresponding package version for the version listed below.
 
 ## v1.5.11
