@@ -8,7 +8,7 @@ This CHANGELOG details any breaking changes to the API or new additions that req
 - If you are using the `SliderComponent` in your app, be aware, the behavior of the component has changed in 1.5.9. Now, instead of updating the value when the slider is dragged, it will only update the value when the slider is released. If your plugin was relying on the old behavior, you will need to update your plugin code to call `.setInstant(true)` on the slider.
   **Note:** Because `setInstant` is a new function, you'll also need to check to see if the function exists before calling it. This will ensure your plugin maintains backwards compatibility when being run on older versions of Obsidian.
 
-## v.1.5.7
+## v1.5.7
 
 ### `Plugin.onExternalSettingsChange`
 
