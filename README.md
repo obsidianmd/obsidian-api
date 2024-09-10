@@ -6,7 +6,11 @@ Type definitions for the latest [Obsidian](https://obsidian.md) API.
 
 You can browse our Plugin API documentation at https://docs.obsidian.md/
 
-For an example on how to create Obsidian plugins, use the template at https://github.com/obsidianmd/obsidian-sample-plugin 
+For an example on how to create Obsidian plugins, use the template at https://github.com/obsidianmd/obsidian-sample-plugin
+
+### Issues and API requests
+
+For issues with the API, or to make requests for new APIs, please go to our forum: https://forum.obsidian.md/c/developers-api/14
 
 ### Plugin structure
 
