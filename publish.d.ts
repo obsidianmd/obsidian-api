@@ -336,7 +336,7 @@ export class Component {
 
     /**
      * Registers an interval (from setInterval) to be cancelled when unloading
-     * Use {@link window.setInterval} instead of {@link setInterval} to avoid TypeScript confusing between NodeJS vs Browser API
+     * Use {@link window#setInterval} instead of {@link setInterval} to avoid TypeScript confusing between NodeJS vs Browser API
      * @public
      */
     registerInterval(id: number): number;
@@ -357,11 +357,11 @@ export class Events {
     /**
      * @public
      */
-    on(name: string, callback: (...data: any) => any, ctx?: any): EventRef;
+    on(name: string, callback: (...data: unknown[]) => unknown, ctx?: any): EventRef;
     /**
      * @public
      */
-    off(name: string, callback: (...data: any) => any): void;
+    off(name: string, callback: (...data: unknown[]) => unknown): void;
     /**
      * @public
      */
@@ -369,11 +369,11 @@ export class Events {
     /**
      * @public
      */
-    trigger(name: string, ...data: any[]): void;
+    trigger(name: string, ...data: unknown[]): void;
     /**
      * @public
      */
-    tryTrigger(evt: EventRef, args: any[]): void;
+    tryTrigger(evt: EventRef, args: unknown[]): void;
 }
 
 /**
@@ -406,7 +406,10 @@ export interface MarkdownPostProcessorContext {
      * @public
      */
     docId: string;
-    /** @public */
+    /**
+     * The path to the associated file. Any links are assumed to be relative to the `sourcePath`.
+     * @public
+     */
     sourcePath: string;
     /** @public */
     frontmatter: any | null | undefined;
@@ -458,8 +461,8 @@ export class MarkdownRenderChild extends Component {
     containerEl: HTMLElement;
     /**
      * @param containerEl - This HTMLElement will be used to test whether this component is still alive.
-     * It should be a child of the markdown preview sections, and when it's no longer attached
-     * (for example, when it is replaced with a new version because the user edited the markdown source code),
+     * It should be a child of the Markdown preview sections, and when it's no longer attached
+     * (for example, when it is replaced with a new version because the user edited the Markdown source code),
      * this component will be unloaded.
      * @public
      */
@@ -487,7 +490,7 @@ export class Publish extends Events {
     registerMarkdownPostProcessor(postProcessor: MarkdownPostProcessor, sortOrder?: number): MarkdownPostProcessor;
     /**
      * Register a special post processor that handles fenced code given a language and a handler.
-     * This special post processor takes care of removing the <pre><code> and create a <div> that
+     * This special post processor takes care of removing the `<pre><code>` and create a `<div>` that
      * will be passed to your handler, and is expected to be filled with your custom elements.
      * @public
      */
@@ -501,7 +504,7 @@ export { }
 
 /** @public */
 declare global {
-    /**
+	/**
 	 * Global reference to the publish instance.
 	 * @public
 	 */
