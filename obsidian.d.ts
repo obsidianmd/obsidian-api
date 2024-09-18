@@ -4349,7 +4349,7 @@ export class Vault extends Events {
     trash(file: TAbstractFile, system: boolean): Promise<void>;
     /**
      * Rename or move a file. To ensure links are automatically renamed,
-     * use {@link FileManager.renameFile} instead.
+     * use {@link FileManager#renameFile} instead.
      * @param file - the file to rename/move
      * @param newPath - vault absolute path to move file to.
      * @public
@@ -4633,8 +4633,8 @@ export class Workspace extends Events {
      * @public
      * @deprecated The use of this field is discouraged.
      * The recommended alternatives are:
-     * - If you need information about the current view, use {@link Workspace.getActiveViewOfType}.
-     * - If you need to open a new file or navigate a view, use {@link Workspace.getLeaf}.
+     * - If you need information about the current view, use {@link Workspace#getActiveViewOfType}.
+     * - If you need to open a new file or navigate a view, use {@link Workspace#getLeaf}.
      */
     activeLeaf: WorkspaceLeaf | null;
 
@@ -4645,7 +4645,7 @@ export class Workspace extends Events {
     containerEl: HTMLElement;
     /**
      * If the layout of the app has been successfully initialized.
-     * To react to the layout becoming ready, use {@link onLayoutReady}
+     * To react to the layout becoming ready, use {@link Workspace#onLayoutReady}
      * @public
      */
     layoutReady: boolean;
