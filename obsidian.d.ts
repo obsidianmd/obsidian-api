@@ -918,7 +918,7 @@ export class Component {
 
     /**
      * Registers an interval (from setInterval) to be cancelled when unloading
-     * Use {@link window#setInterval} instead of {@link setInterval} to avoid TypeScript confusing between NodeJS vs Browser API
+     * Use {@link window.setInterval} instead of {@link setInterval} to avoid TypeScript confusing between NodeJS vs Browser API
      * @public
      */
     registerInterval(id: number): number;
@@ -2343,7 +2343,7 @@ export interface MarkdownFileInfo extends HoverParent {
  * Post processors can mutate the DOM to render various things, such as mermaid graphs, latex equations, or custom controls.
  *
  * If your post processor requires lifecycle management, for example, to clear an interval, kill a subprocess, etc when this element is
- * removed from the app, look into {@link MarkdownPostProcessorContext#addChild}
+ * removed from the app, look into {@link MarkdownPostProcessorContext.addChild}
  * @public
  */
 export interface MarkdownPostProcessor {
@@ -2495,7 +2495,7 @@ export abstract class MarkdownRenderer extends MarkdownRenderChild implements Ma
     /**
      * Renders Markdown string to an HTML element.
      * @public
-     * @deprecated - use {@link MarkdownRenderer#render}
+     * @deprecated - use {@link MarkdownRenderer.render}
      */
     static renderMarkdown(markdown: string, el: HTMLElement, sourcePath: string, component: Component): Promise<void>;
     /**
@@ -2660,7 +2660,7 @@ export class Menu extends Component implements CloseableComponent {
 export class MenuItem {
 
     /**
-     * Private constructor. Use {@link Menu#addItem} instead.
+     * Private constructor. Use {@link Menu.addItem} instead.
      * @public
      */
     private constructor();
@@ -3112,9 +3112,7 @@ export abstract class Plugin extends Component {
     constructor(app: App, manifest: PluginManifest);
 
     /**
-     * Custom async `onload`
      * @public
-     * @virtual
      */
     onload(): Promise<void> | void;
     /**
@@ -3183,7 +3181,7 @@ export abstract class Plugin extends Component {
     /**
      * Registers a CodeMirror 6 extension.
      * To reconfigure cm6 extensions for a plugin on the fly, an array should be passed in, and modified dynamically.
-     * Once this array is modified, calling {@link Workspace#updateOptions} will apply the changes.
+     * Once this array is modified, calling {@link Workspace.updateOptions} will apply the changes.
      * @param extension - must be a CodeMirror 6 `Extension`, or an array of Extensions.
      * @public
      */
@@ -4311,14 +4309,14 @@ export class Vault extends Events {
     /**
      * Read a plaintext file that is stored inside the vault, directly from disk.
      * Use this if you intend to modify the file content afterwards.
-     * Use {@link Vault#cachedRead} otherwise for better performance.
+     * Use {@link Vault.cachedRead} otherwise for better performance.
      * @public
      */
     read(file: TFile): Promise<string>;
     /**
      * Read the content of a plaintext file stored inside the vault
      * Use this if you only want to display the content to the user.
-     * If you want to modify the file content afterward use {@link Vault#read}
+     * If you want to modify the file content afterward use {@link Vault.read}
      * @public
      */
     cachedRead(file: TFile): Promise<string>;
@@ -4349,7 +4347,7 @@ export class Vault extends Events {
     trash(file: TAbstractFile, system: boolean): Promise<void>;
     /**
      * Rename or move a file. To ensure links are automatically renamed,
-     * use {@link FileManager#renameFile} instead.
+     * use {@link FileManager.renameFile} instead.
      * @param file - the file to rename/move
      * @param newPath - vault absolute path to move file to.
      * @public
@@ -4431,7 +4429,7 @@ export class Vault extends Events {
     /**
      * Called when a file is created.
      * This is also called when the vault is first loaded for each existing file
-     * If you do not wish to receive create events on vault load, register your event handler inside {@link Workspace#onLayoutReady}.
+     * If you do not wish to receive create events on vault load, register your event handler inside {@link Workspace.onLayoutReady}.
      * @public
      */
     on(name: 'create', callback: (file: TAbstractFile) => any, ctx?: any): EventRef;
@@ -4633,8 +4631,8 @@ export class Workspace extends Events {
      * @public
      * @deprecated The use of this field is discouraged.
      * The recommended alternatives are:
-     * - If you need information about the current view, use {@link Workspace#getActiveViewOfType}.
-     * - If you need to open a new file or navigate a view, use {@link Workspace#getLeaf}.
+     * - If you need information about the current view, use {@link Workspace.getActiveViewOfType}.
+     * - If you need to open a new file or navigate a view, use {@link Workspace.getLeaf}.
      */
     activeLeaf: WorkspaceLeaf | null;
 
@@ -4645,7 +4643,7 @@ export class Workspace extends Events {
     containerEl: HTMLElement;
     /**
      * If the layout of the app has been successfully initialized.
-     * To react to the layout becoming ready, use {@link Workspace#onLayoutReady}
+     * To react to the layout becoming ready, use {@link Workspace.onLayoutReady}
      * @public
      */
     layoutReady: boolean;
@@ -4689,7 +4687,7 @@ export class Workspace extends Events {
     createLeafBySplit(leaf: WorkspaceLeaf, direction?: SplitDirection, before?: boolean): WorkspaceLeaf;
     /**
      * @public
-     * @deprecated - You should use {@link Workspace#getLeaf|getLeaf(true)} instead which does the same thing.
+     * @deprecated - You should use {@link Workspace.getLeaf|getLeaf(true)} instead which does the same thing.
      */
     splitActiveLeaf(direction?: SplitDirection): WorkspaceLeaf;
 
@@ -4704,7 +4702,7 @@ export class Workspace extends Events {
     duplicateLeaf(leaf: WorkspaceLeaf, leafType: PaneType | boolean, direction?: SplitDirection): Promise<WorkspaceLeaf>;
     /**
      * @public
-     * @deprecated - You should use {@link Workspace#getLeaf|getLeaf(false)} instead which does the same thing.
+     * @deprecated - You should use {@link Workspace.getLeaf|getLeaf(false)} instead which does the same thing.
      */
     getUnpinnedLeaf(): WorkspaceLeaf;
     /**
