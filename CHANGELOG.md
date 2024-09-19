@@ -2,13 +2,13 @@
 
 This CHANGELOG details any breaking changes to the API or new additions that require additional context. The versions listed below correspond to the versions of the Obsidian app. There may not be a corresponding package version for the version listed below.
 
-## v1.7.2 (Insider)
+## [v1.7.2](<https://github.com/obsidianmd/obsidian-api/commit/6933c6227617897e031f30c734f61167cedafb7d>) (Insider)
 
 ### Workspace changes
 
 - New function `Plugin#onUserEnable` gives you a place to performance one-time initialize after the user installs and enables your plugin. If your plugin has a custom view, this is a good place to initialize it rather than recreating the view in `Plugin#onload`.
 - `Workspace#ensureSideLeaf` is now public. This function is a shorthand way to create a leaf in the sidebar if one does not already exist.
-- Added `WorkspaceLeaf#isDeferred` and `WorkspaceLeaf#loadIfDeferred`. As of Obsidian v1.7.2, Obsidian will now defer tabs by default. We are publishing a guide on how to handle deferred views in the developer docs.
+- Added `WorkspaceLeaf#isDeferred` and `WorkspaceLeaf#loadIfDeferred`. As of Obsidian v1.7.2, Obsidian will now defer tabs by default. We published [a guide on how to handle deferred views](<https://publish.obsidian.md/dev-docs-test/Plugins/Guides/Understanding+deferred+views>) in the developer docs.
 
 ### Housekeeping
 
