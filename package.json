@@ -2,11 +2,13 @@
     "name": "obsidian",
     "version": "1.7.2",
     "description": "Type definitions for the latest Obsidian API (https://obsidian.md)",
-    "keywords": ["obsdmd"],
+    "keywords": [
+        "obsdmd"
+    ],
     "homepage": "https://obsidian.md",
     "repository": {
         "type": "git",
-        "url": "https://github.com/obsidianmd/obsidian-api.git"
+        "url": "git+https://github.com/obsidianmd/obsidian-api.git"
     },
     "license": "MIT",
     "main": "",
