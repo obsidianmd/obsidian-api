@@ -12,8 +12,22 @@ This CHANGELOG details any breaking changes to the API or new additions that req
 
 ### Housekeeping
 
-- Removed `prepareQuery`, `fuzzySearch`, and `PreparedQuery` from the API. If your plugin is using one of these functions, you should migrate to `prepareFuzzySearch`.
-- We've updated the API to prefer `unknown` to `any`. Using `any` causes Typescript to disable typechecking entirely on the returned value, so this change could uncover some hidden typing issues.
+We've updated the API to prefer `unknown` to `any`. Using `any` causes Typescript to disable typechecking entirely on the returned value, so this change could uncover some hidden typing issues.
+
+We also removed `prepareQuery`, `fuzzySearch`, and `PreparedQuery` from the API. If your plugin is using one of these functions, you should migrate to `prepareFuzzySearch`.
+
+```ts
+// Old
+let pq: PreparedQuery = prepareQuery(q);
+...
+fuzzySearch(pq, text);
+
+
+// New
+let fuzzy = prepareFuzzySearch(q);
+...
+fuzzy(text);
+```
 
 ### Misc
 
