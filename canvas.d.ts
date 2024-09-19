@@ -1,8 +1,8 @@
 
 /**
  * A color used to encode color data for nodes and edges
- * can be a number (like "1") representing one of the (currently 6) supported colors.
- * or can be a custom color using the hex format "#FFFFFFF".
+ * can be a number (like '1') representing one of the (currently 6) supported colors.
+ * or can be a custom color using the hex format '#FFFFFFF'.
  */
 export type CanvasColor = string;
 
@@ -79,12 +79,12 @@ export interface CanvasEdgeData {
     id: string;
     /** The node ID and side where this edge starts */
     fromNode: string;
-    fromSide: NodeSide;
+    fromSide?: NodeSide;
     /** The starting edge end; defaults to 'none' */
     fromEnd?: EdgeEnd;
     /** The node ID and side where this edge ends */
     toNode: string;
-    toSide: NodeSide;
+    toSide?: NodeSide;
     /** The ending edge end; defaults to 'arrow' */
     toEnd?: EdgeEnd;
     /** The color of this edge */
