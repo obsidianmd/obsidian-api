@@ -404,6 +404,20 @@ export class App {
      */
     lastEvent: UserEvent | null;
 
+    /**
+     * Retrieve value from `localStorage` for this vault.
+     * @param key
+     * @public
+     */
+    loadLocalStorage(key: string): any | null;
+    /**
+     * Save vault-specific value to `localStorage`. If data is `null`, the entry will be cleared.
+     * @param key
+     * @param data value being saved to localStorage. Must be serializable.
+     * @public
+     */
+    saveLocalStorage(key: string, data: unknown | null): void;
+
 }
 
 /** @public */
@@ -534,6 +548,14 @@ export interface CachedMetadata {
      * @public
      */
     footnotes?: FootnoteCache[];
+    /**
+     * @public
+     */
+    footnoteRefs?: FootnoteRefCache[];
+    /**
+     * @public
+     */
+    referenceLinks?: ReferenceLinkCache[];
     /**
      * Sections are root level markdown blocks, which can be used to divide the document up.
      * @public
@@ -940,7 +962,8 @@ export interface DataAdapter {
     getName(): string;
 
     /**
-     * Check if something exists at the given path.
+     * Check if something exists at the given path. For a faster way to synchronously check
+     * if a note or attachment is in the vault, use {@link Vault.getAbstractFileByPath}.
      * @param normalizedPath - path to file/folder, use {@link normalizePath} to normalize beforehand.
      * @param sensitive - Some file systems/operating systems are case-insensitive, set to true to force a case-sensitivity check.
      * @public
@@ -1104,11 +1127,25 @@ export function debounce<T extends unknown[], V>(cb: (...args: [...T]) => V, tim
 export interface Debouncer<T extends unknown[], V> {
     /** @public */
     (...args: [...T]): this;
-    /** @public */
+    /**
+     * Cancel any pending debounced function call.
+     * @public
+     */
     cancel(): this;
-    /** @public */
+    /**
+     * If there is any pending function call, clear the timer and call the function immediately.
+     * @public
+     */
     run(): V | void;
 }
+
+/**
+ * Manually trigger a tooltip that will appear over the provided element.
+ *
+ * To display a tooltip on hover, use {@link setTooltip} instead.
+ * @public
+ */
+export function displayTooltip(newTargetEl: HTMLElement, content: string | DocumentFragment, options?: TooltipOptions): void;
 
 /**
  * @public
@@ -1518,6 +1555,7 @@ export class FileManager {
      * @public
      */
     trashFile(file: TAbstractFile): Promise<void>;
+
     /**
      * Generate a Markdown link based on the user's preferences.
      * @param file - the file to link to.
@@ -1658,6 +1696,7 @@ export class FileSystemAdapter implements DataAdapter {
      * @public
      */
     rename(normalizedPath: string, normalizedNewPath: string): Promise<void>;
+
     /**
      * @public
      */
@@ -1770,6 +1809,16 @@ export interface FootnoteCache extends CacheItem {
 /**
  * @public
  */
+export interface FootnoteRefCache extends CacheItem {
+    /**
+     * @public
+     */
+    id: string;
+}
+
+/**
+ * @public
+ */
 export interface FootnoteSubpathResult extends SubpathResult {
     /**
      * @public
@@ -1829,6 +1878,7 @@ export interface FuzzyMatch<T> {
  * @public
  */
 export abstract class FuzzySuggestModal<T> extends SuggestModal<FuzzyMatch<T>> {
+
     /**
      * @public
      */
@@ -1884,6 +1934,13 @@ export function getIcon(iconId: string): SVGSVGElement | null;
  * @public
  */
 export function getIconIds(): IconName[];
+
+/**
+ * Get the ISO code for the currently configured app language. Defaults to 'en'.
+ * See {@link https://github.com/obsidianmd/obsidian-translations?tab=readme-ov-file#existing-languages} for list of options.
+ * @public
+ */
+export function getLanguage(): string;
 
 /**
  * Converts the linktext to a linkpath.
@@ -1989,7 +2046,7 @@ export class HoverPopover extends Component {
     /**
      * @public
      */
-    constructor(parent: HoverParent, targetEl: HTMLElement | null, waitTime?: number);
+    constructor(parent: HoverParent, targetEl: HTMLElement | null, waitTime?: number, staticPos?: Point | null);
 
 }
 
@@ -2015,7 +2072,7 @@ export interface HSL {
 }
 
 /**
- * Converts HTML to Markdown using Turndown Service.
+ * Converts HTML to a Markdown string.
  * @public
  */
 export function htmlToMarkdown(html: string | HTMLElement | Document | DocumentFragment): string;
@@ -2202,7 +2259,13 @@ export interface ListItemCache extends CacheItem {
 /**
  * @public
  */
-export interface LivePreviewState {
+export const livePreviewState: ViewPlugin<LivePreviewStateType>;
+
+/**
+ * The object stored in the view plugin {@link livePreviewState}
+ * @public
+ */
+export interface LivePreviewStateType {
     /**
      * True if the left mouse is currently held down in the editor
      * (for example, when drag-to-select text).
@@ -2210,11 +2273,6 @@ export interface LivePreviewState {
      */
     mousedown: boolean;
 }
-
-/**
- * @public
- */
-export const livePreviewState: ViewPlugin<LivePreviewState>;
 
 /**
  * Load MathJax.
@@ -2253,7 +2311,7 @@ export function loadPrism(): Promise<any>;
  */
 export interface Loc {
     /**
-     * Line number.
+     * Line number. 0-based.
      * @public
      */
     line: number;
@@ -2840,11 +2898,13 @@ export class Modal implements CloseableComponent {
      */
     constructor(app: App);
     /**
+     * Show the modal on the the active window. On mobile, the modal will animate on screen.
      * @public
      */
     open(): void;
 
     /**
+     * Hide the modal.
      * @public
      */
     close(): void;
@@ -2924,8 +2984,13 @@ export function normalizePath(path: string): string;
 export class Notice {
     /**
      * @public
+     * @deprecated Use `messageEl` instead
      */
     noticeEl: HTMLElement;
+    /** @public */
+    containerEl: HTMLElement;
+    /** @public */
+    messageEl: HTMLElement;
     /**
      * @param message - The message to be displayed, can either be a simple string or a {@link DocumentFragment}
      * @param duration - Time in milliseconds to show the notice for. If this is 0, the
@@ -2938,6 +3003,7 @@ export class Notice {
      * @public
      */
     setMessage(message: string | DocumentFragment): this;
+
     /**
      * @public
      */
@@ -3434,6 +3500,20 @@ export interface Reference {
  * @public
  */
 export interface ReferenceCache extends Reference, CacheItem {
+}
+
+/**
+ * @public
+ */
+export interface ReferenceLinkCache extends CacheItem {
+    /**
+     * @public
+     */
+    id: string;
+    /**
+     * @public
+     */
+    link: string;
 }
 
 /**
@@ -4198,6 +4278,10 @@ export class ToggleComponent extends ValueComponent<boolean> {
 export interface TooltipOptions {
     /** @public */
     placement?: TooltipPlacement;
+    /** @public */
+    classes?: string[];
+    /** @public */
+    gap?: number;
 
     /** @public */
     delay?: number;
@@ -4393,12 +4477,12 @@ export class Vault extends Events {
      */
     process(file: TFile, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
     /**
-     * Create a copy of the selected file.
-     * @param file - The file
+     * Create a copy of a file or folder.
+     * @param file - The file or folder.
      * @param newPath - Vault absolute path for the new copy.
      * @public
      */
-    copy(file: TFile, newPath: string): Promise<TFile>;
+    copy<T extends TAbstractFile>(file: T, newPath: string): Promise<T>;
     /**
      * Get all files and folders in the vault.
      * @public
@@ -4473,7 +4557,6 @@ export abstract class View extends Component {
      * @public
      */
     navigation: boolean;
-
     /**
      * @public
      */
@@ -5028,8 +5111,7 @@ export class WorkspaceLeaf extends WorkspaceItem {
     view: View;
 
     /**
-     * By default, `openFile` will also make the leaf active.
-     * Pass in `{ active: false }` to override.
+     * Open a file in this leaf.
      *
      * @public
      */
