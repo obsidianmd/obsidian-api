@@ -5,7 +5,6 @@
 
 import { Extension, StateField } from '@codemirror/state';
 import { EditorView, ViewPlugin } from '@codemirror/view';
-import * as CodeMirror from 'codemirror';
 import * as Moment from 'moment';
 
 declare global {
@@ -2545,7 +2544,7 @@ export abstract class MarkdownRenderer extends MarkdownRenderChild implements Ma
     app: App;
 
     /** @public */
-    hoverPopover: HoverPopover;
+    hoverPopover: HoverPopover | null;
 
     /** @public */
     abstract get file(): TFile;
@@ -5089,7 +5088,7 @@ export abstract class WorkspaceItem extends Events {
 /**
  * @public
  */
-export class WorkspaceLeaf extends WorkspaceItem {
+export class WorkspaceLeaf extends WorkspaceItem implements HoverParent {
 
     /**
      * The direct parent of the leaf.
@@ -5109,6 +5108,9 @@ export class WorkspaceLeaf extends WorkspaceItem {
      * @public
      */
     view: View;
+
+    /** @public */
+    hoverPopover: HoverPopover | null;
 
     /**
      * Open a file in this leaf.
