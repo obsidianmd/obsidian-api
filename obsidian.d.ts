@@ -43,7 +43,21 @@ declare global {
             [key: string]: T;
         }, callback: (value: T, key?: string) => boolean | void, context?: any): boolean;
     }
+    /**
+     * Augments the built-in `Array` constructor.
+     */
     interface ArrayConstructor {
+        /**
+         * Combines an array of arrays into a single array.
+         *
+         * @param arrays - The array of arrays to combine.
+         * @returns A single array containing all elements from the input arrays.
+         * 
+         * @example
+         * ```ts
+         * console.log(Array.combine([[1, 2], [3, 4], [5, 6]])); // [1, 2, 3, 4, 5, 6]
+         * ```
+         */
         combine<T>(arrays: T[][]): T[];
     }
     interface Array<T> {
