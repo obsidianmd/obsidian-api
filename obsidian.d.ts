@@ -17,7 +17,7 @@ declare global {
          *
          * @param object - The object to check.
          * @returns `true` if the object is empty, `false` otherwise.
-         * 
+         *
          * @example
          * ```ts
          * console.log(Object.isEmpty({})); // true
@@ -52,7 +52,7 @@ declare global {
          *
          * @param arrays - The array of arrays to combine.
          * @returns A single array containing all elements from the input arrays.
-         * 
+         *
          * @example
          * ```ts
          * console.log(Array.combine([[1, 2], [3, 4], [5, 6]])); // [1, 2, 3, 4, 5, 6]
