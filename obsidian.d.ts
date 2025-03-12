@@ -8,8 +8,37 @@ import { EditorView, ViewPlugin } from '@codemirror/view';
 import * as Moment from 'moment';
 
 declare global {
+    /**
+     * Augments the built-in `Object` constructor.
+     */
     interface ObjectConstructor {
+        /**
+         * Checks if an object is empty.
+         *
+         * @param object - The object to check.
+         * @returns `true` if the object is empty, `false` otherwise.
+         * 
+         * @example
+         * ```ts
+         * console.log(Object.isEmpty({})); // true
+         * console.log(Object.isEmpty({ a: 1 })); // false
+         * ```
+         */
         isEmpty(object: Record<string, any>): boolean;
+        /**
+         * Check if all properties in an object satisfy a condition
+         *
+         * @param object - The object to check
+         * @param callback - The condition to check
+         * @param context - The context passed as `this` to the `callback`
+         * @returns `true` if all properties satisfy the condition, `false` otherwise
+         *
+         * @example
+         * ```ts
+         * console.log(Object.each({ a: 1, b: 2 }, function(value) { return value > this.min }, { min: 0 })); // true
+         * console.log(Object.each({ a: 1, b: 2 }, function(value) { return value > this.min }, { min: 1 }); // false
+         * ```
+         */
         each<T>(object: {
             [key: string]: T;
         }, callback: (value: T, key?: string) => boolean | void, context?: any): boolean;
