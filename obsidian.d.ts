@@ -1990,18 +1990,31 @@ export interface BlockCache extends CacheItem {
 }
 
 /**
+ * Subpath result for a block from `resolveSubpath()`
+ *
+ * @example
+ * ```ts
+ * const result = resolveSubpath(myNoteCache, '#^my-block-id');
+ * ```
+ *
  * @public
  */
 export interface BlockSubpathResult extends SubpathResult {
     /**
+     * The type of the subpath result.
+     *
      * @public
      */
     type: 'block';
     /**
+     * The block cache.
+     *
      * @public
      */
     block: BlockCache;
     /**
+     * The list item cache.
+     *
      * @public
      */
     list?: ListItemCache;
