@@ -2766,6 +2766,15 @@ export class ColorComponent extends ValueComponent<string> {
 
     /**
      * Set the current value of the color picker.
+     *
+     * @param value - The value to set the color picker to. 
+     * @returns The color picker.
+     *
+     * @example
+     * ```ts
+     * colorPicker.setValue('#000000');
+     * ```
+     *
      * @public
      */
     setValue(value: HexString): this;
