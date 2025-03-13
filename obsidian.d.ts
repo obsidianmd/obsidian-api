@@ -2776,6 +2776,7 @@ export class ColorComponent extends ValueComponent<string> {
     setValue(value: HexString): this;
     /**
      * Set the current value of the color picker as an RGB object.
+     *
      * @param rgb - The RGB object to set the color picker to.
      * @returns The color picker.
      *
@@ -2789,6 +2790,7 @@ export class ColorComponent extends ValueComponent<string> {
     setValueRgb(rgb: RGB): this;
     /**
      * Set the current value of the color picker as an HSL object.
+     *
      * @param hsl - The HSL object to set the color picker to.
      * @returns The color picker.
      *
@@ -2803,6 +2805,7 @@ export class ColorComponent extends ValueComponent<string> {
 
     /**
      * Set the callback to be called when the color picker value changes.
+     *
      * @param callback - The callback to be called when the color picker value changes.
      * @returns The color picker.
      *
@@ -3291,6 +3294,7 @@ export interface DataAdapter {
     /**
      * Write to a plaintext file.
      * If the file exists its content will be overwritten, otherwise the file will be created.
+     *
      * @param normalizedPath - path to file, use {@link normalizePath} to normalize beforehand.
      * @param data - new file content
      * @param options - write options.
@@ -3323,6 +3327,7 @@ export interface DataAdapter {
     writeBinary(normalizedPath: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
     /**
      * Add text to the end of a plaintext file.
+     *
      * @param normalizedPath - path to file, use {@link normalizePath} to normalize beforehand.
      * @param data - the text to append.
      * @param options - write options.
@@ -3601,6 +3606,7 @@ export class DropdownComponent extends ValueComponent<string> {
 
     /**
      * Create a dropdown component
+     *
      * @param containerEl - The container element
      *
      * @example
@@ -3613,6 +3619,7 @@ export class DropdownComponent extends ValueComponent<string> {
     constructor(containerEl: HTMLElement);
     /**
      * Set the disabled state of the dropdown
+     *
      * @param disabled - Whether the dropdown is disabled
      * @returns The dropdown component
      *
