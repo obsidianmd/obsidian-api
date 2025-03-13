@@ -1058,11 +1058,9 @@ declare global {
          * Create an element and append it to this node.
          *
          * @typeParam K - The type of the element to create.
-         *
          * @param tag - The tag name of the element to create.
          * @param o - The options object.
          * @param callback - A callback function to be called when the element is created.
-         *
          * @returns The created element.
          *
          * @example
@@ -1080,7 +1078,6 @@ declare global {
          *
          * @param o - The options object.
          * @param callback - A callback function to be called when the element is created.
-         *
          * @returns The created element.
          *
          * @example
@@ -1098,7 +1095,6 @@ declare global {
          *
          * @param o - The options object.
          * @param callback - A callback function to be called when the element is created.
-         *
          * @returns The created element.
          *
          * @example
@@ -1115,11 +1111,9 @@ declare global {
          * Creates a new svg element such as `<svg>`, `<circle>`, `<rect>`, etc.
          *
          * @typeParam K - The type of the element to create.
-         *
          * @param tag - The tag name of the element to create.
          * @param o - The options object.
          * @param callback - A callback function to be called when the element is created.
-         *
          * @returns The created element.
          *
          * @example
