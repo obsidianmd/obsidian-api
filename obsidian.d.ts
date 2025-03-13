@@ -2694,45 +2694,120 @@ export interface CloseableComponent {
 
 /**
  * Color picker component. Values are by default 6-digit hash-prefixed hex strings like `#000000`.
+ *
  * @public
  */
 export class ColorComponent extends ValueComponent<string> {
 
     /**
+     * Create a new color picker component.
+     *
+     * @param containerEl - The container element.
+     *
+     * @example
+     * ```ts
+     * const colorPicker = new ColorComponent(containerEl);
+     * ```
+     *
      * @public
      */
     constructor(containerEl: HTMLElement);
     /**
+     * Disable the color picker.
+     *
+     * @param disabled - Whether to disable the color picker.
+     *
+     * @example
+     * ```ts
+     * colorPicker.setDisabled(true);
+     * ```
+     *
      * @public
      */
     setDisabled(disabled: boolean): this;
     /**
+     * Get the current value of the color picker.
+     *
+     * @returns The current value of the color picker.
+     *
+     * @example
+     * ```ts
+     * console.log(colorPicker.getValue());
+     * ```
+     *
      * @public
      */
     getValue(): HexString;
     /**
+     * Get the current value of the color picker as an RGB object.
+     *
+     * @returns The current value of the color picker as an RGB object.
+     *
+     * @example
+     * ```ts
+     * console.log(colorPicker.getValueRgb());
+     *
      * @public
      */
     getValueRgb(): RGB;
     /**
+     * Get the current value of the color picker as an HSL object.
+     *
+     * @returns The current value of the color picker as an HSL object.
+     *
+     * @example
+     * ```ts
+     * console.log(colorPicker.getValueHsl());
+     * ```
+     *
      * @public
      */
     getValueHsl(): HSL;
 
     /**
+     * Set the current value of the color picker.
      * @public
      */
     setValue(value: HexString): this;
     /**
+     * Set the current value of the color picker as an RGB object.
+     * @param rgb - The RGB object to set the color picker to.
+     * @returns The color picker.
+     *
+     * @example
+     * ```ts
+     * colorPicker.setValueRgb({ r: 0, g: 0, b: 0 });
+     * ```
+     *
      * @public
      */
     setValueRgb(rgb: RGB): this;
     /**
+     * Set the current value of the color picker as an HSL object.
+     * @param hsl - The HSL object to set the color picker to.
+     * @returns The color picker.
+     *
+     * @example
+     * ```ts
+     * colorPicker.setValueHsl({ h: 0, s: 0, l: 0 });
+     * ```
+     *
      * @public
      */
     setValueHsl(hsl: HSL): this;
 
     /**
+     * Set the callback to be called when the color picker value changes.
+     * @param callback - The callback to be called when the color picker value changes.
+     * @returns The color picker.
+     *
+     * @example
+     * ```ts
+     * colorPicker.onChange((value) => {
+     *     console.log(value);
+     * });
+     * ```
+     *
      * @public
      */
     onChange(callback: (value: string) => any): this;
