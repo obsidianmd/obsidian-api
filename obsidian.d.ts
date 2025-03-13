@@ -953,8 +953,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const parent = createEl('div');
-         * createEl('span', { parent });
+         * createEl('span', { parent: document.body });
          * ```
          */
         parent?: Node;
