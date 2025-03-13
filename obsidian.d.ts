@@ -1588,27 +1588,85 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
     limit: number;
     /**
      * Accepts an `<input>` text box or a contenteditable div.
+     *
+     * @param app - The app instance.
+     * @param textInputEl - The text input element.
+     *
+     * @example
+     * ```ts
+     * class MyInputSuggest extends AbstractInputSuggest<string> {}
+     * const inputSuggest = new MyInputSuggest(app, document.querySelector('input'));
+     * ```
+     *
      * @public
      */
     constructor(app: App, textInputEl: HTMLInputElement | HTMLDivElement);
 
     /**
      * Sets the value into the input element.
+     *
+     * @param value - The value to set.
+     *
+     * @example
+     * ```ts
+     * inputSuggest.setValue('Hello, world!');
+     * ```
+     *
      * @public
      */
     setValue(value: string): void;
     /**
      * Gets the value from the input element.
+     *
+     * @returns The value from the input element.
+     *
+     * @example
+     * ```ts
+     * const value = inputSuggest.getValue();
+     * ```
+     *
      * @public
      */
     getValue(): string;
 
-    /** @public */
+    /**
+     * Gets the suggestions for the input element.
+     *
+     * @param query - The query to get suggestions for.
+     * @returns The suggestions for the input element.
+     *
+     * @example
+     * ```ts
+     * class MyInputSuggest extends AbstractInputSuggest<string> {
+     *     protected override getSuggestions(query: string): string[] {
+     *         return ['Hello', 'World'];
+     *     }
+     * }
+     * ```
+     *
+     * @example
+     * ```ts
+     * class MyInputSuggest extends AbstractInputSuggest<string> {
+     *     protected override async getSuggestions(query: string): Promise<string[]> {
+     *         return await Promise.resolve(['Hello', 'World']);
+     *     }
+     * }
+     *
+     * @public
+     */
     protected abstract getSuggestions(query: string): T[] | Promise<T[]>;
-    /** @public */
-    selectSuggestion(value: T, evt: MouseEvent | KeyboardEvent): void;
     /**
      * Registers a callback to handle when a suggestion is selected by the user.
+     *
+     * @param callback - The callback to handle when a suggestion is selected by the user.
+     * @returns The input suggest instance.
+     *
+     * @example
+     * ```ts
+     * inputSuggest.onSelect((value, evt) => {
+     *     console.log(value, evt);
+     * });
+     * ```
      * @public
      */
     onSelect(callback: (value: T, evt: MouseEvent | KeyboardEvent) => any): this;
