@@ -4304,23 +4304,53 @@ export interface EditorSelectionOrCaret {
     head?: EditorPosition;
 }
 
-/** @public */
+/**
+ * Represents a autocomplete suggestion in the editor
+ *
+ * @typeParam T - The type of the suggestion items
+ *
+ * @public
+ **/
 export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
 
     /**
      * Current suggestion context, containing the result of `onTrigger`.
-     * This will be null any time the EditorSuggest is not supposed to run.
+     * This will be null any time the `EditorSuggest` is not supposed to run.
+     *
      * @public
      */
     context: EditorSuggestContext | null;
     /**
      * Override this to use a different limit for suggestion items
+     *
      * @public
      */
     limit: number;
-    /** @public */
+    /**
+     * Create a new EditorSuggest
+     *
+     * @param app - The app instance
+     *
+     * @example
+     * ```ts
+     * class MyEditorSuggest extends EditorSuggest<string> {}
+     *
+     * new MyEditorSuggest(app);
+     * ```
+     *
+     * @public
+     **/
     constructor(app: App);
     /**
+     * Set the instructions for the suggestion
+     *
+     * @param instructions - The instructions for the suggestion
+     *
+     * @example
+     * ```ts
+     * suggest.setInstructions([{ command: '↑↓', purpose: 'Navigate' }]);
+     * ```
+     *
      * @public
      */
     setInstructions(instructions: Instruction[]): void;
@@ -4332,62 +4362,139 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
      *
      * Please be mindful of performance when implementing this function, as it will be triggered very often (on each keypress).
      * Keep it simple, and return null as early as possible if you determine that it is not the right time.
+     *
+     * @param cursor - The cursor position
+     * @param editor - The editor instance
+     * @param file - The file instance
+     * @returns The trigger info or null if the suggestion is not supposed to be triggered
+     *
+     * @example
+     * ```ts
+     * class MyEditorSuggest extends EditorSuggest<string> {
+     *     onTrigger(cursor: EditorPosition, editor: Editor, file: TFile | null): EditorSuggestTriggerInfo | null {
+     *         return {
+     *             start: cursor,
+     *             end: cursor,
+     *             query: file?.basename ?? ''
+     *         };
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     abstract onTrigger(cursor: EditorPosition, editor: Editor, file: TFile | null): EditorSuggestTriggerInfo | null;
     /**
      * Generate suggestion items based on this context. Can be async, but preferably sync.
      * When generating async suggestions, you should pass the context along.
+     *
+     * @param context - The context of the suggestion
+     * @returns The suggestion items
+     *
+     * @example
+     * ```ts
+     * class MyEditorSuggest extends EditorSuggest<string> {
+     *     getSuggestions(context: EditorSuggestContext): string[] {
+     *         return ['Item 1', 'Item 2', 'Item 3'];
+     *     }
+     * }
+     * ```
+     *
+     * @example
+     * ```ts
+     * class MyEditorSuggest extends EditorSuggest<string> {
+     *     async getSuggestions(context: EditorSuggestContext): Promise<string[]> {
+     *         return Promise.resolve(['Item 1', 'Item 2', 'Item 3']);
+     *     }
+     * }
+     * ```
      * @public
      */
     abstract getSuggestions(context: EditorSuggestContext): T[] | Promise<T[]>;
 
 }
 
-/** @public */
+/**
+ * The context of the suggestion
+ *
+ * @public
+ */
 export interface EditorSuggestContext extends EditorSuggestTriggerInfo {
-    /** @public */
+    /**
+     * The editor instance
+     *
+     * @public
+     */
     editor: Editor;
-    /** @public */
+    /**
+     * The file instance
+     *
+     * @public
+     */
     file: TFile;
 }
 
-/** @public */
+/**
+ * The trigger info for the suggestion
+ *
+ * @public
+ */
 export interface EditorSuggestTriggerInfo {
     /**
      * The start position of the triggering text. This is used to position the popover.
+     *
      * @public
      */
     start: EditorPosition;
     /**
      * The end position of the triggering text. This is used to position the popover.
+     *
      * @public
      */
     end: EditorPosition;
     /**
      * They query string (usually the text between start and end) that will be used to generate the suggestion content.
+     *
      * @public
      */
     query: string;
 }
 
-/** @public */
+/**
+ * Transaction for the editor
+ *
+ * @public
+ */
 export interface EditorTransaction {
-    /** @public */
+    /**
+     * The replacement text
+     *
+     * @public
+     */
     replaceSelection?: string;
-    /** @public */
+    /**
+     * The changes to the editor
+     *
+     * @public
+     */
     changes?: EditorChange[];
     /**
-     * Multiple selections, overrides `selection`.
+     * List of selections for multiple cursors
+     *
      * @public
      */
     selections?: EditorRangeOrCaret[];
-    /** @public */
+    /**
+     * The main selection
+     *
+     * @public
+     */
     selection?: EditorRangeOrCaret;
 }
 
 /**
- * This is now deprecated - it is now mapped directly to `editorInfoField`, which return a MarkdownFileInfo, which may be a MarkdownView but not necessarily.
+ * This is now deprecated - it is now mapped directly to {@link editorInfoField}, which return a {@link MarkdownFileInfo}, which may be a {@link MarkdownView} but not necessarily.
+ *
  * @public
  * @deprecated use {@link editorInfoField} instead.
  */
