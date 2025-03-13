@@ -2365,11 +2365,14 @@ export interface CachedMetadata {
 }
 
 /**
+ * A cache item with a position within a note.
+ *
  * @public
  */
 export interface CacheItem {
     /**
      * Position of this item in the note.
+     *
      * @public
      */
     position: Pos;
@@ -2378,6 +2381,7 @@ export interface CacheItem {
 
 /**
  * Implementation of the vault adapter for mobile devices.
+ *
  * @public
  */
 export class CapacitorAdapter implements DataAdapter {
