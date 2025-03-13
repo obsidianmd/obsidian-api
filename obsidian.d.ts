@@ -1583,6 +1583,7 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
 
     /**
      * Limit to the number of elements rendered at once. Set to 0 to disable. Defaults to 100.
+     *
      * @public
      */
     limit: number;
@@ -1667,6 +1668,7 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
      *     console.log(value, evt);
      * });
      * ```
+     *
      * @public
      */
     onSelect(callback: (value: T, evt: MouseEvent | KeyboardEvent) => any): this;
@@ -1724,6 +1726,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      * ```ts
      * const value = textComponent.getValue();
      * ```
+     *
      * @public
      */
     getValue(): string;
@@ -1805,6 +1808,7 @@ export function addIcon(iconId: string, svgContent: string): void;
 /**
  * This is the API version of the app, which follows the release cycle of the desktop app.
  * Example: '0.13.21'
+ *
  * @public
  */
 export let apiVersion: string;
@@ -1881,6 +1885,7 @@ export class App {
      * ```ts
      * app.saveLocalStorage('my-key', 'my-value');
      * ```
+     *
      * @public
      */
     saveLocalStorage(key: string, data: unknown | null): void;
@@ -2310,6 +2315,7 @@ export interface CachedMetadata {
      * 2. Ordered List Item 2
      * 3. Ordered List Item 3
      * ```
+     *
      * @public
      */
     listItems?: ListItemCache[];
@@ -2322,6 +2328,7 @@ export interface CachedMetadata {
      * key2: 42
      * ---
      * ```
+     *
      * @public
      */
     frontmatter?: FrontMatterCache;
@@ -2335,6 +2342,7 @@ export interface CachedMetadata {
      * ---
      *
      * ```
+     *
      * @public
      */
     frontmatterPosition?: Pos;
@@ -2358,6 +2366,7 @@ export interface CachedMetadata {
      * ```markdown
      * Hello ^world
      * ```
+     *
      * @public
      */
     blocks?: Record<string, BlockCache>;
@@ -2767,7 +2776,7 @@ export class ColorComponent extends ValueComponent<string> {
     /**
      * Set the current value of the color picker.
      *
-     * @param value - The value to set the color picker to. 
+     * @param value - The value to set the color picker to.
      * @returns The color picker.
      *
      * @example
@@ -2978,6 +2987,7 @@ export interface Command {
      *   }],
      * });
      * ```
+     *
      * @public
      */
     hotkeys?: Hotkey[];
@@ -3173,14 +3183,15 @@ export class Component {
      *   console.log('Interval');
      * }, 1000));
      * ```
+     *
      * @public
      */
     registerInterval(id: number): number;
 }
 
-/** 
+/**
  * Abstract constructor type.
- * 
+ *
  * @typeParam T - The type of the class to create.
  * @param args - The arguments to pass to the constructor.
  * @returns A new instance of the class.
