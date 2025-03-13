@@ -150,7 +150,7 @@ declare global {
         /**
          * Returns the index of the last element that satisfies the provided predicate.
          *
-         * @param predicate - The predicate to test each element.   
+         * @param predicate - The predicate to test each element.
          * @returns The index of the last element that satisfies the predicate, or `-1` if no such element is found.
          *
          * @example
