@@ -2984,6 +2984,8 @@ export interface Command {
      * this.addCommand({
      *   id: 'example-command',
      *   name: 'Example command',
+     *   // WARNING: as per comment above, it's not recommended to set default hotkeys
+     *   // this example is just for syntax demonstration purposes, not the recommended way to do it
      *   hotkeys: [{
      *     modifiers: ['Mod', 'Shift'],
      *     key: 'l',
