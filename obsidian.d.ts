@@ -1479,8 +1479,40 @@ declare global {
      * ```
      */
     function ajaxPromise(options: AjaxOptions): Promise<any>;
+    /**
+     * Executes a function when the DOM is ready.
+     *
+     * @param fn - The function to execute when the DOM is ready.
+     *
+     * @example
+     * ```ts
+     * ready(() => {
+     *     console.log('DOM is ready');
+     * });
+     */
     function ready(fn: () => any): void;
+    /**
+     * Sleeps for a given number of milliseconds.
+     *
+     * @param ms - The number of milliseconds to sleep.
+     * @returns A promise that resolves after the given number of milliseconds.
+     *
+     * @example
+     * ```ts
+     * await sleep(1000);
+     * ```
+     */
     function sleep(ms: number): Promise<void>;
+    /**
+     * Waits for the next frame.
+     *
+     * @returns A promise that resolves after the next frame.
+     *
+     * @example
+     * ```ts
+     * await nextFrame();
+     * ```
+     */
     function nextFrame(): Promise<void>;
     /**
      * The actively focused Window object. This is usually the same as `window` but
@@ -1492,6 +1524,9 @@ declare global {
      * it will be different when using popout windows.
      */
     let activeDocument: Document;
+    /**
+     * Augments the built-in `Window` type.
+     */
     interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandlers, WindowEventHandlers, WindowLocalStorage, WindowOrWorkerGlobalScope, WindowSessionStorage {
         /**
          * The actively focused Window object. This is usually the same as `window` but
@@ -1503,10 +1538,37 @@ declare global {
          * it will be different when using popout windows.
          */
         activeDocument: Document;
+        /**
+         * Sleeps for a given number of milliseconds.
+         *
+         * @param ms - The number of milliseconds to sleep.
+         * @returns A promise that resolves after the given number of milliseconds.
+         *
+         * @example
+         * ```ts
+         * await window.sleep(1000);
+         * ```
+         */
         sleep(ms: number): Promise<void>;
+        /**
+         * Waits for the next frame.
+         *
+         * @returns A promise that resolves after the next frame.
+         *
+         * @example
+         * ```ts
+         * await window.nextFrame();
+         * ```
+         */
         nextFrame(): Promise<void>;
     }
+    /**
+     * Augments the built-in `Touch` type.
+     */
     interface Touch {
+        /**
+         * The type of touch.
+         */
         touchType: 'stylus' | 'direct';
     }
 }
