@@ -3169,7 +3169,22 @@ export class Component {
     registerInterval(id: number): number;
 }
 
-/** @public */
+/** 
+ * Abstract constructor type.
+ * 
+ * @typeParam T - The type of the class to create.
+ * @param args - The arguments to pass to the constructor.
+ * @returns A new instance of the class.
+ *
+ * @example
+ * ```ts
+ * abstract class AbstractClass {}
+ * const ctor: Constructor<AbstractClass> = AbstractClass;
+ * class ChildClass extends ctor {}
+ * ```
+ *
+ * @public
+ */
 export type Constructor<T> = abstract new (...args: any[]) => T;
 
 /**
