@@ -1883,7 +1883,7 @@ export class App {
 
 }
 
-/** 
+/**
  * Converts an `ArrayBuffer` to a base64 string.
  *
  * @param buffer - The `ArrayBuffer` to convert.
