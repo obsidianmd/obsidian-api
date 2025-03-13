@@ -1050,13 +1050,86 @@ declare global {
          */
         prepend?: boolean;
     }
+    /**
+     * Augments the built-in `Node` type.
+     */
     interface Node {
         /**
          * Create an element and append it to this node.
+         *
+         * @typeParam K - The type of the element to create.
+         *
+         * @param tag - The tag name of the element to create.
+         * @param o - The options object.
+         * @param callback - A callback function to be called when the element is created.
+         *
+         * @returns The created element.
+         *
+         * @example
+         * ```ts
+         * createEl('div', { text: 'Hello' }, (div) => {
+         *     div.addEventListener('click', () => {
+         *         console.log('clicked');
+         *     });
+         * });
+         * ```
          */
         createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo | string, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
+        /**
+         * Creates a new `<div>` element.
+         *
+         * @param o - The options object.
+         * @param callback - A callback function to be called when the element is created.
+         *
+         * @returns The created element.
+         *
+         * @example
+         * ```ts
+         * createDiv({ text: 'Hello' }, (div) => {
+         *     div.addEventListener('click', () => {
+         *         console.log('clicked');
+         *     });
+         * });
+         * ```
+         */
         createDiv(o?: DomElementInfo | string, callback?: (el: HTMLDivElement) => void): HTMLDivElement;
+        /**
+         * Creates a new `<span>` element.
+         *
+         * @param o - The options object.
+         * @param callback - A callback function to be called when the element is created.
+         *
+         * @returns The created element.
+         *
+         * @example
+         * ```ts
+         * createSpan({ text: 'Hello' }, (span) => {
+         *     span.addEventListener('click', () => {
+         *         console.log('clicked');
+         *     });
+         * });
+         * ```
+         */
         createSpan(o?: DomElementInfo | string, callback?: (el: HTMLSpanElement) => void): HTMLSpanElement;
+        /**
+         * Creates a new svg element such as `<svg>`, `<circle>`, `<rect>`, etc.
+         *
+         * @typeParam K - The type of the element to create.
+         *
+         * @param tag - The tag name of the element to create.
+         * @param o - The options object.
+         * @param callback - A callback function to be called when the element is created.
+         *
+         * @returns The created element.
+         *
+         * @example
+         * ```ts
+         * createSvg('svg', { cls: 'foo bar' }, (svg) => {
+         *     svg.addEventListener('click', () => {
+         *         console.log('clicked');
+         *     });
+         * });
+         */
         createSvg<K extends keyof SVGElementTagNameMap>(tag: K, o?: SvgElementInfo | string, callback?: (el: SVGElementTagNameMap[K]) => void): SVGElementTagNameMap[K];
     }
     function createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo | string, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
