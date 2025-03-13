@@ -2675,10 +2675,20 @@ export class CapacitorAdapter implements DataAdapter {
 
 /**
  * A closeable component that can get dismissed via the Android 'back' button.
+ *
  * @public
  */
 export interface CloseableComponent {
-    /** @public */
+    /**
+     * Close the component.
+     *
+     * @example
+     * ```ts
+     * component.close();
+     * ```
+     *
+     * @public
+     */
     close(): void;
 }
 
