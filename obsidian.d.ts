@@ -1067,7 +1067,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('div', { text: 'Hello' }, (div) => {
+         * document.body.createEl('div', { text: 'Hello' }, (div) => {
          *     div.addEventListener('click', () => {
          *         console.log('clicked');
          *     });
@@ -1085,7 +1085,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createDiv({ text: 'Hello' }, (div) => {
+         * document.body.createDiv({ text: 'Hello' }, (div) => {
          *     div.addEventListener('click', () => {
          *         console.log('clicked');
          *     });
@@ -1103,7 +1103,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createSpan({ text: 'Hello' }, (span) => {
+         * document.body.createSpan({ text: 'Hello' }, (span) => {
          *     span.addEventListener('click', () => {
          *         console.log('clicked');
          *     });
@@ -1124,7 +1124,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createSvg('svg', { cls: 'foo bar' }, (svg) => {
+         * document.body.createSvg('svg', { cls: 'foo bar' }, (svg) => {
          *     svg.addEventListener('click', () => {
          *         console.log('clicked');
          *     });
