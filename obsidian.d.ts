@@ -763,8 +763,46 @@ declare global {
          */
         setCssProps(props: Record<string, string>): void;
     }
+    /**
+     * Checks if the given object is a boolean.
+     *
+     * @param obj - The object to check.
+     * @returns `true` if the object is a boolean, `false` otherwise.
+     *
+     * @example
+     * ```ts
+     * console.log(isBoolean(false)); // true
+     * console.log(isBoolean('not a boolean')); // false
+     * ```
+     */
     function isBoolean(obj: any): obj is boolean;
+    /**
+     * Finds the first element that matches the selector.
+     *
+     * @param selector - The selector to find the element with.
+     * @returns The first element that matches the selector, or `null` if no match is found.
+     *
+     * @example
+     * ```ts
+     * const element = fish('body');
+     * console.log(element); // <body></body>
+     * const notFound = fish('not a selector');
+     * console.log(notFound); // null
+     * ```
+     */
     function fish(selector: string): HTMLElement | null;
+    /**
+     * Finds all elements that match the selector.
+     *
+     * @param selector - The selector to find the elements with.
+     * @returns An array of all elements that match the selector.
+     *
+     * @example
+     * ```ts
+     * const elements = fishAll('div');
+     * console.log(elements); // [<div></div>, <div></div>, <div></div>]
+     * ```
+     */
     function fishAll(selector: string): HTMLElement[];
     interface Element extends Node {
         find(selector: string): Element | null;
