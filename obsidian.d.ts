@@ -807,19 +807,100 @@ declare global {
      * ```
      */
     function fishAll(selector: string): HTMLElement[];
+    /**
+     * Augments the built-in `Element` type.
+     */
     interface Element extends Node {
+        /**
+         * Finds the first descendant element that matches the selector.
+         *
+         * @param selector - The selector to find the element with.
+         * @returns The first descendant element that matches the selector, or `null` if no match is found.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.createEl('span', { cls: 'foo' });
+         * console.log(element.find('.foo')); // <span class="foo"></span>
+         * console.log(element.find('.bar')); // null
+         * ```
+         */
         find(selector: string): Element | null;
-        findAll(selector: string): HTMLElement[];
-        findAllSelf(selector: string): HTMLElement[];
+        /**
+         * Finds all descendant elements that match the selector.
+         *
+         * @param selector - The selector to find the elements with.
+         * @returns An array of all descendant elements that match the selector.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.createEl('span', { cls: 'foo' });
+         * element.createEl('span', { cls: 'foo' });
+         * console.log(element.findAll('.foo')); // [<span class="foo"></span>, <span class="foo"></span>]
+         * console.log(element.findAll('.bar')); // []
+         * ```
+         *
+         * @remarks See bug {@link https://forum.obsidian.md/t/bug-find-findall-findallself/98108}
+         */
+        findAll(selector: string): Element[];
+        /**
+         * Finds all descendant elements or self that match the selector.
+         *
+         * @param selector - The selector to find the elements with.
+         * @returns An array of all descendant elements or self that match the selector.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div', { cls: 'foo' });
+         * element.createEl('span', { cls: 'foo' });
+         * console.log(element.findAllSelf('.foo')); // [<div class="foo"></div>, <span class="foo"></span>]
+         * console.log(element.findAllSelf('.bar')); // []
+         * ```
+         *
+         * @remarks See bug {@link https://forum.obsidian.md/t/bug-find-findall-findallself/98108}
+         */
+        findAllSelf(selector: string): Element[];
     }
-    interface HTMLElement extends Element {
-        find(selector: string): HTMLElement;
-        findAll(selector: string): HTMLElement[];
-        findAllSelf(selector: string): HTMLElement[];
-    }
+    /**
+     * Augments the built-in `DocumentFragment` type.
+     */
     interface DocumentFragment extends Node, NonElementParentNode, ParentNode {
-        find(selector: string): HTMLElement;
-        findAll(selector: string): HTMLElement[];
+        /**
+         * Finds the first descendant element that matches the selector.
+         *
+         * @param selector - The selector to find the element with.
+         * @returns The first descendant element that matches the selector, or `null` if no match is found.
+         *
+         * @example
+         * ```ts
+         * const fragment = createFragment();
+         * fragment.createEl('span', { cls: 'foo' });
+         * console.log(fragment.find('.foo')); // <span class="foo"></span>
+         * console.log(fragment.find('.bar')); // null
+         * ```
+         *
+         * @remarks See bug {@link https://forum.obsidian.md/t/bug-find-findall-findallself/98108}
+         */
+        find(selector: string): Element | null;
+        /**
+         * Finds all descendant elements that match the selector.
+         *
+         * @param selector - The selector to find the elements with.
+         * @returns An array of all descendant elements that match the selector.
+         *
+         * @example
+         * ```ts
+         * const fragment = createFragment();
+         * fragment.createEl('span', { cls: 'foo' });
+         * fragment.createEl('span', { cls: 'foo' });
+         * console.log(fragment.findAll('.foo')); // [<span class="foo"></span>, <span class="foo"></span>]
+         * console.log(fragment.findAll('.bar')); // []
+         * ```
+         *
+         * @remarks See bug {@link https://forum.obsidian.md/t/bug-find-findall-findallself/98108}
+         */
+        findAll(selector: string): Element[];
     }
     interface DomElementInfo {
         /**
