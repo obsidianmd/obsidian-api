@@ -346,7 +346,7 @@ declare global {
          * const child3 = parent.createEl('span', { text: '3' });
          * const newNode = createEl('p', { text: '4' });
          * parent.insertAfter(newNode, child2);
-         * console.log(parent.innerHTML); // <span>1</span><span>2</span><p>4</p><span>3</span>
+         * console.log(parent); // <div><span>1</span><span>2</span><p>4</p><span>3</span></div>
          * ```
          */
         insertAfter<T extends Node>(node: T, child: Node | null): T;
@@ -369,7 +369,7 @@ declare global {
          * const child2 = parent.createEl('span', { text: '2' });
          * const child3 = createEl('span', { text: '3' });
          * parent.setChildrenInPlace([child1, child3]);
-         * console.log(parent.innerHTML); // <span>1</span><span>3</span>
+         * console.log(parent); // <div><span>1</span><span>3</span></div>
          * ```
          */
         setChildrenInPlace(children: Node[]): void;
@@ -383,7 +383,7 @@ declare global {
          * const parent = createEl('div');
          * parent.createEl('span', { text: 'Hello' });
          * parent.appendText(' World');
-         * console.log(parent.innerHTML); // <span>Hello</span> World
+         * console.log(parent); // <div><span>Hello</span> World</div>
          * ```
          */
         appendText(val: string): void;
@@ -444,13 +444,13 @@ declare global {
          *
          * @example
          * ```ts
-         * import { sanitizeHTMLToDom } from 'obsidian';
-         *
          * const element = createEl('div');
          * element.setText('Hello');
-         * console.log(element.innerHTML); // 'Hello'
-         * element.setText(sanitizeHTMLToDom('<b>Hello</b>'));
-         * console.log(element.innerHTML); // '<b>Hello</b>'
+         * console.log(element); // <div>Hello</div>
+         * const fragment = createFragment();
+         * fragment.createEl('span', { text: 'Hello' });
+         * element.setText(fragment);
+         * console.log(element); // <div><span>Hello</span></div>
          * ```
          */
         setText(val: string | DocumentFragment): void;
@@ -600,11 +600,11 @@ declare global {
          * @example
          * ```ts
          * const element = createEl('div');
-         * console.log(element.matchParent('div') === element); // true
+         * console.log(element.matchParent('div')); // <div></div>
          * console.log(element.matchParent('span')); // null
          * const child = element.createEl('span');
-         * console.log(child.matchParent('span') === child); // true
-         * console.log(child.matchParent('div') === element); // true
+         * console.log(child.matchParent('span')); // <span></span>
+         * console.log(child.matchParent('div')); // <div></div>
          * const grandchild = child.createEl('span');
          * console.log(grandchild.matchParent('div', child)); // null
          * ```
