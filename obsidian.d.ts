@@ -1674,39 +1674,110 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
 }
 
 /**
+ * Component for a text input or text area.
+ *
+ * @typeParam T - The type of the input element.
+ *
  * @public
  */
 export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElement> extends ValueComponent<string> {
     /**
+     * The input element.
+     *
      * @public
      */
     inputEl: T;
 
     /**
+     * Creates a new text component.
+     *
+     * @param inputEl - The input element.
+     *
+     * @example
+     * ```ts
+     * const textComponent = new AbstractTextComponent(document.querySelector('input'));
+     * ```
+     *
      * @public
      */
     constructor(inputEl: T);
     /**
+     * Sets the disabled state of the input element.
+     *
+     * @param disabled - Whether to disable the input element.
+     *
+     * @example
+     * ```ts
+     * textComponent.setDisabled(true);
+     * ```
+     *
      * @public
      */
     setDisabled(disabled: boolean): this;
     /**
+     * Gets the value of the input element.
+     *
+     * @returns The value of the input element.
+     *
+     * @example
+     * ```ts
+     * const value = textComponent.getValue();
+     * ```
      * @public
      */
     getValue(): string;
     /**
+     * Sets the value of the input element.
+     *
+     * @param value - The value to set.
+     *
+     * @example
+     * ```ts
+     * textComponent.setValue('Hello, world!');
+     * ```
+     *
      * @public
      */
     setValue(value: string): this;
     /**
+     * Sets the placeholder of the input element.
+     *
+     * @param placeholder - The placeholder to set.
+     *
+     * @example
+     * ```ts
+     * textComponent.setPlaceholder('Hello, world!');
+     * ```
+     *
      * @public
      */
     setPlaceholder(placeholder: string): this;
     /**
+     * Manually invokes the callback registered with `onChange`.
+     *
+     * @example
+     * ```ts
+     * textComponent.onChange((value) => {
+     *     console.log(value);
+     * });
+     * textComponent.onChanged();
+     * ```
+     *
      * @public
      */
     onChanged(): void;
     /**
+     * Sets the callback to handle when the value of the input element changes.
+     *
+     * @param callback - The callback to handle when the value of the input element changes.
+     *
+     * @example
+     * ```ts
+     * textComponent.onChange((value) => {
+     *     console.log(value);
+     * });
+     * ```
+     *
      * @public
      */
     onChange(callback: (value: string) => any): this;
