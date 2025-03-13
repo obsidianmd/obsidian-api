@@ -2814,35 +2814,48 @@ export class ColorComponent extends ValueComponent<string> {
 }
 
 /**
+ * A command that can be executed from the command palette or toolbar buttons.
+ *
  * @public
  */
 export interface Command {
     /**
      * Globally unique ID to identify this command.
+     *
      * @public
      */
     id: string;
     /**
      * Human friendly name for searching.
+     *
      * @public
      */
     name: string;
     /**
      * Icon ID to be used in the toolbar.
+     *
      * See {@link https://docs.obsidian.md/Plugins/User+interface/Icons} for available icons and how to add your own.
+     *
      * @public
      */
     icon?: IconName;
-    /** @public */
+    /** 
+     * Whether the command is only available on mobile.
+     *
+     * @public
+     */
     mobileOnly?: boolean;
     /**
      * Whether holding the hotkey should repeatedly trigger this command.
+     *
      * @defaultValue false
+     *
      * @public
      */
     repeatable?: boolean;
     /**
      * Simple callback, triggered globally.
+     *
      * @example
      * ```ts
      * this.addCommand({
@@ -2853,6 +2866,7 @@ export interface Command {
      *   },
      * });
      * ```
+     *
      * @public
      */
     callback?: () => any;
@@ -2864,8 +2878,8 @@ export interface Command {
      * the command to be hidden from the command palette.
      *
      * @param checking - Whether the command palette is just 'checking' if your command should show right now.
-     * If checking is true, then this function should not perform any action.
-     * If checking is false, then this function should perform the action.
+     * If checking is `true`, then this function should not perform any action.
+     * If checking is `false`, then this function should perform the action.
      * @returns Whether this command can be executed at the moment.
      *
      * @example
@@ -2895,6 +2909,7 @@ export interface Command {
     /**
      * A command callback that is only triggered when the user is in an editor.
      * Overrides `callback` and `checkCallback`
+     *
      * @example
      * ```ts
      * this.addCommand({
@@ -2907,12 +2922,14 @@ export interface Command {
      *   }
      * });
      * ```
+     *
      * @public
      */
     editorCallback?: (editor: Editor, ctx: MarkdownView | MarkdownFileInfo) => any;
     /**
      * A command callback that is only triggered when the user is in an editor.
      * Overrides `editorCallback`, `callback` and `checkCallback`
+     *
      * @example
      * ```ts
      * this.addCommand({
@@ -2933,12 +2950,25 @@ export interface Command {
      *   }
      * });
      * ```
+     *
      * @public
      */
     editorCheckCallback?: (checking: boolean, editor: Editor, ctx: MarkdownView | MarkdownFileInfo) => boolean | void;
     /**
      * Sets the default hotkey. It is recommended for plugins to avoid setting default hotkeys if possible,
      * to avoid conflicting hotkeys with one that's set by the user, even though customized hotkeys have higher priority.
+     * 
+     * @example
+     * ```ts
+     * this.addCommand({
+     *   id: 'example-command',
+     *   name: 'Example command',
+     *   hotkeys: [{
+     *     modifiers: ['Mod', 'Shift'],
+     *     key: 'l',
+     *   }],
+     * });
+     * ```
      * @public
      */
     hotkeys?: Hotkey[];
