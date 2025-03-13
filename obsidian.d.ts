@@ -1004,21 +1004,50 @@ declare global {
          */
         href?: string;
     }
+    /**
+     * Options object passed to `createSvg()`.
+     */
     interface SvgElementInfo {
         /**
          * The class to be assigned. Can be a space-separated string or an array of strings.
+         *
+         * @example
+         * ```ts
+         * createSvg('svg', { cls: 'foo bar' });
+         * createSvg('svg', { cls: ['foo', 'bar'] });
+         * ```
          */
         cls?: string | string[];
         /**
          * HTML attributes to be added.
+         *
+         * @example
+         * ```ts
+         * createSvg('svg', { attr: { id: 'foo', 'data-bar': 'baz' } });
+         * ```
          */
         attr?: {
             [key: string]: string | number | boolean | null;
         };
         /**
          * The parent element to be assigned to.
+         *
+         * @example
+         * ```ts
+         * createSvg('svg', { parent: document.body });
+         * ```
          */
         parent?: Node;
+        /**
+         * Whether to prepend the element to the parent.
+         * If `true`, the element will be inserted before the first child of the parent.
+         * If `false` or omitted, the element will be inserted after the last child of the parent.
+         *
+         * @example
+         * ```ts
+         * createSvg('svg', { prepend: true });
+         * ```
+         */
         prepend?: boolean;
     }
     interface Node {
