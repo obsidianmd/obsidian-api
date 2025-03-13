@@ -784,10 +784,10 @@ declare global {
      *
      * @example
      * ```ts
-     * const element = fish('body');
-     * console.log(element); // <body></body>
-     * const notFound = fish('.non-existent-class');
-     * console.log(notFound); // null
+     * const element = document.body.createEl('div');
+     * element.createEl('span', { cls: 'foo' });
+     * console.log(fish('.foo')); // <span class="foo"></span>
+     * console.log(fish('.bar')); // null
      * ```
      */
     function fish(selector: string): HTMLElement | null;
@@ -799,8 +799,11 @@ declare global {
      *
      * @example
      * ```ts
-     * const elements = fishAll('div');
-     * console.log(elements); // [<div></div>, <div></div>, <div></div>]
+     * const element = document.body.createEl('div');
+     * element.createEl('span', { cls: 'foo' });
+     * element.createEl('span', { cls: 'foo' });
+     * console.log(fishAll('.foo')); // [<span class="foo"></span>, <span class="foo"></span>]
+     * console.log(fishAll('.bar')); // []
      * ```
      */
     function fishAll(selector: string): HTMLElement[];
