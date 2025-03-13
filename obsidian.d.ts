@@ -207,7 +207,7 @@ declare global {
          *
          * @example
          * ```ts
-         * console.log(String.isString('hello')); // true
+         * console.log(String.isString('foo')); // true
          * console.log(String.isString(123)); // false
          * ```
          */
@@ -225,8 +225,8 @@ declare global {
          *
          * @example
          * ```ts
-         * console.log('hello'.contains('ell')); // true
-         * console.log('hello'.contains('world')); // false
+         * console.log('foo'.contains('oo')); // true
+         * console.log('foo'.contains('bar')); // false
          * ```
          */
         contains(target: string): boolean;
@@ -239,10 +239,10 @@ declare global {
          *
          * @example
          * ```ts
-         * console.log('hello'.startsWith('hel')); // true
-         * console.log('hello'.startsWith('ell')); // false
-         * console.log('hello'.startsWith('hel', 1)); // false
-         * console.log('hello'.startsWith('ell', 1)); // true
+         * console.log('foo'.startsWith('fo')); // true
+         * console.log('foo'.startsWith('oo')); // false
+         * console.log('foo'.startsWith('foo', 1)); // false
+         * console.log('foo'.startsWith('oo', 1)); // true
          * ```
          */
         startsWith(searchString: string, position?: number): boolean;
@@ -255,10 +255,10 @@ declare global {
          *
          * @example
          * ```ts
-         * console.log('hello'.endsWith('llo')); // true
-         * console.log('hello'.endsWith('ell')); // false
-         * console.log('hello'.endsWith('llo', 4)); // false
-         * console.log('hello'.endsWith('ell', 4)); // true
+         * console.log('foo'.endsWith('oo')); // true
+         * console.log('foo'.endsWith('fo')); // false
+         * console.log('foo'.endsWith('foo', 2)); // false
+         * console.log('foo'.endsWith('fo', 2)); // true
          * ```
          *
          * @remarks The original version had different argument names.
@@ -273,7 +273,7 @@ declare global {
          *
          * @example
          * ```ts
-         * console.log('foo {0} bar {1} baz {0}'.format('hello', 'world')); // 'foo hello bar world baz hello'
+         * console.log('foo {0} bar {1} baz {0}'.format('qux', 'quux')); // 'foo qux bar quux baz qux'
          * ```
          */
         format(...args: string[]): string;
@@ -381,9 +381,9 @@ declare global {
          * @example
          * ```ts
          * const parent = createEl('div');
-         * parent.createEl('span', { text: 'Hello' });
-         * parent.appendText(' World');
-         * console.log(parent); // <div><span>Hello</span> World</div>
+         * parent.createEl('span', { text: 'foo' });
+         * parent.appendText('bar');
+         * console.log(parent); // <div><span>foo</span>bar</div>
          * ```
          */
         appendText(val: string): void;
@@ -431,9 +431,9 @@ declare global {
          * @example
          * ```ts
          * const element = createEl('div');
-         * element.createEl('span', { text: 'Hello' });
-         * element.createEl('span', { text: 'World' });
-         * console.log(element.getText()); // 'HelloWorld'
+         * element.createEl('span', { text: 'foo' });
+         * element.createEl('span', { text: 'bar' });
+         * console.log(element.getText()); // 'foobar'
          * ```
          */
         getText(): string;
@@ -445,12 +445,12 @@ declare global {
          * @example
          * ```ts
          * const element = createEl('div');
-         * element.setText('Hello');
-         * console.log(element); // <div>Hello</div>
+         * element.setText('foo');
+         * console.log(element); // <div>foo</div>
          * const fragment = createFragment();
-         * fragment.createEl('span', { text: 'Hello' });
+         * fragment.createEl('span', { text: 'bar' });
          * element.setText(fragment);
-         * console.log(element); // <div><span>Hello</span></div>
+         * console.log(element); // <div><span>bar</span></div>
          * ```
          */
         setText(val: string | DocumentFragment): void;
@@ -921,9 +921,9 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('div', { text: 'Hello' });
+         * createEl('div', { text: 'foo' });
          * const fragment = createFragment();
-         * fragment.createEl('span', { text: 'Hello' });
+         * fragment.createEl('span', { text: 'bar' });
          * createEl('div', { text: fragment });
          * ```
          */
@@ -944,7 +944,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('div', { title: 'Hello' });
+         * createEl('div', { title: 'foo' });
          * ```
          */
         title?: string;
@@ -962,7 +962,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('input', { value: 'Hello' });
+         * createEl('input', { value: 'foo' });
          * ```
          */
         value?: string;
@@ -990,7 +990,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('input', { placeholder: 'Hello' });
+         * createEl('input', { placeholder: 'foo' });
          * ```
          */
         placeholder?: string;
@@ -1065,7 +1065,7 @@ declare global {
          *
          * @example
          * ```ts
-         * document.body.createEl('div', { text: 'Hello' }, (div) => {
+         * document.body.createEl('div', { text: 'foo' }, (div) => {
          *     div.addEventListener('click', () => {
          *         console.log('clicked');
          *     });
@@ -1082,7 +1082,7 @@ declare global {
          *
          * @example
          * ```ts
-         * document.body.createDiv({ text: 'Hello' }, (div) => {
+         * document.body.createDiv({ text: 'foo' }, (div) => {
          *     div.addEventListener('click', () => {
          *         console.log('clicked');
          *     });
@@ -1099,7 +1099,7 @@ declare global {
          *
          * @example
          * ```ts
-         * document.body.createSpan({ text: 'Hello' }, (span) => {
+         * document.body.createSpan({ text: 'foo' }, (span) => {
          *     span.addEventListener('click', () => {
          *         console.log('clicked');
          *     });
@@ -1137,7 +1137,7 @@ declare global {
      *
      * @example
      * ```ts
-     * createEl('div', { text: 'Hello' }, (div) => {
+     * createEl('div', { text: 'foo' }, (div) => {
      *     div.addEventListener('click', () => {
      *         console.log('clicked');
      *     });
@@ -1153,7 +1153,7 @@ declare global {
      *
      * @example
      * ```ts
-     * createDiv({ text: 'Hello' }, (div) => {
+     * createDiv({ text: 'foo' }, (div) => {
      *     div.addEventListener('click', () => {
      *         console.log('clicked');
      *     });
@@ -1170,7 +1170,7 @@ declare global {
      *
      * @example
      * ```ts
-     * createSpan({ text: 'Hello' }, (span) => {
+     * createSpan({ text: 'foo' }, (span) => {
      *     span.addEventListener('click', () => {
      *         console.log('clicked');
      *     });
@@ -1205,7 +1205,7 @@ declare global {
      * @example
      * ```ts
      * createFragment((fragment) => {
-     *     fragment.createEl('div', { text: 'Hello' });
+     *     fragment.createEl('div', { text: 'foo' });
      * });
      * ```
      */
@@ -1610,7 +1610,7 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
      *
      * @example
      * ```ts
-     * inputSuggest.setValue('Hello, world!');
+     * inputSuggest.setValue('foo');
      * ```
      *
      * @public
@@ -1640,7 +1640,7 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
      * ```ts
      * class MyInputSuggest extends AbstractInputSuggest<string> {
      *     protected override getSuggestions(query: string): string[] {
-     *         return ['Hello', 'World'];
+     *         return ['foo', 'bar'];
      *     }
      * }
      * ```
@@ -1649,7 +1649,7 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
      * ```ts
      * class MyInputSuggest extends AbstractInputSuggest<string> {
      *     protected override async getSuggestions(query: string): Promise<string[]> {
-     *         return await Promise.resolve(['Hello', 'World']);
+     *         return await Promise.resolve(['foo', 'bar']);
      *     }
      * }
      *
@@ -1738,7 +1738,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      *
      * @example
      * ```ts
-     * textComponent.setValue('Hello, world!');
+     * textComponent.setValue('foo');
      * ```
      *
      * @public
@@ -1752,7 +1752,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      *
      * @example
      * ```ts
-     * textComponent.setPlaceholder('Hello, world!');
+     * textComponent.setPlaceholder('foo');
      * ```
      *
      * @public
@@ -2256,9 +2256,9 @@ export interface CachedMetadata {
      * The footnotes in the note.
      *
      * ```markdown
-     * Hello [^1]
+     * foo [^1]
      *
-     * [^1]: World
+     * [^1]: bar
      * ```
      *
      * @public
@@ -2268,9 +2268,9 @@ export interface CachedMetadata {
      * The footnote references in the note.
      *
      * ```markdown
-     * Hello [^1]
+     * foo [^1]
      *
-     * [^1]: World
+     * [^1]: bar
      * ```
      *
      * @public
@@ -2364,7 +2364,7 @@ export interface CachedMetadata {
      * The blocks in the note.
      *
      * ```markdown
-     * Hello ^world
+     * foo ^bar
      * ```
      *
      * @public
