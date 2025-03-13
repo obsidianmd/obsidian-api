@@ -301,18 +301,107 @@ declare global {
          */
         isNumber(obj: any): obj is number;
     }
+    /**
+     * Augments the built-in `Node` type.
+     */
     interface Node {
+        /**
+         * Detaches the node from the DOM.
+         *
+         * @example
+         * ```ts
+         * const node = document.body.createEl('div');
+         * console.log(document.body.contains(node)); // true
+         * node.detach();
+         * console.log(document.body.contains(node)); // false
+         * ```
+         */
         detach(): void;
+        /**
+         * Empties the node.
+         *
+         * @example
+         * ```ts
+         * const parent = createEl('div');
+         * parent.createEl('span');
+         * console.log(parent.childNodes.length); // 1
+         * parent.empty();
+         * console.log(parent.childNodes.length); // 0
+         * ```
+         */
         empty(): void;
+        /**
+         * Inserts a child node after the current node.
+         *
+         * @typeParam T - The type of the node to insert.
+         * @param node - The node to insert.
+         * @param child - The child node to insert after.
+         * @returns The inserted node.
+         *
+         * @example
+         * ```ts
+         * const parent = createEl('div');
+         * const child1 = parent.createEl('span', { text: '1' });
+         * const child2 = parent.createEl('span', { text: '2' });
+         * const child3 = parent.createEl('span', { text: '3' });
+         * const newNode = createEl('p', { text: '4' });
+         * parent.insertAfter(newNode, child2);
+         * console.log(parent.innerHTML); // <span>1</span><span>2</span><p>4</p><span>3</span>
+         * ```
+         */
         insertAfter<T extends Node>(node: T, child: Node | null): T;
+        /**
+         * Returns the index of the node or `-1` if the node is not found.
+         * 
+         * @param other - The node to find.
+         * @returns The index of the node or `-1` if the node is not found.
+         */
         indexOf(other: Node): number;
+        /**
+         * Sets the children of the node.
+         *
+         * @param children - The children to set.
+         *
+         * @example
+         * ```ts
+         * const parent = createEl('div');
+         * const child1 = parent.createEl('span', { text: '1' });
+         * const child2 = parent.createEl('span', { text: '2' });
+         * const child3 = createEl('span', { text: '3' });
+         * parent.setChildrenInPlace([child1, child3]);
+         * console.log(parent.innerHTML); // <span>1</span><span>3</span>
+         * ```
+         */
         setChildrenInPlace(children: Node[]): void;
+        /**
+         * Appends a text node to the node.
+         *
+         * @param val - The text to append.
+         *
+         * @example
+         * ```ts
+         * const parent = createEl('div');
+         * parent.createEl('span', { text: 'Hello' });
+         * parent.appendText(' World');
+         * console.log(parent.innerHTML); // <span>Hello</span> World
+         * ```
+         */
         appendText(val: string): void;
         /**
          * Cross-window capable instanceof check, a drop-in replacement
          * for instanceof checks on DOM Nodes. Remember to also check
          * for nulls when necessary.
-         * @param type
+         * 
+         * @typeParam T - The type of the instance.
+         * @param type - The type to check.
+         * @returns `true` if the node is of the given type, `false` otherwise.
+         * 
+         * @example
+         * ```ts
+         * const node = createEl('div');
+         * console.log(node.instanceOf(HTMLDivElement)); // true
+         * console.log(node.instanceOf(HTMLSpanElement)); // false
+         * ```
          */
         instanceOf<T>(type: {
             new (): T;
@@ -325,6 +414,9 @@ declare global {
          * The window object this node belongs to, or the global window.
          */
         win: Window;
+        /**
+         * The window object this node belongs to, or the global window.
+         */
         constructorWin: Window;
     }
     interface Element extends Node {
