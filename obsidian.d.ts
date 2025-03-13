@@ -3601,39 +3601,110 @@ export interface Debouncer<T extends unknown[], V> {
 export function displayTooltip(newTargetEl: HTMLElement, content: string | DocumentFragment, options?: TooltipOptions): void;
 
 /**
+ * Dropdown component
+ *
  * @public
  */
 export class DropdownComponent extends ValueComponent<string> {
     /**
+     * The select element
+     *
      * @public
      */
     selectEl: HTMLSelectElement;
 
     /**
+     * Create a dropdown component
+     * @param containerEl - The container element
+     *
+     * @example
+     * ```ts
+     * const dropdown = new DropdownComponent(document.body);
+     * ```
+     *
      * @public
      */
     constructor(containerEl: HTMLElement);
     /**
+     * Set the disabled state of the dropdown
+     * @param disabled - Whether the dropdown is disabled
+     * @returns The dropdown component
+     *
+     * @example
+     * ```ts
+     * dropdown.setDisabled(true);
+     * ```
+     *
      * @public
      */
     setDisabled(disabled: boolean): this;
     /**
+     * Add an option to the dropdown
+     *
+     * @param value - The value of the option
+     * @param display - The display of the option
+     * @returns The dropdown component
+     *
+     * @example
+     * ```ts
+     * dropdown.addOption('foo', 'bar');
+     * ```
+     *
      * @public
      */
     addOption(value: string, display: string): this;
     /**
+     * Add multiple options to the dropdown
+     *
+     * @param options - The options to add
+     * @returns The dropdown component
+     *
+     * @example
+     * ```ts
+     * dropdown.addOptions({ foo: 'bar', baz: 'qux' });
+     * ```
+     *
      * @public
      */
     addOptions(options: Record<string, string>): this;
     /**
+     * Get the selected value of the dropdown
+     *
+     * @returns The selected value of the dropdown
+     *
+     * @example
+     * ```ts
+     * console.log(dropdown.getValue());
+     * ```
+     *
      * @public
      */
     getValue(): string;
     /**
+     * Set the selected value of the dropdown
+     *
+     * @param value - The value to set
+     * @returns The dropdown component
+     *
+     * @example
+     * ```ts
+     * dropdown.setValue('foo');
+     * ```
+     *
      * @public
      */
     setValue(value: string): this;
     /**
+     * Set the callback function to be called when the dropdown value changes
+     *
+     * @param callback - The callback function
+     * @returns The dropdown component
+     *
+     * @example
+     * ```ts
+     * dropdown.onChange((value) => console.log(value));
+     * ```
+     *
      * @public
      */
     onChange(callback: (value: string) => any): this;
