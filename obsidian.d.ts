@@ -1883,13 +1883,34 @@ export class App {
 
 }
 
-/** @public */
-export function arrayBufferToBase64(buffer: ArrayBuffer): string;
-
-/** @public */
+/** 
+ * Converts an `ArrayBuffer` to a base64 string.
+ *
+ * @param buffer - The `ArrayBuffer` to convert.
+ * @returns The base64 string.
+ *
+ * @example
+ * ```ts
+ * const base64 = arrayBufferToBase64(new ArrayBuffer(10));
+ * ```
+ *
+ * @public
+ */
 export function arrayBufferToHex(data: ArrayBuffer): string;
 
-/** @public */
+/**
+ * Converts a base64 string to an `ArrayBuffer`.
+ *
+ * @param base64 - The base64 string to convert.
+ * @returns The `ArrayBuffer`.
+ *
+ * @example
+ * ```ts
+ * const arrayBuffer = base64ToArrayBuffer('my-base64-string');
+ * ```
+ *
+ * @public
+ */
 export function base64ToArrayBuffer(base64: string): ArrayBuffer;
 
 /**
