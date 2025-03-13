@@ -902,33 +902,115 @@ declare global {
          */
         findAll(selector: string): Element[];
     }
+    /**
+     * Options object passed to `createEl()`.
+     */
     interface DomElementInfo {
         /**
          * The class to be assigned. Can be a space-separated string or an array of strings.
+         *
+         * @example
+         * ```ts
+         * createEl('div', { cls: 'foo bar' });
+         * ```
+         *
+         * @example
+         * ```ts
+         * createEl('div', { cls: ['foo', 'bar'] });
+         * ```
          */
         cls?: string | string[];
         /**
          * The textContent to be assigned.
+         *
+         * @example
+         * ```ts
+         * createEl('div', { text: 'Hello' });
+         * ```
+         *
+         * @example
+         * ```ts
+         * const fragment = createFragment();
+         * fragment.createEl('span', { text: 'Hello' });
+         * createEl('div', { text: fragment });
+         * ```
          */
         text?: string | DocumentFragment;
         /**
          * HTML attributes to be added.
+         *
+         * @example
+         * ```ts
+         * createEl('div', { attr: { id: 'foo', 'data-bar': 'baz' } });
+         * ```
          */
         attr?: {
             [key: string]: string | number | boolean | null;
         };
         /**
          * HTML title (for hover tooltip).
+         *
+         * @example
+         * ```ts
+         * createEl('div', { title: 'Hello' });
+         * ```
          */
         title?: string;
         /**
          * The parent element to be assigned to.
+         *
+         * @example
+         * ```ts
+         * const parent = createEl('div');
+         * createEl('span', { parent });
+         * ```
          */
         parent?: Node;
+        /**
+         * The value to be assigned. Applies to `<input>`, `<select>`, and `<option>` elements.
+         *
+         * @example
+         * ```ts
+         * createEl('input', { value: 'Hello' });
+         * ```
+         */
         value?: string;
+        /**
+         * The type to be assigned. Applies to `<input>` and `<style>` elements.
+         *
+         * @example
+         * ```ts
+         * createEl('input', { type: 'text' });
+         */
         type?: string;
+        /**
+         * Whether to prepend the element to the parent.
+         * If `true`, the element will be inserted before the first child of the parent.
+         * If `false` or omitted, the element will be inserted after the last child of the parent.
+         *
+         * @example
+         * ```ts
+         * createEl('input', { prepend: true });
+         * ```
+         */
         prepend?: boolean;
+        /**
+         * The placeholder to be assigned. Applies to `<input>` elements.
+         *
+         * @example
+         * ```ts
+         * createEl('input', { placeholder: 'Hello' });
+         * ```
+         */
         placeholder?: string;
+        /**
+         * The href to be assigned. Applies to `<a>`, `<link>`, and `<base>` elements.
+         *
+         * @example
+         * ```ts
+         * createEl('a', { href: 'https://example.com' });
+         * ```
+         */
         href?: string;
     }
     interface SvgElementInfo {
