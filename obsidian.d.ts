@@ -310,7 +310,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const node = document.body.createEl('div');
+         * const node = document.body.createEl('p');
          * console.log(document.body.contains(node)); // true
          * node.detach();
          * console.log(document.body.contains(node)); // false
@@ -322,8 +322,8 @@ declare global {
          *
          * @example
          * ```ts
-         * const parent = createEl('div');
-         * parent.createEl('span');
+         * const parent = createEl('p');
+         * parent.createEl('strong');
          * console.log(parent.childNodes.length); // 1
          * parent.empty();
          * console.log(parent.childNodes.length); // 0
@@ -340,13 +340,13 @@ declare global {
          *
          * @example
          * ```ts
-         * const parent = createEl('div');
-         * const child1 = parent.createEl('span', { text: '1' });
-         * const child2 = parent.createEl('span', { text: '2' });
-         * const child3 = parent.createEl('span', { text: '3' });
-         * const newNode = createEl('p', { text: '4' });
+         * const parent = createEl('p');
+         * const child1 = parent.createEl('strong', { text: '1' });
+         * const child2 = parent.createEl('strong', { text: '2' });
+         * const child3 = parent.createEl('strong', { text: '3' });
+         * const newNode = createEl('em', { text: '4' });
          * parent.insertAfter(newNode, child2);
-         * console.log(parent); // <div><span>1</span><span>2</span><p>4</p><span>3</span></div>
+         * console.log(parent); // <p><strong>1</strong><strong>2</strong><em>4</em><strong>3</strong></p>
          * ```
          */
         insertAfter<T extends Node>(node: T, child: Node | null): T;
@@ -364,12 +364,12 @@ declare global {
          *
          * @example
          * ```ts
-         * const parent = createEl('div');
-         * const child1 = parent.createEl('span', { text: '1' });
-         * const child2 = parent.createEl('span', { text: '2' });
-         * const child3 = createEl('span', { text: '3' });
+         * const parent = createEl('p');
+         * const child1 = parent.createEl('strong', { text: '1' });
+         * const child2 = parent.createEl('strong', { text: '2' });
+         * const child3 = createEl('strong', { text: '3' });
          * parent.setChildrenInPlace([child1, child3]);
-         * console.log(parent); // <div><span>1</span><span>3</span></div>
+         * console.log(parent); // <p><strong>1</strong><strong>3</strong></p>
          * ```
          */
         setChildrenInPlace(children: Node[]): void;
@@ -380,10 +380,10 @@ declare global {
          *
          * @example
          * ```ts
-         * const parent = createEl('div');
-         * parent.createEl('span', { text: 'foo' });
+         * const parent = createEl('p');
+         * parent.createEl('strong', { text: 'foo' });
          * parent.appendText('bar');
-         * console.log(parent); // <div><span>foo</span>bar</div>
+         * console.log(parent); // <p><strong>foo</strong>bar</p>
          * ```
          */
         appendText(val: string): void;
@@ -398,8 +398,8 @@ declare global {
          *
          * @example
          * ```ts
-         * const node = createEl('div');
-         * console.log(node.instanceOf(HTMLDivElement)); // true
+         * const node = createEl('p');
+         * console.log(node.instanceOf(HTMLParagraphElement)); // true
          * console.log(node.instanceOf(HTMLSpanElement)); // false
          * ```
          */
@@ -430,9 +430,9 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
-         * element.createEl('span', { text: 'foo' });
-         * element.createEl('span', { text: 'bar' });
+         * const element = createEl('p');
+         * element.createEl('strong', { text: 'foo' });
+         * element.createEl('strong', { text: 'bar' });
          * console.log(element.getText()); // 'foobar'
          * ```
          */
@@ -444,13 +444,13 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.setText('foo');
-         * console.log(element); // <div>foo</div>
+         * console.log(element); // <p>foo</p>
          * const fragment = createFragment();
-         * fragment.createEl('span', { text: 'bar' });
+         * fragment.createEl('strong', { text: 'bar' });
          * element.setText(fragment);
-         * console.log(element); // <div><span>bar</span></div>
+         * console.log(element); // <p><strong>bar</strong></p>
          * ```
          */
         setText(val: string | DocumentFragment): void;
@@ -461,7 +461,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.addClass('foo', 'bar');
          * console.log(element.className); // 'foo'
          */
@@ -473,7 +473,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.addClasses(['foo', 'bar']);
          * console.log(element.className); // 'foo bar'
          * ```
@@ -486,7 +486,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.addClass('foo bar');
          * element.removeClass('foo', 'baz');
          * console.log(element.className); // 'bar'
@@ -500,7 +500,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.addClass('foo bar');
          * element.removeClasses(['foo', 'baz']);
          * console.log(element.className); // 'bar'
@@ -515,7 +515,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.addClass('foo', 'bar');
          * element.toggleClass('foo', false);
          * console.log(element.className); // 'bar'
@@ -536,7 +536,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.addClass('foo', 'bar');
          * console.log(element.hasClass('foo')); // true
          * console.log(element.hasClass('baz')); // false
@@ -551,7 +551,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.setAttr('data-foo', 'bar');
          * console.log(element.getAttr('data-foo')); // 'bar'
          * ```
@@ -564,7 +564,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.setAttrs({
          *     'data-foo': 'bar',
          *     'data-baz': 'qux',
@@ -584,7 +584,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
+         * const element = createEl('p');
          * element.setAttr('data-foo', 'bar');
          * console.log(element.getAttr('data-foo')); // 'bar'
          * ```
@@ -599,14 +599,14 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
-         * console.log(element.matchParent('div')); // <div></div>
-         * console.log(element.matchParent('span')); // null
-         * const child = element.createEl('span');
-         * console.log(child.matchParent('span')); // <span></span>
-         * console.log(child.matchParent('div')); // <div></div>
-         * const grandchild = child.createEl('span');
-         * console.log(grandchild.matchParent('div', child)); // null
+         * const element = createEl('p');
+         * console.log(element.matchParent('p')); // <p></p>
+         * console.log(element.matchParent('strong')); // null
+         * const child = element.createEl('strong');
+         * console.log(child.matchParent('strong')); // <strong></strong>
+         * console.log(child.matchParent('p')); // <p></p>
+         * const grandchild = child.createEl('em');
+         * console.log(grandchild.matchParent('p', child)); // null
          * ```
          */
         matchParent(selector: string, lastParent?: Element): Element | null;
@@ -619,7 +619,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = document.body.createEl('div');
+         * const element = document.body.createEl('p');
          * element.style.color = 'red';
          * console.log(element.getCssPropertyValue('color')); // 'rgb(255, 0, 0)'
          * console.log(element.getCssPropertyValue('color', ':after')); // 'rgb(255, 0, 0)'
@@ -633,7 +633,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = document.body.createEl('div');
+         * const element = document.body.createEl('p');
          * console.log(element.isActiveElement()); // false
          * console.log(document.activeElement.isActiveElement()); // true
          * ```
@@ -694,7 +694,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = document.body.createEl('div');
+         * const element = document.body.createEl('p');
          * console.log(element.isShown()); // true
          * element.hide();
          * console.log(element.isShown()); // false
@@ -708,7 +708,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = document.body.createEl('div');
+         * const element = document.body.createEl('p');
          * element.setCssStyles({ color: 'red', fontSize: '16px' });
          * ```
          */
@@ -720,7 +720,7 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = document.body.createEl('div');
+         * const element = document.body.createEl('p');
          * element.setCssProps({ color: 'red', 'font-size': '16px' });
          * ```
          */
@@ -784,9 +784,9 @@ declare global {
      *
      * @example
      * ```ts
-     * const element = document.body.createEl('div');
-     * element.createEl('span', { cls: 'foo' });
-     * console.log(fish('.foo')); // <span class="foo"></span>
+     * const element = document.body.createEl('p');
+     * element.createEl('strong', { cls: 'foo' });
+     * console.log(fish('.foo')); // <strong class="foo"></span>
      * console.log(fish('.bar')); // null
      * ```
      */
@@ -799,10 +799,10 @@ declare global {
      *
      * @example
      * ```ts
-     * const element = document.body.createEl('div');
-     * element.createEl('span', { cls: 'foo' });
-     * element.createEl('span', { cls: 'foo' });
-     * console.log(fishAll('.foo')); // [<span class="foo"></span>, <span class="foo"></span>]
+     * const element = document.body.createEl('p');
+     * element.createEl('strong', { cls: 'foo' });
+     * element.createEl('strong', { cls: 'foo' });
+     * console.log(fishAll('.foo')); // [<strong class="foo"></strong>, <strong class="foo"></strong>]
      * console.log(fishAll('.bar')); // []
      * ```
      */
@@ -819,9 +819,9 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
-         * element.createEl('span', { cls: 'foo' });
-         * console.log(element.find('.foo')); // <span class="foo"></span>
+         * const element = createEl('p');
+         * element.createEl('strong', { cls: 'foo' });
+         * console.log(element.find('.foo')); // <strong class="foo"></strong>
          * console.log(element.find('.bar')); // null
          * ```
          */
@@ -834,10 +834,10 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div');
-         * element.createEl('span', { cls: 'foo' });
-         * element.createEl('span', { cls: 'foo' });
-         * console.log(element.findAll('.foo')); // [<span class="foo"></span>, <span class="foo"></span>]
+         * const element = createEl('p');
+         * element.createEl('strong', { cls: 'foo' });
+         * element.createEl('strong', { cls: 'foo' });
+         * console.log(element.findAll('.foo')); // [<strong class="foo"></strong>, <strong class="foo"></strong>]
          * console.log(element.findAll('.bar')); // []
          * ```
          *
@@ -852,9 +852,9 @@ declare global {
          *
          * @example
          * ```ts
-         * const element = createEl('div', { cls: 'foo' });
-         * element.createEl('span', { cls: 'foo' });
-         * console.log(element.findAllSelf('.foo')); // [<div class="foo"></div>, <span class="foo"></span>]
+         * const element = createEl('p', { cls: 'foo' });
+         * element.createEl('strong', { cls: 'foo' });
+         * console.log(element.findAllSelf('.foo')); // [<p class="foo"></p>, <strong class="foo"></strong>]
          * console.log(element.findAllSelf('.bar')); // []
          * ```
          *
@@ -875,8 +875,8 @@ declare global {
          * @example
          * ```ts
          * const fragment = createFragment();
-         * fragment.createEl('span', { cls: 'foo' });
-         * console.log(fragment.find('.foo')); // <span class="foo"></span>
+         * fragment.createEl('strong', { cls: 'foo' });
+         * console.log(fragment.find('.foo')); // <strong class="foo"></strong>
          * console.log(fragment.find('.bar')); // null
          * ```
          *
@@ -892,9 +892,9 @@ declare global {
          * @example
          * ```ts
          * const fragment = createFragment();
-         * fragment.createEl('span', { cls: 'foo' });
-         * fragment.createEl('span', { cls: 'foo' });
-         * console.log(fragment.findAll('.foo')); // [<span class="foo"></span>, <span class="foo"></span>]
+         * fragment.createEl('strong', { cls: 'foo' });
+         * fragment.createEl('strong', { cls: 'foo' });
+         * console.log(fragment.findAll('.foo')); // [<strong class="foo"></strong>, <strong class="foo"></strong>]
          * console.log(fragment.findAll('.bar')); // []
          * ```
          *
@@ -911,8 +911,8 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('div', { cls: 'foo bar' });
-         * createEl('div', { cls: ['foo', 'bar'] });
+         * createEl('p', { cls: 'foo bar' });
+         * createEl('p', { cls: ['foo', 'bar'] });
          * ```
          */
         cls?: string | string[];
@@ -921,10 +921,10 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('div', { text: 'foo' });
+         * createEl('p', { text: 'foo' });
          * const fragment = createFragment();
-         * fragment.createEl('span', { text: 'bar' });
-         * createEl('div', { text: fragment });
+         * fragment.createEl('strong', { text: 'bar' });
+         * createEl('p', { text: fragment });
          * ```
          */
         text?: string | DocumentFragment;
@@ -933,7 +933,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('div', { attr: { id: 'foo', 'data-bar': 'baz' } });
+         * createEl('p', { attr: { id: 'foo', 'data-bar': 'baz' } });
          * ```
          */
         attr?: {
@@ -944,7 +944,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('div', { title: 'foo' });
+         * createEl('p', { title: 'foo' });
          * ```
          */
         title?: string;
@@ -953,7 +953,7 @@ declare global {
          *
          * @example
          * ```ts
-         * createEl('span', { parent: document.body });
+         * createEl('strong', { parent: document.body });
          * ```
          */
         parent?: Node;
@@ -1065,10 +1065,8 @@ declare global {
          *
          * @example
          * ```ts
-         * document.body.createEl('div', { text: 'foo' }, (div) => {
-         *     div.addEventListener('click', () => {
-         *         console.log('clicked');
-         *     });
+         * document.body.createEl('p', { text: 'foo' }, (div) => {
+         *     div.createEl('strong', { text: 'bar' });
          * });
          * ```
          */
@@ -1083,9 +1081,7 @@ declare global {
          * @example
          * ```ts
          * document.body.createDiv({ text: 'foo' }, (div) => {
-         *     div.addEventListener('click', () => {
-         *         console.log('clicked');
-         *     });
+         *     div.createEl('strong', { text: 'bar' });
          * });
          * ```
          */
@@ -1100,9 +1096,7 @@ declare global {
          * @example
          * ```ts
          * document.body.createSpan({ text: 'foo' }, (span) => {
-         *     span.addEventListener('click', () => {
-         *         console.log('clicked');
-         *     });
+         *     span.createEl('strong', { text: 'bar' });
          * });
          * ```
          */
@@ -1119,9 +1113,7 @@ declare global {
          * @example
          * ```ts
          * document.body.createSvg('svg', { cls: 'foo bar' }, (svg) => {
-         *     svg.addEventListener('click', () => {
-         *         console.log('clicked');
-         *     });
+         *     svg.createSvg('circle');
          * });
          */
         createSvg<K extends keyof SVGElementTagNameMap>(tag: K, o?: SvgElementInfo | string, callback?: (el: SVGElementTagNameMap[K]) => void): SVGElementTagNameMap[K];
@@ -1137,10 +1129,8 @@ declare global {
      *
      * @example
      * ```ts
-     * createEl('div', { text: 'foo' }, (div) => {
-     *     div.addEventListener('click', () => {
-     *         console.log('clicked');
-     *     });
+     * createEl('p', { text: 'foo' }, (p) => {
+     *     p.createEl('strong', { text: 'bar' });
      * });
      */
     function createEl<K extends keyof HTMLElementTagNameMap>(tag: K, o?: DomElementInfo | string, callback?: (el: HTMLElementTagNameMap[K]) => void): HTMLElementTagNameMap[K];
@@ -1154,9 +1144,7 @@ declare global {
      * @example
      * ```ts
      * createDiv({ text: 'foo' }, (div) => {
-     *     div.addEventListener('click', () => {
-     *         console.log('clicked');
-     *     });
+     *     div.createEl('strong', { text: 'bar' });
      * });
      * ```
      */
@@ -1171,9 +1159,7 @@ declare global {
      * @example
      * ```ts
      * createSpan({ text: 'foo' }, (span) => {
-     *     span.addEventListener('click', () => {
-     *         console.log('clicked');
-     *     });
+     *     span.createEl('strong', { text: 'bar' });
      * });
      * ```
      */
@@ -1189,9 +1175,7 @@ declare global {
      * @example
      * ```ts
      * createSvg('svg', { cls: 'foo bar' }, (svg) => {
-     *     svg.addEventListener('click', () => {
-     *         console.log('clicked');
-     *     });
+     *     svg.createSvg('circle');
      * });
      * ```
      */
@@ -1205,7 +1189,7 @@ declare global {
      * @example
      * ```ts
      * createFragment((fragment) => {
-     *     fragment.createEl('div', { text: 'foo' });
+     *     fragment.createEl('p', { text: 'foo' });
      * });
      * ```
      */
