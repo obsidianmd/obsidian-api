@@ -2026,52 +2026,164 @@ export interface BlockSubpathResult extends SubpathResult {
 }
 
 /**
+ * A button component.
+ *
  * @public
  */
 export class ButtonComponent extends BaseComponent {
     /**
+     * The button element.
+     *
      * @public
      */
     buttonEl: HTMLButtonElement;
 
     /**
+     * The constructor for the button component.
+     *
+     * @param containerEl - The container element.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * ```
+     *
      * @public
      */
     constructor(containerEl: HTMLElement);
     /**
+     * Sets the disabled state of the button component.
+     *
+     * @param disabled - Whether to disable the button component.
+     * @returns The button component.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * button.setDisabled(true);
+     * ```
+     *
      * @public
      */
     setDisabled(disabled: boolean): this;
 
     /**
+     * Sets the button component to a call to action button.
+     *
+     * @returns The button component.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * button.setCta();
+     * ```
+     *
      * @public
      */
     setCta(): this;
     /**
+     * Removes the call to action style from the button component.
+     *
+     * @returns The button component.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * button.removeCta();
+     * ```
+     *
      * @public
      */
     removeCta(): this;
     /**
+     * Sets the button component to a warning button.
+     *
+     * @returns The button component.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * button.setWarning();
+     * ```
+     *
      * @public
      */
     setWarning(): this;
     /**
+     * Sets the tooltip for the button component.
+     *
+     * @param tooltip - The tooltip to set.
+     * @param options - The options for the tooltip.
+     * @returns The button component.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * button.setTooltip('My tooltip');
+     * ```
+     *
      * @public
      */
     setTooltip(tooltip: string, options?: TooltipOptions): this;
     /**
+     * Sets the text for the button component.
+     *
+     * @param name - The name to set.
+     * @returns The button component.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * button.setButtonText('My button');
+     * ```
+     *
      * @public
      */
     setButtonText(name: string): this;
     /**
+     * Sets the icon for the button component.
+     *
+     * @param icon - The icon to set.
+     * @returns The button component.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * button.setIcon('my-icon');
+     * ```
+     *
      * @public
      */
     setIcon(icon: IconName): this;
     /**
+     * Sets the class for the button component.
+     *
+     * @param cls - The class to set.
+     * @returns The button component.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * button.setClass('my-class');
+     * ```
+     *
      * @public
      */
     setClass(cls: string): this;
     /**
+     * Sets the click event callback for the button component.
+     *
+     * @param callback - The callback to set.
+     * @returns The button component.
+     *
+     * @example
+     * ```ts
+     * const button = new ButtonComponent(containerEl);
+     * button.onClick(() => {
+     *     console.log('Button clicked');
+     * });
+     * ```
+     *
      * @public
      */
     onClick(callback: (evt: MouseEvent) => any): this;
