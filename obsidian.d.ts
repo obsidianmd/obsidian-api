@@ -2839,7 +2839,7 @@ export interface Command {
      * @public
      */
     icon?: IconName;
-    /** 
+    /**
      * Whether the command is only available on mobile.
      *
      * @public
@@ -2957,7 +2957,7 @@ export interface Command {
     /**
      * Sets the default hotkey. It is recommended for plugins to avoid setting default hotkeys if possible,
      * to avoid conflicting hotkeys with one that's set by the user, even though customized hotkeys have higher priority.
-     * 
+     *
      * @example
      * ```ts
      * this.addCommand({
