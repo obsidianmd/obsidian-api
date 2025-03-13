@@ -3514,10 +3514,13 @@ export interface DataWriteOptions {
  * A standard debounce function.
  * Use this to have a time-delayed function only be called once in a given timeframe.
  *
+ * @typeParam T - The type of the arguments of the function to debounce.
+ * @typeParam V - The type of the return value of the function to debounce.
  * @param cb - The function to call.
  * @param timeout - The timeout to wait, in milliseconds
  * @param resetTimer - Whether to reset the timeout when the debouncer is called again.
  * @returns a debounced function that takes the same parameter as the original function.
+ *
  * @example
  * ```ts
  * const debounced = debounce((text: string) => {
@@ -3527,21 +3530,54 @@ export interface DataWriteOptions {
  * await sleep(500);
  * debounced('World, hello'); // this will be printed to the console.
  * ```
+ *
  * @public
  */
 export function debounce<T extends unknown[], V>(cb: (...args: [...T]) => V, timeout?: number, resetTimer?: boolean): Debouncer<T, V>;
 
-/** @public */
+/**
+ * A debouncer wrapper for a function.
+ *
+ * @typeParam T - The type of the arguments of the function to debounce.
+ * @typeParam V - The type of the return value of the function to debounce.
+ *
+ * @public
+ */
 export interface Debouncer<T extends unknown[], V> {
-    /** @public */
+    /**
+     * Call the debounced function.
+     *
+     * @param args - The arguments to pass to the function.
+     * @returns The debouncer.
+     *
+     * @example
+     * ```ts
+     * debouncer('foo');
+     * ```
+     * @public
+     */
     (...args: [...T]): this;
     /**
      * Cancel any pending debounced function call.
+     *
+     * @returns The debouncer.
+     *
+     * @example
+     * ```ts
+     * debouncer.cancel();
+     * ```
      * @public
      */
     cancel(): this;
     /**
      * If there is any pending function call, clear the timer and call the function immediately.
+     *
+     * @returns The return value of the function or `void` if the are no pending function calls.
+     *
+     * @example
+     * ```ts
+     * debouncer.run();
+     * ```
      * @public
      */
     run(): V | void;
