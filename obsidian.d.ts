@@ -415,7 +415,7 @@ declare global {
          */
         win: Window;
         /**
-         * The window object this node belongs to, or the global window.
+         * Global window object.
          */
         constructorWin: Window;
     }
