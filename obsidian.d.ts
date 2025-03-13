@@ -2390,6 +2390,8 @@ export interface CacheItem {
 
 /**
  * Implementation of the vault adapter for mobile devices.
+ * 
+ * `app.vault.adapter` returns an instance of `CapacitorAdapter` on mobile devices.
  *
  * @public
  */
@@ -2564,11 +2566,11 @@ export class CapacitorAdapter implements DataAdapter {
      * Returns an URI for the browser engine to use, for example to embed an image.
      *
      * @param normalizedPath - The path to get the resource path for.
-     * @returns The resource path for the file.
+     * @returns A URI for the browser engine to use.
      *
      * @example
      * ```ts
-     * const resourcePath = app.vault.adapter.getResourcePath('foo/bar.md');
+     * console.log(app.vault.adapter.getResourcePath('foo/bar.jpg'));
      * ```
      *
      * @public
