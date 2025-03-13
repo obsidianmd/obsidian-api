@@ -2543,7 +2543,7 @@ export class CapacitorAdapter implements DataAdapter {
      */
     append(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
     /**
-     * Processes a file.
+     * Atomically read, modify, and save the contents of a plaintext file.
      *
      * @param normalizedPath - The path to process.
      * @param fn - The function to process the file.
@@ -2553,7 +2553,7 @@ export class CapacitorAdapter implements DataAdapter {
      * @example
      * ```ts
      * await app.vault.adapter.process('foo/bar.md', (data) => {
-     *     return data.replace('Hello', 'Hi');
+     *     return data.replace('foo', 'bar');
      * });
      * ```
      *
