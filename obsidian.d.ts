@@ -210,10 +210,69 @@ declare global {
          */
         isString(obj: any): obj is string;
     }
+    /**
+     * Augments the built-in `String` type.
+     */
     interface String {
+        /**
+         * Checks if the string contains a specific substring.
+         *
+         * @param target - The substring to check for.
+         * @returns `true` if the string contains the substring, `false` otherwise.
+         *
+         * @example
+         * ```ts
+         * console.log('hello'.contains('ell')); // true
+         * console.log('hello'.contains('world')); // false
+         * ```
+         */
         contains(target: string): boolean;
+        /**
+         * Checks if the string starts with a specific substring.
+         *
+         * @param searchString - The substring to check for.
+         * @param position - The position to start checking from.
+         * @returns `true` if the string starts with the substring, `false` otherwise.
+         *
+         * @example
+         * ```ts
+         * console.log('hello'.startsWith('hel')); // true
+         * console.log('hello'.startsWith('ell')); // false
+         * console.log('hello'.startsWith('hel', 1)); // false
+         * console.log('hello'.startsWith('ell', 1)); // true
+         * ```
+         */
         startsWith(searchString: string, position?: number): boolean;
-        endsWith(target: string, length?: number): boolean;
+        /**
+         * Checks if the string ends with a specific substring.
+         *
+         * @param searchString - The substring to check for.
+         * @param endPosition - The position to end checking at.
+         * @returns `true` if the string ends with the substring, `false` otherwise.
+         *
+         * @example
+         * ```ts
+         * console.log('hello'.endsWith('llo')); // true
+         * console.log('hello'.endsWith('ell')); // false
+         * console.log('hello'.endsWith('llo', 4)); // false
+         * console.log('hello'.endsWith('ell', 4)); // true
+         * ```
+         *
+         * @remarks The original version had different argument names.
+         * See bug: {@link https://forum.obsidian.md/t/bug-string-endwith-definition/98103}
+         */
+        endsWith(searchString: string, endPosition?: number): boolean;
+        /**
+         * Formats a string using the indexed placeholders.
+         *
+         * @param args - The arguments to format the string with.
+         * @returns The formatted string.
+         *
+         * @example
+         * ```ts
+         * console.log('foo {0} bar {1} baz {0}'.format('hello', 'world')); // 'foo hello bar world baz hello'
+         * ```
+         */
         format(...args: string[]): string;
     }
     interface NumberConstructor {
