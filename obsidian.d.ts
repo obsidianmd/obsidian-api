@@ -3585,8 +3585,17 @@ export interface Debouncer<T extends unknown[], V> {
 
 /**
  * Manually trigger a tooltip that will appear over the provided element.
- *
  * To display a tooltip on hover, use {@link setTooltip} instead.
+ *
+ * @param newTargetEl - The element to display the tooltip over.
+ * @param content - The content of the tooltip.
+ * @param options - The options for the tooltip.
+ *
+ * @example
+ * ```ts
+ * displayTooltip(document.body, 'foo');
+ * ```
+ *
  * @public
  */
 export function displayTooltip(newTargetEl: HTMLElement, content: string | DocumentFragment, options?: TooltipOptions): void;
