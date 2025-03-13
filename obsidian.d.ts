@@ -1410,17 +1410,74 @@ declare global {
             new (...data: any[]): T;
         }): this is T;
     }
+    /**
+     * Options for an `ajax()` request.
+     */
     interface AjaxOptions {
+        /**
+         * The method of the AJAX request.
+         */
         method?: 'GET' | 'POST';
+        /**
+         * The URL of the AJAX request.
+         */
         url: string;
+        /**
+         * The success callback of the AJAX request.
+         */
         success?: (response: any, req: XMLHttpRequest) => any;
+        /**
+         * The error callback of the AJAX request.
+         */
         error?: (error: any, req: XMLHttpRequest) => any;
+        /**
+         * The data of the AJAX request.
+         */
         data?: object | string | ArrayBuffer;
+        /**
+         * The headers of the AJAX request.
+         */
         headers?: Record<string, string>;
+        /**
+         * Whether to send credentials with the AJAX request.
+         */
         withCredentials?: boolean;
+        /**
+         * The XMLHttpRequest object.
+         */
         req?: XMLHttpRequest;
     }
+    /**
+     * Sends an AJAX request.
+     *
+     * @param options - The options for the AJAX request.
+     *
+     * @example
+     * ```ts
+     * ajax({
+     *     url: 'https://example.com',
+     *     success: (response) => {
+     *         console.log(response);
+     *     },
+     *     error: (error) => {
+     *         console.error(error);
+     *     }
+     * });
+     * ```
+     */
     function ajax(options: AjaxOptions): void;
+    /**
+     * Sends an AJAX request and returns a promise.
+     *
+     * @param options - The options for the AJAX request.
+     * @returns A promise that resolves to the response.
+     *
+     * @example
+     * ```ts
+     * const response = await ajaxPromise({ url: 'https://example.com' });
+     * console.log(response);
+     * ```
+     */
     function ajaxPromise(options: AjaxOptions): Promise<any>;
     function ready(fn: () => any): void;
     function sleep(ms: number): Promise<void>;
