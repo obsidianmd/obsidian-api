@@ -1965,7 +1965,11 @@ export abstract class BaseComponent {
  * some **markdown** ^my-block-id
  * ```
  *
- * The block cache would be:
+ * ```ts
+ * app.metadataCache.getCache('note.md').blocks['my-block-id']
+ * ```
+ *
+ * would return the following block cache:
  *
  * ```ts
  * {
