@@ -4131,86 +4131,176 @@ export abstract class Editor {
 
 }
 
-/** @public */
+/**
+ * Represents a change to the editor
+ *
+ * @public
+ **/
 export interface EditorChange extends EditorRangeOrCaret {
-    /** @public */
+    /**
+     * The text to replace the range with
+     *
+     * @public
+     **/
     text: string;
 }
 
-/** @public */
+/**
+ * The name of a command you can execute with {@link Editor.exec}
+ *
+ * @public
+ **/
 export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goStart' | 'goEnd' | 'goWordLeft' | 'goWordRight' | 'indentMore' | 'indentLess' | 'newlineAndIndent' | 'swapLineUp' | 'swapLineDown' | 'deleteLine' | 'toggleFold' | 'foldAll' | 'unfoldAll';
 
 /**
- * Use this StateField to get a reference to the EditorView
+ * Use this {@link StateField} to get a reference to the {@link EditorView}
+ *
  * @public
  */
 export const editorEditorField: StateField<EditorView>;
 
 /**
- * Use this StateField to get information about this Markdown editor, such as the associated file, or the Editor.
+ * Use this {@link StateField} to get {@link MarkdownFileInfo} about this Markdown editor, such as the associated file, or the Editor.
+ *
  * @public
  */
 export const editorInfoField: StateField<MarkdownFileInfo>;
 
 /**
- * Use this StateField to check whether Live Preview is active
+ * Use this {@link StateField} to check whether `Live Preview` is active
+ *
  * @public
- */
+ **/
 export const editorLivePreviewField: StateField<boolean>;
 
-/** @public */
+/**
+ * Represents a position in the editor
+ *
+ * @public
+ **/
 export interface EditorPosition {
-    /** @public */
+    /**
+     * The line number (0-based)
+     *
+     * @public
+     **/
     line: number;
-    /** @public */
+    /**
+     * The character index (0-based)
+     *
+     * @public
+     **/
     ch: number;
 }
 
-/** @public */
+/**
+ * Represents a range in the editor
+ *
+ * @public
+ **/
 export interface EditorRange {
-    /** @public */
+    /**
+     * The start position
+     *
+     * @public
+     **/
     from: EditorPosition;
-    /** @public */
+    /**
+     * The end position
+     *
+     * @public */
     to: EditorPosition;
 }
 
-/** @public */
+/**
+ * Represents a range or caret in the editor
+ *
+ * @public
+ **/
 export interface EditorRangeOrCaret {
-    /** @public */
+    /**
+     * The start position
+     *
+     * @public
+     **/
     from: EditorPosition;
-    /** @public */
+    /**
+     * The end position. If not provided, the caret is used.
+     *
+     * @public
+     **/
     to?: EditorPosition;
 }
 
-/** @public */
+/**
+ * Scroll info for the editor
+ *
+ * @public
+ **/
 export interface EditorScrollInfo {
-    /** @public */
+    /**
+     * The horizontal scroll position
+     *
+     * @public
+     **/
     left: number;
-    /** @public */
+    /**
+     * The vertical scroll position
+     *
+     * @public
+     **/
     top: number;
-    /** @public */
-    width: number;
-    /** @public */
+    /**
+     * The height of the editor
+     *
+     * @public
+     **/
     height: number;
-    /** @public */
+    /**
+     * The width of the editor
+     *
+     * @public
+     **/
     clientWidth: number;
-    /** @public */
-    clientHeight: number;
 }
 
-/** @public */
+/**
+ * Represents a selection in the editor
+ *
+ * @public
+ **/
 export interface EditorSelection {
-    /** @public */
+    /**
+     * The selection start position
+     *
+     * @public
+     **/
     anchor: EditorPosition;
-    /** @public */
+    /**
+     * The selection end position
+     *
+     * @public
+     **/
     head: EditorPosition;
 }
 
-/** @public */
+/**
+ * Represents a selection or caret in the editor
+ *
+ * @public
+ **/
 export interface EditorSelectionOrCaret {
-    /** @public */
+    /**
+     * The selection start position
+     *
+     * @public
+     **/
     anchor: EditorPosition;
-    /** @public */
+    /**
+     * The selection end position. If not provided, the caret is used.
+     *
+     * @public
+     **/
     head?: EditorPosition;
 }
 
