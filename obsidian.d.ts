@@ -1785,8 +1785,15 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
 
 /**
  * Adds an icon to the library.
+ *
  * @param iconId - the icon ID
  * @param svgContent - the content of the SVG.
+ *
+ * @example
+ * ```ts
+ * addIcon('icon-id', '<svg>...</svg>');
+ * ```
+ *
  * @public
  */
 export function addIcon(iconId: string, svgContent: string): void;
