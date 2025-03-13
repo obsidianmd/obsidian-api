@@ -640,19 +640,90 @@ declare global {
          */
         isActiveElement(): boolean;
     }
+    /**
+     * Augments the built-in `HTMLElement` type.
+     */
     interface HTMLElement extends Element {
+        /**
+         * Shows the element using css `display` property.
+         *
+         * @example
+         * ```ts
+         * document.body.show();
+         * ```
+         */
         show(): void;
+        /**
+         * Hides the element using css `display` property.
+         *
+         * @example
+         * ```ts
+         * document.body.hide();
+         * ```
+         */
         hide(): void;
+        /**
+         * Toggles the visibility of the element using css `display` property.
+         *
+         * @param show - Whether to show the element.
+         *
+         * @example
+         * ```ts
+         * document.body.toggle(true);
+         * document.body.toggle(false);
+         * ```
+         */
         toggle(show: boolean): void;
+        /**
+         * Toggles the visibility of the element using css `visibility` property.
+         *
+         * @param visible - Whether to show the element.
+         *
+         * @example
+         * ```ts
+         * document.body.toggleVisibility(true);
+         * document.body.toggleVisibility(false);
+         * ```
+         */
         toggleVisibility(visible: boolean): void;
         /**
          * Returns whether this element is shown, when the element is attached to the DOM and
          * none of the parent and ancestor elements are hidden with `display: none`.
          *
          * Exception: Does not work on `<body>` and `<html>`, or on elements with `position: fixed`.
+         *
+         * @example
+         * ```ts
+         * const element = document.body.createEl('div');
+         * console.log(element.isShown()); // true
+         * element.hide();
+         * console.log(element.isShown()); // false
+         * ```
          */
         isShown(): boolean;
+        /**
+         * Sets the CSS styles of the element.
+         *
+         * @param styles - The styles to set.
+         *
+         * @example
+         * ```ts
+         * const element = document.body.createEl('div');
+         * element.setCssStyles({ color: 'red', fontSize: '16px' });
+         * ```
+         */
         setCssStyles(styles: Partial<CSSStyleDeclaration>): void;
+        /**
+         * Sets the CSS properties of the element.
+         *
+         * @param props - The properties to set.
+         *
+         * @example
+         * ```ts
+         * const element = document.body.createEl('div');
+         * element.setCssProps({ color: 'red', 'font-size': '16px' });
+         * ```
+         */
         setCssProps(props: Record<string, string>): void;
         /**
          * Get the inner width of this element without padding.
