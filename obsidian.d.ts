@@ -352,7 +352,7 @@ declare global {
         insertAfter<T extends Node>(node: T, child: Node | null): T;
         /**
          * Returns the index of the node or `-1` if the node is not found.
-         * 
+         *
          * @param other - The node to find.
          * @returns The index of the node or `-1` if the node is not found.
          */
@@ -391,11 +391,11 @@ declare global {
          * Cross-window capable instanceof check, a drop-in replacement
          * for instanceof checks on DOM Nodes. Remember to also check
          * for nulls when necessary.
-         * 
+         *
          * @typeParam T - The type of the instance.
          * @param type - The type to check.
          * @returns `true` if the node is of the given type, `false` otherwise.
-         * 
+         *
          * @example
          * ```ts
          * const node = createEl('div');
