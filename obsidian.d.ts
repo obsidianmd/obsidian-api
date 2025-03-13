@@ -786,7 +786,7 @@ declare global {
      * ```ts
      * const element = fish('body');
      * console.log(element); // <body></body>
-     * const notFound = fish('not a selector');
+     * const notFound = fish('.non-existent-class');
      * console.log(notFound); // null
      * ```
      */
