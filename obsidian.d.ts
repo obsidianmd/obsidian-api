@@ -28,6 +28,7 @@ declare global {
         /**
          * Check if all properties in an object satisfy a condition
          *
+         * @typeParam T - The type of the properties in the object.
          * @param object - The object to check
          * @param callback - The condition to check
          * @param context - The context passed as `this` to the `callback`
@@ -62,6 +63,8 @@ declare global {
     }
     /**
      * Augments the built-in `Array` type.
+     *
+     * @typeParam T - The type of the elements in the array.
      */
     interface Array<T> {
         /**
