@@ -1705,6 +1705,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      * Sets the disabled state of the input element.
      *
      * @param disabled - Whether to disable the input element.
+     * @returns The text component.
      *
      * @example
      * ```ts
@@ -1730,6 +1731,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      * Sets the value of the input element.
      *
      * @param value - The value to set.
+     * @returns The text component.
      *
      * @example
      * ```ts
@@ -1743,6 +1745,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      * Sets the placeholder of the input element.
      *
      * @param placeholder - The placeholder to set.
+     * @returns The text component.
      *
      * @example
      * ```ts
@@ -1770,6 +1773,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      * Sets the callback to handle when the value of the input element changes.
      *
      * @param callback - The callback to handle when the value of the input element changes.
+     * @returns The text component.
      *
      * @example
      * ```ts
@@ -1945,6 +1949,7 @@ export abstract class BaseComponent {
      * Sets the disabled state of the component.
      *
      * @param disabled - Whether to disable the component.
+     * @returns The component instance.
      *
      * @example
      * ```ts
