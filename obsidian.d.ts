@@ -1210,47 +1210,201 @@ declare global {
      * ```
      */
     function createFragment(callback?: (el: DocumentFragment) => void): DocumentFragment;
+    /**
+     * Information about HTMLElement event listener.
+     */
     interface EventListenerInfo {
+        /**
+         * The selector of the event target.
+         */
         selector: string;
+        /**
+         * The listener of the event.
+         */
         listener: Function;
+        /**
+         * The options of the event listener.
+         */
         options?: boolean | AddEventListenerOptions;
+        /**
+         * Wrapper function of the event listener.
+         */
         callback: Function;
     }
+    /**
+     * Augments the built-in `HTMLElement` type.
+     */
     interface HTMLElement extends Element {
+        /**
+         * The event listeners of the element.
+         */
         _EVENTS?: {
             [K in keyof HTMLElementEventMap]?: EventListenerInfo[];
         };
+        /**
+         * Adds an event listener to the element.
+         *
+         * @typeParam K - The type of the event to listen for.
+         * @param this - The element to add the event listener to.
+         * @param type - The type of event to listen for.
+         * @param selector - The selector of the event target.
+         * @param listener - The listener to call when the event is triggered.
+         * @param options - The options of the event listener.
+         *
+         * @example
+         * ```ts
+         * document.body.on('click', 'div', (ev) => {
+         *     console.log(ev);
+         * });
+         * ```
+         */
         on<K extends keyof HTMLElementEventMap>(this: HTMLElement, type: K, selector: string, listener: (this: HTMLElement, ev: HTMLElementEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
+        /**
+         * Removes an event listener from the element.
+         *
+         * @typeParam K - The type of the event to listen for.
+         * @param this - The element to remove the event listener from.
+         * @param type - The type of event to listen for.
+         * @param selector - The selector of the event target.
+         * @param listener - The listener to call when the event is triggered.
+         * @param options - The options of the event listener.
+         *
+         * @example
+         * ```ts
+         * document.body.off('click', 'div', document.body._EVENTS.click[0].listener);
+         * ```
+         */
         off<K extends keyof HTMLElementEventMap>(this: HTMLElement, type: K, selector: string, listener: (this: HTMLElement, ev: HTMLElementEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
+        /**
+         * Adds a click event listener to the element.
+         *
+         * @param this - The element to add the event listener to.
+         * @param listener - The listener to call when the click event is triggered.
+         * @param options - The options of the click event listener.
+         *
+         * @example
+         * ```ts
+         * document.body.onClickEvent((ev) => {
+         *     console.log(ev);
+         * });
+         * ```
+         */
         onClickEvent(this: HTMLElement, listener: (this: HTMLElement, ev: MouseEvent) => any, options?: boolean | AddEventListenerOptions): void;
         /**
+         * Adds an event listener to the element when it is inserted into the DOM.
+         *
          * @param listener - the callback to call when this node is inserted into the DOM.
          * @param once - if true, this will only fire once and then unhook itself.
          * @returns destroy - a function to remove the event handler to avoid memory leaks.
+         *
+         * @example
+         * ```ts
+         * document.body.onNodeInserted(() => {
+         *     console.log('node inserted');
+         * });
+         * ```
          */
         onNodeInserted(this: HTMLElement, listener: () => any, once?: boolean): () => void;
         /**
+         * Adds an event listener to the element when it is migrated to another window.
+         *
          * @param listener - the callback to call when this node has been migrated to another window.
          * @returns destroy - a function to remove the event handler to avoid memory leaks.
+         *
+         * @example
+         * ```ts
+         * document.body.onWindowMigrated((win) => {
+         *     console.log('window migrated');
+         * });
          */
         onWindowMigrated(this: HTMLElement, listener: (win: Window) => any): () => void;
+        /**
+         * Triggers an event on the element.
+         *
+         * @param eventType - the type of event to trigger.
+         *
+         * @example
+         * ```ts
+         * document.body.trigger('click');
+         * ```
+         */
         trigger(eventType: string): void;
     }
+    /**
+     * Augments the built-in `Document` type.
+     */
     interface Document {
+        /**
+         * The event listeners of the document.
+         */
         _EVENTS?: {
             [K in keyof DocumentEventMap]?: EventListenerInfo[];
         };
+        /**
+         * Adds an event listener to the document.
+         *
+         * @typeParam K - The type of the event to listen for.
+         * @param this - The document to add the event listener to.
+         * @param type - The type of event to listen for.
+         * @param selector - The selector of the event target.
+         * @param listener - The listener to call when the event is triggered.
+         * @param options - The options of the event listener.
+         *
+         * @example
+         * ```ts
+         * document.on('click', 'div', (ev) => {
+         *     console.log(ev);
+         * });
+         * ```
+         */
         on<K extends keyof DocumentEventMap>(this: Document, type: K, selector: string, listener: (this: Document, ev: DocumentEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
+        /**
+         * Removes an event listener from the document.
+         *
+         * @typeParam K - The type of the event to listen for.
+         * @param this - The document to remove the event listener from.
+         * @param type - The type of event to listen for.
+         * @param selector - The selector of the event target.
+         * @param listener - The listener to call when the event is triggered.
+         * @param options - The options of the event listener.
+         *
+         * @example
+         * ```ts
+         * document.off('click', 'div', document.body._EVENTS.click[0].listener);
+         * ```
+         */
         off<K extends keyof DocumentEventMap>(this: Document, type: K, selector: string, listener: (this: Document, ev: DocumentEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
     }
+    /**
+     * Augments the built-in `UIEvent` type.
+     */
     interface UIEvent extends Event {
+        /**
+         * The target node of the event.
+         */
         targetNode: Node | null;
+        /**
+         * The window of the event.
+         */
         win: Window;
+        /**
+         * The document of the event.
+         */
         doc: Document;
         /**
          * Cross-window capable instanceof check, a drop-in replacement
          * for instanceof checks on UIEvents.
-         * @param type
+         *
+         * @typeParam T - The type to check.
+         * @param type - The type to check.
+         * @returns Whether the event is an instance of the type.
+         *
+         * @example
+         * ```ts
+         * if (event.instanceOf(MouseEvent)) {
+         *     console.log('event is a mouse event');
+         * }
+         * ```
          */
         instanceOf<T>(type: {
             new (...data: any[]): T;
