@@ -2511,7 +2511,7 @@ export class CapacitorAdapter implements DataAdapter {
      *
      * @example
      * ```ts
-     * await app.vault.adapter.writeBinary('foo/bar.jpg', new Uint8Array());
+     * await app.vault.adapter.writeBinary('foo/bar.jpg', new Uint8Array([1, 2, 3]));
      * ```
      *
      * @public
