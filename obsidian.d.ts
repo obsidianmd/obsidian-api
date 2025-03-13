@@ -419,22 +419,225 @@ declare global {
          */
         constructorWin: Window;
     }
+    /**
+     * Augments the built-in `Element` type.
+     */
     interface Element extends Node {
+        /**
+         * Returns the text content of the element.
+         *
+         * @returns The text content of the element.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.createEl('span', { text: 'Hello' });
+         * element.createEl('span', { text: 'World' });
+         * console.log(element.getText()); // 'HelloWorld'
+         * ```
+         */
         getText(): string;
+        /**
+         * Sets the text content of the element.
+         *
+         * @param val - The text content to set.
+         *
+         * @example
+         * ```ts
+         * import { sanitizeHTMLToDom } from 'obsidian';
+         *
+         * const element = createEl('div');
+         * element.setText('Hello');
+         * console.log(element.innerHTML); // 'Hello'
+         * element.setText(sanitizeHTMLToDom('<b>Hello</b>'));
+         * console.log(element.innerHTML); // '<b>Hello</b>'
+         * ```
+         */
         setText(val: string | DocumentFragment): void;
+        /**
+         * Adds a class to the element.
+         *
+         * @param classes - The class to add.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.addClass('foo', 'bar');
+         * console.log(element.className); // 'foo'
+         */
         addClass(...classes: string[]): void;
+        /**
+         * Adds multiple classes to the element.
+         *
+         * @param classes - The classes to add.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.addClasses(['foo', 'bar']);
+         * console.log(element.className); // 'foo bar'
+         * ```
+         */
         addClasses(classes: string[]): void;
+        /**
+         * Removes a class from the element.
+         *
+         * @param classes - The class to remove.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.addClass('foo bar');
+         * element.removeClass('foo', 'baz');
+         * console.log(element.className); // 'bar'
+         * ```
+         */
         removeClass(...classes: string[]): void;
+        /**
+         * Removes multiple classes from the element.
+         *
+         * @param classes - The classes to remove.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.addClass('foo bar');
+         * element.removeClasses(['foo', 'baz']);
+         * console.log(element.className); // 'bar'
+         * ```
+         */
         removeClasses(classes: string[]): void;
+        /**
+         * Toggles a class on the element.
+         *
+         * @param classes - The class to toggle.
+         * @param value - If `true`, the class will be added, if `false`, the class will be removed.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.addClass('foo', 'bar');
+         * element.toggleClass('foo', false);
+         * console.log(element.className); // 'bar'
+         * element.toggleClass('foo', true);
+         * console.log(element.className); // 'bar foo'
+         * element.toggleClass('baz', false);
+         * console.log(element.className); // 'bar foo'
+         * element.toggleClass('baz', true);
+         * console.log(element.className); // 'bar foo baz'
+         * ```
+         */
         toggleClass(classes: string | string[], value: boolean): void;
+        /**
+         * Checks if the element has a class.
+         *
+         * @param cls - The class to check for.
+         * @returns `true` if the element has the class, `false` otherwise.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.addClass('foo', 'bar');
+         * console.log(element.hasClass('foo')); // true
+         * console.log(element.hasClass('baz')); // false
+         * ```
+         */
         hasClass(cls: string): boolean;
+        /**
+         * Sets an attribute on the element.
+         *
+         * @param qualifiedName - The name of the attribute to set.
+         * @param value - The value to set the attribute to.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.setAttr('data-foo', 'bar');
+         * console.log(element.getAttr('data-foo')); // 'bar'
+         * ```
+         */
         setAttr(qualifiedName: string, value: string | number | boolean | null): void;
+        /**
+         * Sets multiple attributes on the element.
+         *
+         * @param obj - The attributes to set.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.setAttrs({
+         *     'data-foo': 'bar',
+         *     'data-baz': 'qux',
+         * });
+         * console.log(element.getAttr('data-foo')); // 'bar'
+         * console.log(element.getAttr('data-baz')); // 'qux'
+         * ```
+         */
         setAttrs(obj: {
             [key: string]: string | number | boolean | null;
         }): void;
+        /**
+         * Gets an attribute from the element.
+         *
+         * @param qualifiedName - The name of the attribute to get.
+         * @returns The value of the attribute.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * element.setAttr('data-foo', 'bar');
+         * console.log(element.getAttr('data-foo')); // 'bar'
+         * ```
+         */
         getAttr(qualifiedName: string): string | null;
+        /**
+         * Matches the selector recursively up the DOM tree.
+         *
+         * @param selector - The selector to match the parent with.
+         * @param lastParent - The last parent to stop matching against.
+         * @returns The matched element or `null` if no match is found.
+         *
+         * @example
+         * ```ts
+         * const element = createEl('div');
+         * console.log(element.matchParent('div') === element); // true
+         * console.log(element.matchParent('span')); // null
+         * const child = element.createEl('span');
+         * console.log(child.matchParent('span') === child); // true
+         * console.log(child.matchParent('div') === element); // true
+         * const grandchild = child.createEl('span');
+         * console.log(grandchild.matchParent('div', child)); // null
+         * ```
+         */
         matchParent(selector: string, lastParent?: Element): Element | null;
+        /**
+         * Gets the value of a CSS property of the element.
+         *
+         * @param property - The property to get the value of.
+         * @param pseudoElement - The pseudo-element to get the value of.
+         * @returns The value of the CSS property.
+         *
+         * @example
+         * ```ts
+         * const element = document.body.createEl('div');
+         * element.style.color = 'red';
+         * console.log(element.getCssPropertyValue('color')); // 'rgb(255, 0, 0)'
+         * console.log(element.getCssPropertyValue('color', ':after')); // 'rgb(255, 0, 0)'
+         * ```
+         */
         getCssPropertyValue(property: string, pseudoElement?: string): string;
+        /**
+         * Checks if the element is the active element.
+         *
+         * @returns `true` if the element is the active element, `false` otherwise.
+         *
+         * @example
+         * ```ts
+         * const element = document.body.createEl('div');
+         * console.log(element.isActiveElement()); // false
+         * console.log(document.activeElement.isActiveElement()); // true
+         * ```
+         */
         isActiveElement(): boolean;
     }
     interface HTMLElement extends Element {
