@@ -204,7 +204,7 @@ declare global {
          *
          * @example
          * ```ts
-         * console.log(String.isString("hello")); // true
+         * console.log(String.isString('hello')); // true
          * console.log(String.isString(123)); // false
          * ```
          */
