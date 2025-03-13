@@ -1806,42 +1806,77 @@ export function addIcon(iconId: string, svgContent: string): void;
 export let apiVersion: string;
 
 /**
+ * The main app object.
+ *
  * @public
  */
 export class App {
 
-    /** @public */
+    /**
+     * The keymap object.
+     *
+     * @public
+     */
     keymap: Keymap;
-    /** @public */
+    /**
+     * The scope object.
+     *
+     * @public
+     */
     scope: Scope;
 
-    /** @public */
+    /**
+     * The workspace object.
+     *
+     * @public
+     */
     workspace: Workspace;
 
-    /** @public */
+    /**
+     * The vault object.
+     *
+     * @public
+     */
     vault: Vault;
-    /** @public */
-    metadataCache: MetadataCache;
 
-    /** @public */
+    /**
+     * The file manager object.
+     *
+     * @public
+     */
     fileManager: FileManager;
 
     /**
      * The last known user interaction event, to help commands find out what modifier keys are pressed.
+     *
      * @public
      */
     lastEvent: UserEvent | null;
 
     /**
      * Retrieve value from `localStorage` for this vault.
-     * @param key
+     *
+     * @param key - The key to retrieve.
+     * @returns The value from `localStorage`.
+     *
+     * @example
+     * ```ts
+     * const value = app.loadLocalStorage('my-key');
+     * ```
+     *
      * @public
      */
     loadLocalStorage(key: string): any | null;
     /**
      * Save vault-specific value to `localStorage`. If data is `null`, the entry will be cleared.
-     * @param key
-     * @param data value being saved to localStorage. Must be serializable.
+     *
+     * @param key - The key to save.
+     * @param data - The value to save. Must be serializable.
+     *
+     * @example
+     * ```ts
+     * app.saveLocalStorage('my-key', 'my-value');
+     * ```
      * @public
      */
     saveLocalStorage(key: string, data: unknown | null): void;
