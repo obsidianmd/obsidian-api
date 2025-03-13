@@ -734,8 +734,33 @@ declare global {
          */
         readonly innerHeight: number;
     }
+    /**
+     * Augments the built-in `SVGElement` type.
+     */
     interface SVGElement extends Element {
+        /**
+         * Sets the CSS styles of the element.
+         *
+         * @param styles - The styles to set.
+         *
+         * @example
+         * ```ts
+         * const element = document.body.createEl('svg');
+         * element.setCssStyles({ color: 'red', fontSize: '16px' });
+         * ```
+         */
         setCssStyles(styles: Partial<CSSStyleDeclaration>): void;
+        /**
+         * Sets the CSS properties of the element.
+         *
+         * @param props - The properties to set.
+         *
+         * @example
+         * ```ts
+         * const element = document.body.createEl('svg');
+         * element.setCssProps({ color: 'red', 'font-size': '16px' });
+         * ```
+         */
         setCssProps(props: Record<string, string>): void;
     }
     function isBoolean(obj: any): obj is boolean;
