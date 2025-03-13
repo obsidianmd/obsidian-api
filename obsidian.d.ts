@@ -912,10 +912,6 @@ declare global {
          * @example
          * ```ts
          * createEl('div', { cls: 'foo bar' });
-         * ```
-         *
-         * @example
-         * ```ts
          * createEl('div', { cls: ['foo', 'bar'] });
          * ```
          */
@@ -926,10 +922,6 @@ declare global {
          * @example
          * ```ts
          * createEl('div', { text: 'Hello' });
-         * ```
-         *
-         * @example
-         * ```ts
          * const fragment = createFragment();
          * fragment.createEl('span', { text: 'Hello' });
          * createEl('div', { text: fragment });
