@@ -2561,7 +2561,7 @@ export class CapacitorAdapter implements DataAdapter {
      */
     process(normalizedPath: string, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
     /**
-     * Gets the resource path for a file to be used in `<a href="...">`, `<img src="...">`, etc.
+     * Returns an URI for the browser engine to use, for example to embed an image.
      *
      * @param normalizedPath - The path to get the resource path for.
      * @returns The resource path for the file.
