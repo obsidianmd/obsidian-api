@@ -2976,64 +2976,177 @@ export interface Command {
 }
 
 /**
+ * A component that can be loaded and unloaded.
+ *
  * @public
  */
 export class Component {
 
     /**
      * Load this component and its children
+     *
+     * @example
+     * ```ts
+     * component.load();
+     * ```
+     *
      * @public
      */
     load(): void;
     /**
      * Override this to load your component
+     *
+     * @example
+     * ```ts
+     * class MyComponent extends Component {
+     *   onload() {
+     *     console.log('MyComponent loaded');
+     *   }
+     * }
+     * ```
+     *
      * @public
      * @virtual
      */
     onload(): void;
     /**
      * Unload this component and its children
+     *
+     * @example
+     * ```ts
+     * component.unload();
+     * ```
+     *
      * @public
      */
     unload(): void;
     /**
      * Override this to unload your component
+     *
+     * @example
+     * ```ts
+     * class MyComponent extends Component {
+     *   onunload() {
+     *     console.log('MyComponent unloaded');
+     *   }
+     * }
+     * ```
+     *
      * @public
      * @virtual
      */
-    onunload(): void;
     /**
      * Adds a child component, loading it if this component is loaded
+     *
+     * @typeParam T - The type of the component to add.
+     * @param component - The component to add.
+     * @returns The added component.
+     *
+     * @example
+     * ```ts
+     * component.addChild(childComponent);
+     * ```
+     *
      * @public
      */
     addChild<T extends Component>(component: T): T;
     /**
      * Removes a child component, unloading it
+     *
+     * @typeParam T - The type of the component to remove.
+     * @param component - The component to remove.
+     * @returns The removed component.
+     *
+     * @example
+     * ```ts
+     * component.removeChild(childComponent);
+     * ```
+     *
      * @public
      */
     removeChild<T extends Component>(component: T): T;
     /**
      * Registers a callback to be called when unloading
+     *
+     * @param cb - The callback to be called when unloading.
+     *
+     * @example
+     * ```ts
+     * component.register(() => {
+     *   console.log('MyComponent unloaded');
+     * });
+     * ```
+     *
      * @public
      */
     register(cb: () => any): void;
     /**
      * Registers an event to be detached when unloading
+     *
+     * @param eventRef - The event to be registered.
+     *
+     * @example
+     * ```ts
+     * component.registerEvent(eventRef);
+     * ```
+     *
      * @public
      */
     registerEvent(eventRef: EventRef): void;
     /**
      * Registers an DOM event to be detached when unloading
+     *
+     * @typeParam K - The type of the event to register.
+     * @param el - The element to register the event on.
+     * @param type - The type of the event to register.
+     * @param callback - The callback to be called when the event is triggered.
+     * @param options - The options for the event.
+     *
+     * @example
+     * ```ts
+     * component.registerDomEvent(window, 'click', () => {
+     *   console.log('Window clicked');
+     * });
+     * ```
+     *
      * @public
      */
     registerDomEvent<K extends keyof WindowEventMap>(el: Window, type: K, callback: (this: HTMLElement, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     /**
      * Registers an DOM event to be detached when unloading
+     *
+     * @typeParam K - The type of the event to register.
+     * @param el - The element to register the event on.
+     * @param type - The type of the event to register.
+     * @param callback - The callback to be called when the event is triggered.
+     * @param options - The options for the event.
+     *
+     * @example
+     * ```ts
+     * component.registerDomEvent(document, 'click', () => {
+     *   console.log('Document clicked');
+     * });
+     * ```
+     *
      * @public
      */
     registerDomEvent<K extends keyof DocumentEventMap>(el: Document, type: K, callback: (this: HTMLElement, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     /**
      * Registers an DOM event to be detached when unloading
+     *
+     * @typeParam K - The type of the event to register.
+     * @param el - The element to register the event on.
+     * @param type - The type of the event to register.
+     * @param callback - The callback to be called when the event is triggered.
+     * @param options - The options for the event.
+     *
+     * @example
+     * ```ts
+     * component.registerDomEvent(document.body, 'click', () => {
+     *   console.log('Body clicked');
+     * });
+     * ```
+     *
      * @public
      */
     registerDomEvent<K extends keyof HTMLElementEventMap>(el: HTMLElement, type: K, callback: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -3041,6 +3154,16 @@ export class Component {
     /**
      * Registers an interval (from setInterval) to be cancelled when unloading
      * Use {@link window.setInterval} instead of {@link setInterval} to avoid TypeScript confusing between NodeJS vs Browser API
+     *
+     * @param id - The id of the interval to register.
+     * @returns The id of the interval.
+     *
+     * @example
+     * ```ts
+     * component.registerInterval(window.setInterval(() => {
+     *   console.log('Interval');
+     * }, 1000));
+     * ```
      * @public
      */
     registerInterval(id: number): number;
