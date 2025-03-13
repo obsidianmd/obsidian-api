@@ -1957,10 +1957,31 @@ export abstract class BaseComponent {
 }
 
 /**
+ * Cache info for a block.
+ *
+ * If you have note
+ *
+ * ```markdown
+ * some **markdown** ^my-block-id
+ * ```
+ *
+ * The block cache would be:
+ *
+ * ```ts
+ * {
+ *     id: 'my-block-id',
+ *     ...
+ * }
+ * ```
+ *
  * @public
  */
 export interface BlockCache extends CacheItem {
-    /** @public */
+    /**
+     * The ID of the block.
+     *
+     * @public
+     */
     id: string;
 }
 
