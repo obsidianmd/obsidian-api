@@ -2190,61 +2190,174 @@ export class ButtonComponent extends BaseComponent {
 }
 
 /**
+ * Cached metadata for a note.
+ *
  * @public
  */
 export interface CachedMetadata {
     /**
+     * The links in the note.
+     *
+     * ```markdown
+     * [[wikilink]]
+     * [[wikilink|alias]]
+     * [alias](markdown-link)
+     * ```
+     *
      * @public
      */
     links?: LinkCache[];
     /**
+     * The embeds in the note.
+     *
+     * ```markdown
+     * ![[wikilink]]
+     * ![[wikilink|alias]]
+     * ![alias](markdown-link)
+     * ```
+     *
      * @public
      */
     embeds?: EmbedCache[];
     /**
+     * The tags in the note.
+     *
+     * ```markdown
+     * ---
+     * tags:
+     *   - tag1
+     *   - tag2
+     * ---
+     *
+     * #tag3
+     * ```
+     *
      * @public
      */
     tags?: TagCache[];
     /**
+     * The headings in the note.
+     *
+     * ```markdown
+     * # Heading 1
+     * ## Heading 2
+     * ### Heading 3
+     * ```
+     *
      * @public
      */
     headings?: HeadingCache[];
     /**
+     * The footnotes in the note.
+     *
+     * ```markdown
+     * Hello [^1]
+     *
+     * [^1]: World
+     * ```
+     *
      * @public
      */
     footnotes?: FootnoteCache[];
     /**
+     * The footnote references in the note.
+     *
+     * ```markdown
+     * Hello [^1]
+     *
+     * [^1]: World
+     * ```
+     *
      * @public
      */
     footnoteRefs?: FootnoteRefCache[];
     /**
+     * The reference links in the note.
+     *
+     * ```markdown
+     * [google]
+     *
+     * [google]: https://google.com
+     * ```
+     *
      * @public
      */
     referenceLinks?: ReferenceLinkCache[];
     /**
      * Sections are root level markdown blocks, which can be used to divide the document up.
+     *
+     * ```markdown
+     * # Heading section
+     *
+     * Paragraph section
+     *
+     * > [!NOTE]
+     * > Callout section
+     * ```
+     *
      * @public
      */
     sections?: SectionCache[];
     /**
+     * List items are markdown blocks that are used to create lists.
+     *
+     * ```markdown
+     * - Unordered List Item 1
+     * - Unordered List Item 2
+     * - Unordered List Item 3
+     *
+     * 1. Ordered List Item 1
+     * 2. Ordered List Item 2
+     * 3. Ordered List Item 3
+     * ```
      * @public
      */
     listItems?: ListItemCache[];
     /**
+     * Frontmatter is a block of metadata that is used to store information about the note.
+     *
+     * ```markdown
+     * ---
+     * key1: "value1",
+     * key2: 42
+     * ---
+     * ```
      * @public
      */
     frontmatter?: FrontMatterCache;
     /**
      * Position of the frontmatter in the file.
+     *
+     * ```markdown
+     * ---
+     * key1: "value1",
+     * key2: 42
+     * ---
+     *
+     * ```
      * @public
      */
     frontmatterPosition?: Pos;
 
     /**
+     * The links in the frontmatter.
+     *
+     * ```markdown
+     * ---
+     * key1: "[[wikilink]]"
+     * key2: "[[wikilink|alias]]"
+     * ---
+     * ```
+     *
      * @public
      */
     frontmatterLinks?: FrontmatterLinkCache[];
     /**
+     * The blocks in the note.
+     *
+     * ```markdown
+     * Hello ^world
+     * ```
      * @public
      */
     blocks?: Record<string, BlockCache>;
