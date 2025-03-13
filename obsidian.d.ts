@@ -1914,17 +1914,43 @@ export function arrayBufferToHex(data: ArrayBuffer): string;
 export function base64ToArrayBuffer(base64: string): ArrayBuffer;
 
 /**
+ * The base class for all components.
+ *
  * @public
  */
 export abstract class BaseComponent {
-    /** @public */
+    /**
+     * Whether the component is disabled.
+     *
+     * @public
+     */
     disabled: boolean;
     /**
      * Facilitates chaining
+     *
+     * @param cb - The callback to execute.
+     * @returns The component instance.
+     *
+     * @example
+     * ```ts
+     * component.then((x) => {
+     *     console.log(x);
+     * });
+     * ```
+     *
      * @public
      */
     then(cb: (component: this) => any): this;
     /**
+     * Sets the disabled state of the component.
+     *
+     * @param disabled - Whether to disable the component.
+     *
+     * @example
+     * ```ts
+     * component.setDisabled(true);
+     * ```
+     *
      * @public
      */
     setDisabled(disabled: boolean): this;
