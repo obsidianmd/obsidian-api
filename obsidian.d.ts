@@ -3711,6 +3711,8 @@ export class DropdownComponent extends ValueComponent<string> {
 }
 
 /**
+ * Editable file view
+ *
  * @public
  */
 export abstract class EditableFileView extends FileView {
@@ -3719,6 +3721,7 @@ export abstract class EditableFileView extends FileView {
 
 /**
  * A common interface that bridges the gap between CodeMirror 5 and CodeMirror 6.
+ *
  * @public
  */
 export abstract class Editor {
