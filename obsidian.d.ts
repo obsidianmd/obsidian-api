@@ -9,7 +9,7 @@ import * as Moment from 'moment';
 
 declare global {
     /**
-     * Augments the built-in `Object` constructor.
+     * Augments the built-in {@link ObjectConstructor} interface.
      */
     interface ObjectConstructor {
         /**
@@ -45,7 +45,7 @@ declare global {
         }, callback: (value: T, key?: string) => boolean | void, context?: any): boolean;
     }
     /**
-     * Augments the built-in `Array` constructor.
+     * Augments the built-in {@link ArrayConstructor} interface.
      */
     interface ArrayConstructor {
         /**
@@ -62,7 +62,7 @@ declare global {
         combine<T>(arrays: T[][]): T[];
     }
     /**
-     * Augments the built-in `Array` type.
+     * Augments the built-in {@link Array} interface.
      *
      * @typeParam T - The type of the elements in the array.
      */
@@ -162,7 +162,7 @@ declare global {
         findLastIndex(predicate: (value: T) => boolean): number;
     }
     /**
-     * Augments the built-in `Math` type.
+     * Augments the built-in {@link Math} interface.
      */
     interface Math {
         /**
@@ -196,7 +196,7 @@ declare global {
         square(value: number): number;
     }
     /**
-     * Augments the built-in `String` constructor.
+     * Augments the built-in {@link StringConstructor} interface.
      */
     interface StringConstructor {
         /**
@@ -214,7 +214,7 @@ declare global {
         isString(obj: any): obj is string;
     }
     /**
-     * Augments the built-in `String` type.
+     * Augments the built-in {@link String} interface.
      */
     interface String {
         /**
@@ -279,7 +279,7 @@ declare global {
         format(...args: string[]): string;
     }
     /**
-     * Augments the built-in `Number` constructor.
+     * Augments the built-in {@link NumberConstructor} interface.
      */
     interface NumberConstructor {
         /**
@@ -302,7 +302,7 @@ declare global {
         isNumber(obj: any): obj is number;
     }
     /**
-     * Augments the built-in `Node` type.
+     * Augments the built-in {@link Node} interface.
      */
     interface Node {
         /**
@@ -420,7 +420,7 @@ declare global {
         constructorWin: Window;
     }
     /**
-     * Augments the built-in `Element` type.
+     * Augments the built-in {@link Element} interface.
      */
     interface Element extends Node {
         /**
@@ -641,7 +641,7 @@ declare global {
         isActiveElement(): boolean;
     }
     /**
-     * Augments the built-in `HTMLElement` type.
+     * Augments the built-in {@link HTMLElement} interface.
      */
     interface HTMLElement extends Element {
         /**
@@ -735,7 +735,7 @@ declare global {
         readonly innerHeight: number;
     }
     /**
-     * Augments the built-in `SVGElement` type.
+     * Augments the built-in {@link SVGElement} interface.
      */
     interface SVGElement extends Element {
         /**
@@ -808,7 +808,7 @@ declare global {
      */
     function fishAll(selector: string): HTMLElement[];
     /**
-     * Augments the built-in `Element` type.
+     * Augments the built-in {@link Element} interface.
      */
     interface Element extends Node {
         /**
@@ -863,7 +863,7 @@ declare global {
         findAllSelf(selector: string): Element[];
     }
     /**
-     * Augments the built-in `DocumentFragment` type.
+     * Augments the built-in {@link DocumentFragment} interface.
      */
     interface DocumentFragment extends Node, NonElementParentNode, ParentNode {
         /**
@@ -903,7 +903,7 @@ declare global {
         findAll(selector: string): Element[];
     }
     /**
-     * Options object passed to `createEl()`.
+     * Options object passed to {@link createEl}.
      */
     interface DomElementInfo {
         /**
@@ -1005,7 +1005,7 @@ declare global {
         href?: string;
     }
     /**
-     * Options object passed to `createSvg()`.
+     * Options object passed to {@link createSvg}.
      */
     interface SvgElementInfo {
         /**
@@ -1051,7 +1051,7 @@ declare global {
         prepend?: boolean;
     }
     /**
-     * Augments the built-in `Node` type.
+     * Augments the built-in {@link Node} interface.
      */
     interface Node {
         /**
@@ -1232,7 +1232,7 @@ declare global {
         callback: Function;
     }
     /**
-     * Augments the built-in `HTMLElement` type.
+     * Augments the built-in {@link HTMLElement} interface.
      */
     interface HTMLElement extends Element {
         /**
@@ -1331,7 +1331,7 @@ declare global {
         trigger(eventType: string): void;
     }
     /**
-     * Augments the built-in `Document` type.
+     * Augments the built-in {@link Document} interface.
      */
     interface Document {
         /**
@@ -1376,7 +1376,7 @@ declare global {
         off<K extends keyof DocumentEventMap>(this: Document, type: K, selector: string, listener: (this: Document, ev: DocumentEventMap[K], delegateTarget: HTMLElement) => any, options?: boolean | AddEventListenerOptions): void;
     }
     /**
-     * Augments the built-in `UIEvent` type.
+     * Augments the built-in {@link UIEvent} interface.
      */
     interface UIEvent extends Event {
         /**
@@ -1411,7 +1411,7 @@ declare global {
         }): this is T;
     }
     /**
-     * Options for an `ajax()` request.
+     * Options for an {@link ajax} request.
      */
     interface AjaxOptions {
         /**
@@ -1525,7 +1525,7 @@ declare global {
      */
     let activeDocument: Document;
     /**
-     * Augments the built-in `Window` type.
+     * Augments the built-in {@link Window} interface.
      */
     interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandlers, WindowEventHandlers, WindowLocalStorage, WindowOrWorkerGlobalScope, WindowSessionStorage {
         /**
@@ -1563,7 +1563,7 @@ declare global {
         nextFrame(): Promise<void>;
     }
     /**
-     * Augments the built-in `Touch` type.
+     * Augments the built-in {@link Touch} interface.
      */
     interface Touch {
         /**
