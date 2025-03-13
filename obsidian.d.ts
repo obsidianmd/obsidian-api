@@ -2037,7 +2037,7 @@ export interface BlockSubpathResult extends SubpathResult {
  */
 export class ButtonComponent extends BaseComponent {
     /**
-     * The button element.
+     * The HTML element representation of the button
      *
      * @public
      */
@@ -3609,7 +3609,7 @@ export function displayTooltip(newTargetEl: HTMLElement, content: string | Docum
  */
 export class DropdownComponent extends ValueComponent<string> {
     /**
-     * The select element
+     * The HTML element representation of the dropdown
      *
      * @public
      */
