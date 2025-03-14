@@ -5664,16 +5664,59 @@ export abstract class FuzzySuggestModal<T> extends SuggestModal<FuzzyMatch<T>> {
 
 /**
  * Combines all tags from frontmatter and note content into a single array.
+ *
+ * @example
+ * For the following note:
+ *
+ * ```markdown
+ * ---
+ * tags:
+ *   - foo
+ *   - bar
+ * ---
+ *
+ * #baz
+ * ```
+ *
+ * Usage:
+ *
+ * ```ts
+ * console.log(getAllTags(cache)); // ['foo', 'bar', 'baz']
+ * ```
+ *
  * @public
  */
 export function getAllTags(cache: CachedMetadata): string[] | null;
 
-/** @public */
+/**
+ * Converts a Blob to an ArrayBuffer.
+ *
+ * @param blob - The Blob to convert.
+ * @returns The ArrayBuffer.
+ *
+ * @example
+ * ```ts
+ * console.log(await getBlobArrayBuffer(blob));
+ * ```
+ *
+ * @public
+ */
 export function getBlobArrayBuffer(blob: Blob): Promise<ArrayBuffer>;
 
 /**
  * Given the contents of a file, get information about the frontmatter of the file, including
  * whether there is a frontmatter block, the offsets of where it starts and ends, and the frontmatter text.
+ *
+ * @example
+ * ```ts
+ * const content = `---
+ * key1: value1
+ * key2: value2
+ * ---
+ * main content
+ * `;
+ * console.log(getFrontMatterInfo(content));
+ * ```
  *
  * @public
  */
@@ -5681,13 +5724,27 @@ export function getFrontMatterInfo(content: string): FrontMatterInfo;
 
 /**
  * Create an SVG from an iconId. Returns null if no icon associated with the iconId.
+ *
  * @param iconId - the icon ID
+ * @returns the SVG element or `null` if no icon associated with the iconId
+ *
+ * @example
+ * ```ts
+ * console.log(getIcon('dice')); // <svg>...</svg>
+ * ```
+ *
  * @public
  */
 export function getIcon(iconId: string): SVGSVGElement | null;
 
 /**
  * Get the list of registered icons.
+ *
+ * @example
+ * ```ts
+ * console.log(getIconIds()); // ['lucide-a-arrow-down', ..., 'rectangle-vertical-double']
+ * ```
+ *
  * @public
  */
 export function getIconIds(): IconName[];
@@ -5695,14 +5752,27 @@ export function getIconIds(): IconName[];
 /**
  * Get the ISO code for the currently configured app language. Defaults to 'en'.
  * See {@link https://github.com/obsidianmd/obsidian-translations?tab=readme-ov-file#existing-languages} for list of options.
+ *
+ * @example
+ * ```ts
+ * console.log(getLanguage()); // en
+ * ```
+ *
  * @public
  */
 export function getLanguage(): string;
 
 /**
  * Converts the linktext to a linkpath.
+ *
  * @param linktext A wikilink without the leading [[ and trailing ]]
  * @returns the name of the file that is being linked to.
+ *
+ * @example
+ * ```ts
+ * console.log(getLinkpath('foo#bar')); // foo
+ * ```
+ *
  * @public
  */
 export function getLinkpath(linktext: string): string;
