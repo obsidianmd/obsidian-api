@@ -7448,6 +7448,7 @@ export class MenuSeparator {
 }
 
 /**
+ * A cached metadata for a note.
  *
  * Linktext is any internal link that is composed of a path and a subpath, such as 'My note#Heading'
  * Linkpath (or path) is the path part of a linktext
@@ -7459,15 +7460,46 @@ export class MetadataCache extends Events {
 
     /**
      * Get the best match for a linkpath.
+     *
+     * @param linkpath - The linkpath to get the best match for.
+     * @param sourcePath - The source path to get the best match for.
+     * @returns The best match for the linkpath or `null` if the linkpath is not found.
+     *
+     * @example
+     * ```ts
+     * console.log(app.metadataCache.getFirstLinkpathDest('foo/bar', 'baz/qux.md'); // `TFile` with path: 'baz/foo/bar.md' or 'some/other/path/foo/bar.md'
+     * ```
+     *
      * @public
      */
     getFirstLinkpathDest(linkpath: string, sourcePath: string): TFile | null;
 
     /**
+     * Get the cached metadata for a file.
+     *
+     * @param file - The file to get the cached metadata for.
+     * @returns The cached metadata for the file or `null` if the metadata for the file is not cached.
+     *
+     * @example
+     * ```ts
+     * const file = app.vault.getFileByPath('foo/bar.md');
+     * const cache = app.metadataCache.getFileCache(file);
+     * ```
+     *
      * @public
      */
     getFileCache(file: TFile): CachedMetadata | null;
     /**
+     * Get the cached metadata for a path.
+     *
+     * @param path - The path to get the cached metadata for.
+     * @returns The cached metadata for the path or `null` if the metadata for the path is not cached.
+     *
+     * @example
+     * ```ts
+     * const cache = app.metadataCache.getCache('foo/bar.md');
+     * ```
+     *
      * @public
      */
     getCache(path: string): CachedMetadata | null;
@@ -7477,6 +7509,18 @@ export class MetadataCache extends Events {
      *
      * If file name is unique, use the filename.
      * If not unique, use full path.
+     *
+     * @param file - The file to generate a linktext for.
+     * @param sourcePath - The source path to generate a linktext for.
+     * @param omitMdExtension - Whether to omit the `.md` extension from the linktext.
+     * @returns The linktext for the file.
+     *
+     * @example
+     * ```ts
+     * const file = app.vault.getFileByPath('foo/bar.md');
+     * console.log(app.metadataCache.fileToLinktext(file, 'baz/qux.md')); // 'bar' or 'foo/bar' depending on whether the file name is unique
+     * ```
+     *
      * @public
      */
     fileToLinktext(file: TFile, sourcePath: string, omitMdExtension?: boolean): string;
@@ -7484,12 +7528,14 @@ export class MetadataCache extends Events {
     /**
      * Contains all resolved links. This object maps each source file's path to an object of destination file paths with the link count.
      * Source and destination paths are all vault absolute paths that comes from `TFile.path` and can be used with `Vault.getAbstractFileByPath(path)`.
+     *
      * @public
      */
     resolvedLinks: Record<string, Record<string, number>>;
     /**
      * Contains all unresolved links. This object maps each source file to an object of unknown destinations with count.
-     * Source paths are all vault absolute paths, similar to `resolvedLinks`.
+     * Source paths are all vault absolute paths, similar to {@link resolvedLinks}.
+     *
      * @public
      */
     unresolvedLinks: Record<string, Record<string, number>>;
@@ -7497,26 +7543,78 @@ export class MetadataCache extends Events {
     /**
      * Called when a file has been indexed, and its (updated) cache is now available.
      *
+     * @param name - Should be `'changed'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.metadataCache.on('changed', (file, data, cache) => {
+     *     console.log(file.name, data, cache);
+     * });
+     * ```
+     *
      * Note: This is not called when a file is renamed for performance reasons.
-     * You must hook the vault rename event for those.
+     * You must hook the {@link Vault.on | Vault.on(name: 'rename')} event for those.
+     *
      * @public
      */
     on(name: 'changed', callback: (file: TFile, data: string, cache: CachedMetadata) => any, ctx?: any): EventRef;
     /**
      * Called when a file has been deleted. A best-effort previous version of the cached metadata is presented,
-     * but it could be null in case the file was not successfully cached previously.
+     * but it could be `null` in case the file was not successfully cached previously.
+     *
+     * @param name - Should be `'deleted'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.metadataCache.on('deleted', (file, prevCache) => {
+     *     console.log(file.name, prevCache);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'deleted', callback: (file: TFile, prevCache: CachedMetadata | null) => any, ctx?: any): EventRef;
 
     /**
-     * Called when a file has been resolved for `resolvedLinks` and `unresolvedLinks`.
+     * Called when a file has been resolved for {@link resolvedLinks} and {@link unresolvedLinks | unresolvedLinks}.
      * This happens sometimes after a file has been indexed.
+     *
+     * @param name - Should be `'resolve'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.metadataCache.on('resolve', (file) => {
+     *     console.log(file.name);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'resolve', callback: (file: TFile) => any, ctx?: any): EventRef;
     /**
      * Called when all files has been resolved. This will be fired each time files get modified after the initial load.
+     *
+     * @param name - Should be `'resolved'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.metadataCache.on('resolved', () => {
+     *     console.log('All files have been resolved');
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'resolved', callback: () => any, ctx?: any): EventRef;
