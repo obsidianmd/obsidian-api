@@ -6464,6 +6464,7 @@ export function loadPrism(): Promise<any>;
 
 /**
  * Location within a Markdown document
+ *
  * @public
  */
 export interface Loc {
@@ -6473,7 +6474,7 @@ export interface Loc {
      */
     line: number;
     /**
-     * Column number.
+     * Column number. 0-based
      * @public
      */
     col: number;
@@ -6486,47 +6487,119 @@ export interface Loc {
 
 /**
  * This is the editor for Obsidian Mobile as well as the upcoming WYSIWYG editor.
+ *
  * @public
  */
 export class MarkdownEditView implements MarkdownSubView, HoverParent, MarkdownFileInfo {
 
-    /** @public */
+    /**
+     * The Obsidian app instance.
+     *
+     * @public
+     */
     app: App;
 
-    /** @public */
+    /**
+     * The hover popover.
+     *
+     * @public
+     */
     hoverPopover: HoverPopover;
 
     /**
+     * Create a new markdown edit view.
+     *
+     * @param view - The markdown view.
+     *
+     * @example
+     * ```ts
+     * const markdownEditView = new MarkdownEditView(markdownView);
+     * ```
+     *
      * @public
      */
     constructor(view: MarkdownView);
 
     /**
+     * Clear the markdown edit view.
+     *
+     * @example
+     * ```ts
+     * markdownEditView.clear();
+     * ```
+     *
      * @public
      */
     clear(): void;
     /**
+     * Get the markdown content of the edit view.
+     *
+     * @example
+     * ```ts
+     * console.log(markdownEditView.get());
+     * ```
+     *
      * @public
      */
     get(): string;
     /**
+     * Set the markdown content of the edit view.
+     *
+     * @param data - The markdown content.
+     * @param clear - Whether to clear the content before setting it.
+     *
+     * @example
+     * ```ts
+     * markdownEditView.set('**foo** bar', true);
+     * ```
+     *
      * @public
      */
     set(data: string, clear: boolean): void;
 
-    /** @public */
+    /**
+     * Get the file associated with the edit view.
+     *
+     * @example
+     * ```ts
+     * console.log(markdownEditView.file);
+     * ```
+     *
+     * @public
+     */
     get file(): TFile;
 
     /**
+     * Get the selection of the edit view.
+     *
+     * @example
+     * ```ts
+     * console.log(markdownEditView.getSelection());
+     * ```
+     *
      * @public
      */
     getSelection(): string;
 
     /**
+     * Get the scroll position of the edit view.
+     *
+     * @example
+     * ```ts
+     * console.log(markdownEditView.getScroll());
+     * ```
+     *
      * @public
      */
     getScroll(): number;
     /**
+     * Apply the scroll position to the edit view.
+     *
+     * @example
+     * ```ts
+     * markdownEditView.applyScroll(100);
+     * ```
+     *
      * @public
      */
     applyScroll(scroll: number): void;
