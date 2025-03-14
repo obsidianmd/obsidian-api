@@ -4162,21 +4162,21 @@ export interface EditorChange extends EditorRangeOrCaret {
 export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goStart' | 'goEnd' | 'goWordLeft' | 'goWordRight' | 'indentMore' | 'indentLess' | 'newlineAndIndent' | 'swapLineUp' | 'swapLineDown' | 'deleteLine' | 'toggleFold' | 'foldAll' | 'unfoldAll';
 
 /**
- * Use this {@link StateField} to get a reference to the {@link EditorView}
+ * Use this `CodeMirror` {@link StateField} to get a reference to the {@link EditorView}
  *
  * @public
  */
 export const editorEditorField: StateField<EditorView>;
 
 /**
- * Use this {@link StateField} to get {@link MarkdownFileInfo} about this Markdown editor, such as the associated file, or the Editor.
+ * Use this `CodeMirror` {@link StateField} to get {@link MarkdownFileInfo} about this Markdown editor, such as the associated file, or the Editor.
  *
  * @public
  */
 export const editorInfoField: StateField<MarkdownFileInfo>;
 
 /**
- * Use this {@link StateField} to check whether `Live Preview` is active
+ * Use this `CodeMirror` {@link StateField} to check whether `Live Preview` is active
  *
  * @public
  */
@@ -6399,18 +6399,21 @@ export interface ListItemCache extends CacheItem {
 }
 
 /**
+ * `CodeMirror` {@link ViewPlugin} for `Live Preview`.
  * @public
  */
 export const livePreviewState: ViewPlugin<LivePreviewStateType>;
 
 /**
  * The object stored in the view plugin {@link livePreviewState}
+ *
  * @public
  */
 export interface LivePreviewStateType {
     /**
-     * True if the left mouse is currently held down in the editor
+     * Whether the left mouse is currently held down in the editor.
      * (for example, when drag-to-select text).
+     *
      * @public
      */
     mousedown: boolean;
@@ -6418,6 +6421,9 @@ export interface LivePreviewStateType {
 
 /**
  * Load MathJax.
+ *
+ * @returns A promise that resolves when MathJax is loaded.
+ *
  * @see {@link https://www.mathjax.org/ Official MathJax documentation}
  * @public
  */
@@ -6425,7 +6431,10 @@ export function loadMathJax(): Promise<void>;
 
 /**
  * Load Mermaid and return a promise to the global mermaid object.
- * Can also use `mermaid` after this promise resolves to get the same reference.
+ * Can also use `window.mermaid` after this promise resolves to get the same reference.
+ *
+ * @returns A promise that resolves to the global `window.mermaid` object.
+ *
  * @see {@link https://mermaid.js.org/ Official Mermaid documentation}
  * @public
  */
@@ -6434,6 +6443,9 @@ export function loadMermaid(): Promise<any>;
 /**
  * Load PDF.js and return a promise to the global pdfjsLib object.
  * Can also use `window.pdfjsLib` after this promise resolves to get the same reference.
+ *
+ * @returns A promise that resolves to the global `window.pdfjsLib` object.
+ *
  * @see {@link https://mozilla.github.io/pdf.js/ Official PDF.js documentation}
  * @public
  */
@@ -6441,7 +6453,10 @@ export function loadPdfJs(): Promise<any>;
 
 /**
  * Load Prism.js and return a promise to the global Prism object.
- * Can also use `Prism` after this promise resolves to get the same reference.
+ * Can also use `window.Prism` after this promise resolves to get the same reference.
+ *
+ * @returns A promise that resolves to the global `window.Prism` object.
+ *
  * @see {@link https://prismjs.com/ Official Prism documentation}
  * @public
  */
