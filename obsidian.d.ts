@@ -2218,9 +2218,9 @@ export interface CachedMetadata {
      * The cache of the headings in the note.
      *
      * ```markdown
-     * # Heading 1
-     * ## Heading 2
-     * ### Heading 3
+     * # foo
+     * ## bar
+     * ### baz
      * ```
      *
      * @public
