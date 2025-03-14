@@ -6026,12 +6026,37 @@ export interface HSL {
 export function htmlToMarkdown(html: string | HTMLElement | Document | DocumentFragment): string;
 
 /**
+ * An instruction for the modal.
+ *
+ * @example
+ * ```ts
+ * const instruction: Instruction = { command: '↑↓', purpose: 'Navigate' };
+ * ```
+ *
  * @public
  */
 export interface Instruction {
-    /** @public */
+    /** 
+     * The command or the key combination
+     *
+     * @example
+     * ```ts
+     * console.log(instruction.command); // '↑↓'
+     * ```
+     * 
+     * @public
+     */
     command: string;
-    /** @public */
+    /**
+     * The purpose of the command.
+     *
+     * @example
+     * ```ts
+     * console.log(instruction.purpose); // 'Navigate'
+     * ```
+     * 
+     * @public
+     */
     purpose: string;
 }
 
