@@ -6158,7 +6158,17 @@ export abstract class ItemView extends View {
 /**
  * Iterate links and embeds.
  * If callback returns true, the iteration process will be interrupted.
- * @returns true if callback ever returns true, false otherwise.
+ *
+ * @param cache - The cache to iterate.
+ * @param cb - The callback to call for each link or embed.
+ * @returns `true` if callback ever returns `true`, `false` otherwise.
+ *
+ * @example
+ * ```ts
+ * iterateCacheRefs(cache, (ref) => {
+ *     console.log(ref);
+ *     return true;
+ * });
  * @public
  * @deprecated
  */
@@ -6166,7 +6176,17 @@ export function iterateCacheRefs(cache: CachedMetadata, cb: (ref: ReferenceCache
 
 /**
  * If callback returns true, the iteration process will be interrupted.
+ * 
+ * @param refs - The references to iterate.
+ * @param cb - The callback to call for each reference.
  * @returns true if callback ever returns true, false otherwise.
+ * 
+ * @example
+ * ```ts
+ * iterateRefs(refs, (ref) => {
+ *     console.log(ref);
+ *     return true;
+ * });
  * @public
  */
 export function iterateRefs(refs: Reference[], cb: (ref: Reference) => boolean | void): boolean;
