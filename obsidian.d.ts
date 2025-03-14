@@ -5778,15 +5778,36 @@ export function getLanguage(): string;
 export function getLinkpath(linktext: string): string;
 
 /**
+ * The cache of the heading in the note.
+ *
+ * ```markdown
+ * # foo
+ * ## bar
+ * ### baz
+ * ```
+ *
  * @public
  */
 export interface HeadingCache extends CacheItem {
     /**
+     * The heading text.
+     * 
+     * @example
+     * ```ts
+     * console.log(headingCache.heading); // foo
+     * ```
+     * 
      * @public
      */
     heading: string;
     /**
      * Number between 1 and 6.
+     *
+     * @example
+     * ```ts
+     * console.log(headingCache.level); // 1
+     * ```
+     *
      * @public
      */
     level: number;
