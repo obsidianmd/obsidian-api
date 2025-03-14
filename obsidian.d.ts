@@ -1951,25 +1951,10 @@ export abstract class BaseComponent {
 }
 
 /**
- * Cache info for a block.
- *
- * If you have note
+ * The cache of the block in the note.
  *
  * ```markdown
- * some **markdown** ^my-block-id
- * ```
- *
- * ```ts
- * app.metadataCache.getCache('note.md').blocks['my-block-id']
- * ```
- *
- * would return the following block cache:
- *
- * ```ts
- * {
- *     id: 'my-block-id',
- *     ...
- * }
+ * foo ^bar
  * ```
  *
  * @public
@@ -4504,7 +4489,7 @@ export interface EditorTransaction {
 export const editorViewField: StateField<MarkdownFileInfo>;
 
 /**
- * The embeds in the note.
+ * The cache of the embed in the note.
  *
  * ```markdown
  * ![[wikilink]]
@@ -5345,6 +5330,14 @@ export abstract class FileView extends ItemView {
 export function finishRenderMath(): Promise<void>;
 
 /**
+ * The cache of the footnote in the note.
+ *
+ * ```markdown
+ * foo [^1]
+ *
+ * [^1]: bar
+ * ```
+ *
  * @public
  */
 export interface FootnoteCache extends CacheItem {
@@ -5355,6 +5348,14 @@ export interface FootnoteCache extends CacheItem {
 }
 
 /**
+ * The cache of the footnote reference in the note.
+ *
+ * ```markdown
+ * foo [^1]
+ *
+ * [^1]: bar
+ * ```
+ *
  * @public
  */
 export interface FootnoteRefCache extends CacheItem {
@@ -5365,24 +5366,42 @@ export interface FootnoteRefCache extends CacheItem {
 }
 
 /**
+ * Result of resolving footnotes using {@link resolveSubpath}
+ *
  * @public
  */
 export interface FootnoteSubpathResult extends SubpathResult {
     /**
+     * The type of the subpath result
+     *
      * @public
      */
     type: 'footnote';
     /**
+     * The found footnote
+     *
      * @public
      */
     footnote: FootnoteCache;
 }
 
 /**
+ * The cache of the frontmatter in the note.
+ * Frontmatter is a block of metadata that is used to store information about the note.
+ *
+ * ```markdown
+ * ---
+ * key1: "value1",
+ * key2: 42
+ * ---
+ * ```
+ *
  * @public
  */
 export interface FrontMatterCache {
     /**
+     * The key-value pairs in the frontmatter.
+     *
      * @public
      */
     [key: string]: any;
