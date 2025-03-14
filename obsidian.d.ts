@@ -1782,7 +1782,7 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
  *
  * @example
  * ```ts
- * addIcon('icon-id', '<svg>...</svg>');
+ * addIcon('my-icon', '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="40"/></svg>');
  * ```
  *
  * @public
@@ -2128,7 +2128,7 @@ export class ButtonComponent extends BaseComponent {
      * @example
      * ```ts
      * const button = new ButtonComponent(containerEl);
-     * button.setIcon('my-icon');
+     * button.setIcon('dice');
      * ```
      *
      * @public
@@ -2845,6 +2845,14 @@ export interface Command {
      *
      * See {@link https://docs.obsidian.md/Plugins/User+interface/Icons} for available icons and how to add your own.
      *
+     * @example
+     * ```ts
+     * const command: Command = {
+     *   id: 'example-command',
+     *   name: 'Example command',
+     *   icon: 'dice',
+     * };
+     * ```
      * @public
      */
     icon?: IconName;
@@ -4670,7 +4678,7 @@ export class ExtraButtonComponent extends BaseComponent {
      *
      * @example
      * ```ts
-     * extraButton.setIcon('icon-name');
+     * extraButton.setIcon('dice');
      * ```
      *
      * @public
