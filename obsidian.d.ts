@@ -5336,6 +5336,7 @@ export abstract class FileView extends ItemView {
 
 /**
  * Flush the MathJax stylesheet.
+ *
  * @public
  */
 export function finishRenderMath(): Promise<void>;
