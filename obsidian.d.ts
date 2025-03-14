@@ -6607,19 +6607,35 @@ export class MarkdownEditView implements MarkdownSubView, HoverParent, MarkdownF
 }
 
 /**
+ * The markdown file info.
+ *
  * @public
  */
 export interface MarkdownFileInfo extends HoverParent {
     /**
+     * The Obsidian app instance.
+     *
      * @public
      */
     app: App;
     /**
+     * The associated file.
+     *
+     * @example
+     * ```ts
+     * console.log(markdownFileInfo.file);
+     * ```
      * @public
      */
     get file(): TFile | null;
 
     /**
+     * The editor associated with the markdown edit view.
+     *
+     * @example
+     * ```ts
+     * console.log(markdownFileInfo.editor);
+     * ```
      * @public
      */
     editor?: Editor;
@@ -6632,35 +6648,47 @@ export interface MarkdownFileInfo extends HoverParent {
  *
  * If your post processor requires lifecycle management, for example, to clear an interval, kill a subprocess, etc when this element is
  * removed from the app, look into {@link MarkdownPostProcessorContext.addChild}
+ *
  * @public
  */
 export interface MarkdownPostProcessor {
     /**
      * The processor function itself.
+     *
      * @public
      */
     (el: HTMLElement, ctx: MarkdownPostProcessorContext): Promise<any> | void;
     /**
      * An optional integer sort order. Defaults to 0. Lower number runs before higher numbers.
+     *
      * @public
      */
     sortOrder?: number;
 }
 
 /**
+ * The context of the markdown post processor.
+ *
  * @public
  */
 export interface MarkdownPostProcessorContext {
     /**
+     * The ID of the document.
+     *
      * @public
      */
     docId: string;
     /**
      * The path to the associated file. Any links are assumed to be relative to the `sourcePath`.
+     *
      * @public
      */
     sourcePath: string;
-    /** @public */
+    /**
+     * The frontmatter of the document.
+     *
+     * @public
+     */
     frontmatter: any | null | undefined;
 
     /**
@@ -6668,39 +6696,68 @@ export interface MarkdownPostProcessorContext {
      *
      * Use this to add a dependent child to the renderer such that if the containerEl
      * of the child is ever removed, the component's unload will be called.
+     *
+     * @param child - The child component to add.
+     *
      * @public
      */
     addChild(child: MarkdownRenderChild): void;
     /**
      * Gets the section information of this element at this point in time.
      * Only call this function right before you need this information to get the most up-to-date version.
-     * This function may also return null in many circumstances; if you use it, you must be prepared to deal with nulls.
+     * This function may also return `null` in many circumstances; if you use it, you must be prepared to deal with `null`s.
+     *
+     * @param el - The element to get the section information from.
+     * @returns The section information or `null` if no section information is available.
+     *
      * @public
      */
     getSectionInfo(el: HTMLElement): MarkdownSectionInformation | null;
 
 }
 
-/** @public */
+/**
+ * The events of the markdown preview.
+ *
+ * @public
+ */
 export interface MarkdownPreviewEvents extends Component {
 
 }
 
 /**
+ * The renderer of the markdown preview.
+ *
  * @public
  */
 export class MarkdownPreviewRenderer {
 
     /**
+     * Register a post processor.
+     *
+     * @param postProcessor - The post processor to register.
+     * @param sortOrder - The sort order of the post processor.
+     *
      * @public
      */
     static registerPostProcessor(postProcessor: MarkdownPostProcessor, sortOrder?: number): void;
     /**
+     * Unregister a post processor.
+     *
+     * @param postProcessor - The post processor to unregister.
+     *
      * @public
      */
     static unregisterPostProcessor(postProcessor: MarkdownPostProcessor): void;
 
     /**
+     * Create a code block post processor.
+     *
+     * @param language - The language of the code block.
+     * @param handler - The handler of the code block.
+     * @param ctx - The context of the code block post processor.
+     * @returns The code block post processor.
+     *
      * @public
      */
     static createCodeBlockPostProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void): (el: HTMLElement, ctx: MarkdownPostProcessorContext) => void;
@@ -6708,43 +6765,95 @@ export class MarkdownPreviewRenderer {
 }
 
 /**
+ * The markdown preview view.
+ *
  * @public
  */
 export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSubView, MarkdownPreviewEvents {
 
     /**
+     * The container element of the markdown preview view.
+     *
      * @public
      */
     containerEl: HTMLElement;
 
     /**
+     * The file associated with the markdown preview view.
+     *
      * @public
      */
     get file(): TFile;
 
     /**
+     * Get the markdown content of the markdown preview view.
+     *
+     * @example
+     * ```ts
+     * console.log(markdownPreviewView.get());
+     * ```
+     *
      * @public
      */
-    get(): string;
     /**
+     * Set the markdown content of the markdown preview view.
+     *
+     * @param data - The markdown content.
+     * @param clear - Whether to clear the content before setting it.
+     *
+     * @example
+     * ```ts
+     * markdownPreviewView.set('**foo** bar', true);
+     * ```
+     *
      * @public
      */
     set(data: string, clear: boolean): void;
     /**
+     * Clear the markdown content of the markdown preview view.
+     *
+     * @example
+     * ```ts
+     * markdownPreviewView.clear();
+     * ```
+     *
      * @public
      */
     clear(): void;
 
     /**
+     * Force the markdown preview view to rerender.
+     *
+     * @param full - Whether to rerender the entire preview or just the changed parts.
+     *
+     * @example
+     * ```ts
+     * markdownPreviewView.rerender(true);
+     * ```
+     *
      * @public
      */
     rerender(full?: boolean): void;
 
     /**
+     * Get the scroll position of the markdown preview view.
+     *
+     * @example
+     * ```ts
+     * console.log(markdownPreviewView.getScroll());
+     * ```
+     *
      * @public
      */
     getScroll(): number;
     /**
+     * Apply the scroll position to the markdown preview view.
+     *
+     * @example
+     * ```ts
+     * markdownPreviewView.applyScroll(100);
+     * ```
+     *
      * @public
      */
     applyScroll(scroll: number): void;
