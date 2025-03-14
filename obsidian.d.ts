@@ -2185,7 +2185,7 @@ export class ButtonComponent extends BaseComponent {
  */
 export interface CachedMetadata {
     /**
-     * The links in the note.
+     * The cache of the links in the note.
      *
      * ```markdown
      * [[wikilink]]
@@ -2197,7 +2197,7 @@ export interface CachedMetadata {
      */
     links?: LinkCache[];
     /**
-     * The embeds in the note.
+     * The cache of the embeds in the note.
      *
      * ```markdown
      * ![[wikilink]]
@@ -2209,7 +2209,7 @@ export interface CachedMetadata {
      */
     embeds?: EmbedCache[];
     /**
-     * The tags in the note.
+     * The cache of the tags in the note.
      *
      * ```markdown
      * ---
@@ -2225,7 +2225,7 @@ export interface CachedMetadata {
      */
     tags?: TagCache[];
     /**
-     * The headings in the note.
+     * The cache of the headings in the note.
      *
      * ```markdown
      * # Heading 1
@@ -2237,7 +2237,7 @@ export interface CachedMetadata {
      */
     headings?: HeadingCache[];
     /**
-     * The footnotes in the note.
+     * The cache of the footnotes in the note.
      *
      * ```markdown
      * foo [^1]
@@ -2249,7 +2249,7 @@ export interface CachedMetadata {
      */
     footnotes?: FootnoteCache[];
     /**
-     * The footnote references in the note.
+     * The cache of the footnote references in the note.
      *
      * ```markdown
      * foo [^1]
@@ -2261,7 +2261,7 @@ export interface CachedMetadata {
      */
     footnoteRefs?: FootnoteRefCache[];
     /**
-     * The reference links in the note.
+     * The cache of the reference links in the note.
      *
      * ```markdown
      * [google]
@@ -2273,6 +2273,7 @@ export interface CachedMetadata {
      */
     referenceLinks?: ReferenceLinkCache[];
     /**
+     * The cache of the sections in the note.
      * Sections are root level markdown blocks, which can be used to divide the document up.
      *
      * ```markdown
@@ -2288,6 +2289,7 @@ export interface CachedMetadata {
      */
     sections?: SectionCache[];
     /**
+     * The cache of the list items in the note.
      * List items are markdown blocks that are used to create lists.
      *
      * ```markdown
@@ -2304,6 +2306,7 @@ export interface CachedMetadata {
      */
     listItems?: ListItemCache[];
     /**
+     * The cache of the frontmatter in the note.
      * Frontmatter is a block of metadata that is used to store information about the note.
      *
      * ```markdown
@@ -2332,7 +2335,7 @@ export interface CachedMetadata {
     frontmatterPosition?: Pos;
 
     /**
-     * The links in the frontmatter.
+     * The cache of the links in the frontmatter.
      *
      * ```markdown
      * ---
@@ -2345,7 +2348,7 @@ export interface CachedMetadata {
      */
     frontmatterLinks?: FrontmatterLinkCache[];
     /**
-     * The blocks in the note.
+     * The cache of the blocks in the note.
      *
      * ```markdown
      * foo ^bar
