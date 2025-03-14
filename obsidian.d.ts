@@ -1978,7 +1978,7 @@ export interface BlockCache extends CacheItem {
  *
  * @example
  * ```ts
- * console.log(resolveSubpath(myNoteCache, '#^my-block-id'));
+ * console.log(resolveSubpath(myNoteCache, '#^foo'));
  * ```
  *
  * @public
