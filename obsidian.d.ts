@@ -5908,45 +5908,73 @@ export interface Hotkey {
 }
 
 /**
+ * A source for hover links.
+ *
  * @public
  */
 export interface HoverLinkSource {
     /**
      * Text displayed in the 'Page preview' plugin settings.
      * It should match the plugin's display name.
+     *
      * @public
      */
     display: string;
     /**
      * Whether the `hover-link` event requires the 'Mod' key to be pressed to trigger.
+     *
      * @public
      */
     defaultMod: boolean;
 }
 
 /**
+ * A parent for hover links.
+ *
  * @public
  */
 export interface HoverParent {
-    /** @public */
+    /**
+     * The hover popover.
+     *
+     * @public
+     */
     hoverPopover: HoverPopover | null;
 }
 
 /**
+ * A hover popover.
+ *
  * @public
  */
 export class HoverPopover extends Component {
 
     /**
+     * The HTML element representation of the hover popover.
+     *
      * @public
      */
     hoverEl: HTMLElement;
     /**
+     * The state of the hover popover.
+     *
      * @public
      */
     state: PopoverState;
 
     /**
+     * Create a new hover popover.
+     *
+     * @param parent - The parent of the hover popover.
+     * @param targetEl - The target element of the hover popover.
+     * @param waitTime - The wait time of the hover popover.
+     * @param staticPos - The static position of the hover popover.
+     * 
+     * @example
+     * ```ts
+     * const hoverPopover = new HoverPopover(parent, targetEl, 1000, { x: 100, y: 100 });
+     * ```
+     * 
      * @public
      */
     constructor(parent: HoverParent, targetEl: HTMLElement | null, waitTime?: number, staticPos?: Point | null);
