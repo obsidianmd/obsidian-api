@@ -6863,81 +6863,163 @@ export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSub
 }
 
 /**
+ * A component to register as a child component for the markdown preview.
+ *
  * @public
  */
 export class MarkdownRenderChild extends Component {
-    /** @public */
+    /**
+     * The container element of the markdown render child.
+     *
+     * @public
+     */
     containerEl: HTMLElement;
     /**
+     * Create a new markdown render child.
+     *
      * @param containerEl - This HTMLElement will be used to test whether this component is still alive.
      * It should be a child of the Markdown preview sections, and when it's no longer attached
      * (for example, when it is replaced with a new version because the user edited the Markdown source code),
      * this component will be unloaded.
+     *
      * @public
      */
     constructor(containerEl: HTMLElement);
 }
 
 /**
+ * A renderer for markdown.
+ *
  * @public
  */
 export abstract class MarkdownRenderer extends MarkdownRenderChild implements MarkdownPreviewEvents, HoverParent {
-    /** @public */
+    /**
+     * The Obsidian app instance.
+     *
+     * @public
+     */
     app: App;
-
-    /** @public */
+    /**
+     * The hover popover of the markdown renderer.
+     *
+     * @public
+     */
     hoverPopover: HoverPopover | null;
-
-    /** @public */
+    /**
+     * The file of the markdown renderer.
+     *
+     * @public
+     */
     abstract get file(): TFile;
 
     /**
      * Renders Markdown string to an HTML element.
+     *
+     * @param markdown - The Markdown source code
+     * @param el - The element to append to
+     * @param sourcePath - The normalized path of this Markdown file, used to resolve relative internal links
+     * @param component - A parent component to manage the lifecycle of the rendered child components.
+     * @returns A promise that resolves when the markdown is rendered.
+     *
+     * @example
+     * ```ts
+     * MarkdownRenderer.renderMarkdown('**foo** bar', document.body, 'baz.md', new Component());
+     * ```
+     *
      * @public
      * @deprecated - use {@link MarkdownRenderer.render}
      */
     static renderMarkdown(markdown: string, el: HTMLElement, sourcePath: string, component: Component): Promise<void>;
     /**
      * Renders Markdown string to an HTML element.
+     *
      * @param app - A reference to the app object
      * @param markdown - The Markdown source code
      * @param el - The element to append to
      * @param sourcePath - The normalized path of this Markdown file, used to resolve relative internal links
      * @param component - A parent component to manage the lifecycle of the rendered child components.
+     * @returns A promise that resolves when the markdown is rendered.
+     *
+     * @example
+     * ```ts
+     * MarkdownRenderer.render(app, '**foo** bar', document.body, 'baz.md', new Component());
+     * ```
+     *
      * @public
      */
     static render(app: App, markdown: string, el: HTMLElement, sourcePath: string, component: Component): Promise<void>;
 }
 
-/** @public */
+/**
+ * Markdown section information.
+ *
+ * @public
+ */
 export interface MarkdownSectionInformation {
-    /** @public */
+    /**
+     * The text of the section.
+     *
+     * @public
+     */
     text: string;
-    /** @public */
+    /**
+     * The start line of the section (0-based).
+     *
+     * @public
+     */
     lineStart: number;
-    /** @public */
+    /**
+     * The end line of the section (0-based).
+     *
+     * @public
+     */
     lineEnd: number;
 }
 
 /**
+ * A sub view of the markdown view.
+ *
  * @public
  */
 export interface MarkdownSubView {
 
     /**
+     * Get the scroll position.
+     *
      * @public
      */
     getScroll(): number;
     /**
+     * Apply the scroll position.
+     *
+     * @param scroll - The scroll position.
+     *
+     * @example
+     * ```ts
+     * markdownSubView.applyScroll(100);
+     * ```
+     *
      * @public
      */
     applyScroll(scroll: number): void;
 
     /**
+     * Get the markdown content.
+     *
      * @public
      */
     get(): string;
     /**
+     * Set the markdown content.
+     *
+     * @param data - The markdown content.
+     * @param clear - Whether to clear the content before setting it.
+     *
+     * @example
+     * ```ts
+     * markdownSubView.set('**foo** bar', true);
+     * ```
+     *
      * @public
      */
     set(data: string, clear: boolean): void;
@@ -6945,51 +7027,114 @@ export interface MarkdownSubView {
 }
 
 /**
+ * A view for markdown files.
+ *
  * @public
  */
 export class MarkdownView extends TextFileView implements MarkdownFileInfo {
 
-    /** @public */
+    /**
+     * The editor of the markdown view.
+     *
+     * @public
+     */
     editor: Editor;
 
-    /** @public */
+    /**
+     * The preview mode of the markdown view.
+     *
+     * @public
+     */
     previewMode: MarkdownPreviewView;
 
-    /** @public */
+    /**
+     * The current mode of the markdown view.
+     *
+     * @public
+     */
     currentMode: MarkdownSubView;
 
-    /** @public */
+    /**
+     * The hover popover of the markdown view.
+     *
+     * @public
+     */
     hoverPopover: HoverPopover | null;
     /**
+     * Create a new markdown view.
+     *
+     * @param leaf - The workspace leaf to attach the markdown view to.
+     *
+     * @example
+     * ```ts
+     * const leaf = app.workspace.createLeafInTabGroup();
+     * const markdownView = new MarkdownView(leaf);
+     * ```
+     *
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
 
     /**
+     * Get the view type of the markdown view.
+     *
+     * @returns A string representing the view type.
+     *
      * @public
      */
     getViewType(): string;
 
     /**
+     * Get the current mode of the markdown view.
+     *
+     * @returns A string representing the current mode.
+     *
      * @public
      */
     getMode(): MarkdownViewModeType;
 
     /**
+     * Get the view data of the markdown view.
+     *
+     * @returns A string representing the view data.
+     *
      * @public
      */
     getViewData(): string;
     /**
+     * Clear the view data of the markdown view.
+     *
      * @public
      */
     clear(): void;
 
     /**
+     * Set the view data of the markdown view.
+     *
+     * @param data - The view data.
+     * @param clear - Whether to clear the view data before setting it.
+     *
+     * @example
+     * ```ts
+     * markdownView.setViewData('**foo** bar', true);
+     * ```
+     *
      * @public
      */
     setViewData(data: string, clear: boolean): void;
 
     /**
+     * Show the search modal.
+     *
+     * @param replace - Whether to perform a search & replace.
+     * - `true` - Perform a search & replace.
+     * - `false` - Perform a search.
+     *
+     * @example
+     * ```ts
+     * markdownView.showSearch(true);
+     * ```
+     *
      * @public
      */
     showSearch(replace?: boolean): void;
@@ -6997,6 +7142,8 @@ export class MarkdownView extends TextFileView implements MarkdownFileInfo {
 }
 
 /**
+ * The mode of the markdown view.
+ *
  * @public
  */
 export type MarkdownViewModeType = 'source' | 'preview';
