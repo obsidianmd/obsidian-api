@@ -6795,6 +6795,8 @@ export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSub
      *
      * @public
      */
+    get(): string;
+
     /**
      * Set the markdown content of the markdown preview view.
      *
