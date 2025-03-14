@@ -5846,12 +5846,29 @@ export interface HeadingSubpathResult extends SubpathResult {
 
 /**
  * Hex strings are 6-digit hash-prefixed rgb strings in lowercase form.
- * Example: #ffffff
+ * 
+ * @example
+ * ```ts
+ * const hexString: HexString = '#ffffff';
+ * ```
+ * 
  * @public
  */
 export type HexString = string;
 
-/** @public */
+/** 
+ * Converts a hex string to an ArrayBuffer.
+ * 
+ * @param hex - The hex string to convert.
+ * @returns The ArrayBuffer.
+ * 
+ * @example
+ * ```ts
+ * console.log(hexToArrayBuffer('00112233445566778899aabbccddeeff'));
+ * ```
+ * 
+ * @public
+ */
 export function hexToArrayBuffer(hex: string): ArrayBuffer;
 
 /**
