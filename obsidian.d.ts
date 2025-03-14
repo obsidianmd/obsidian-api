@@ -5515,41 +5515,140 @@ export interface FrontmatterLinkCache extends Reference {
 }
 
 /**
+ * The result of a fuzzy search.
+ *
+ * @typeParam T - The type of the item that was searched for.
+ *
  * @public
  */
 export interface FuzzyMatch<T> {
-    /** @public */
+    /**
+     * The item that was matched.
+     *
+     * @public
+     */
     item: T;
-    /** @public */
+    /**
+     * Search result of the fuzzy match.
+     *
+     * @public
+     */
     match: SearchResult;
 }
 
 /**
+ * Suggest modal for fuzzy search.
+ *
+ * @typeParam T - The type of the item that was searched for.
+ *
  * @public
  */
 export abstract class FuzzySuggestModal<T> extends SuggestModal<FuzzyMatch<T>> {
 
     /**
+     * Get the suggestions for the fuzzy match.
+     *
+     * @param query - The query to search for.
+     * @returns The suggestions for the fuzzy match.
+     *
+     * @example
+     * ```ts
+     * class MyFuzzySuggestModal extends FuzzySuggestModal<string> {
+     *     public override getSuggestions(query: string): FuzzyMatch<string>[] {
+     *         return [{ item: 'foo' + query, match: { score: 1, matches: [[0, 3]] } }];
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     getSuggestions(query: string): FuzzyMatch<T>[];
     /**
+     * Render the suggestion.
+     *
+     * @param item - The item to render.
+     * @param el - The element to render the suggestion to.
+     *
+     * @example
+     * ```ts
+     * class MyFuzzySuggestModal extends FuzzySuggestModal<string> {
+     *     public override renderSuggestion(item: FuzzyMatch<string>, el: HTMLElement): void {
+     *         el.createEl('strong', { text: item.item });
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     renderSuggestion(item: FuzzyMatch<T>, el: HTMLElement): void;
     /**
+     * Called when a suggestion is chosen.
+     *
+     * @param item - The item that was chosen.
+     * @param evt - The event that occurred.
+     *
+     * @example
+     * ```ts
+     * class MyFuzzySuggestModal extends FuzzySuggestModal<string> {
+     *     public override onChooseSuggestion(item: FuzzyMatch<string>, evt: MouseEvent | KeyboardEvent): void {
+     *         console.log(item);
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     onChooseSuggestion(item: FuzzyMatch<T>, evt: MouseEvent | KeyboardEvent): void;
     /**
+     * Get the items to be used in the fuzzy search.
+     *
+     * @returns the items to be used in the fuzzy search.
+     *
+     * @example
+     * ```ts
+     * class MyFuzzySuggestModal extends FuzzySuggestModal<string> {
+     *     public override getItems(): string[] {
+     *         return ['foo', 'bar', 'baz'];
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     abstract getItems(): T[];
     /**
+     * Get the text to be used in the fuzzy search.
+     *
+     * @param item - The item to get the text for.
+     * @returns The text to be displayed in the suggestion.
+     *
+     * @example
+     * ```ts
+     * class MyFuzzySuggestModal extends FuzzySuggestModal<string> {
+     *     public override getItemText(item: string): string {
+     *         return `--- ${item} ---`;
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     abstract getItemText(item: T): string;
     /**
+     * Called when an item is chosen.
+     *
+     * @param item - The item that was chosen.
+     * @param evt - The event that occurred.
+     *
+     * @example
+     * ```ts
+     * class MyFuzzySuggestModal extends FuzzySuggestModal<string> {
+     *     public override onChooseItem(item: string, evt: MouseEvent | KeyboardEvent): void {
+     *         console.log(item);
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     abstract onChooseItem(item: T, evt: MouseEvent | KeyboardEvent): void;
