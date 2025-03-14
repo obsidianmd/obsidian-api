@@ -5982,21 +5982,26 @@ export class HoverPopover extends Component {
 }
 
 /**
+ * Represents an HSL color.
+ *
  * @public
  */
 export interface HSL {
     /**
      * Hue integer value between 0 and 360
+     *
      * @public
      */
     h: number;
     /**
      * Saturation integer value between 0 and 100
+     *
      * @public
      */
     s: number;
     /**
      * Lightness integer value between 0 and 100
+     *
      * @public
      */
     l: number;
