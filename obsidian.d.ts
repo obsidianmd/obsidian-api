@@ -6264,38 +6264,58 @@ export class Keymap {
 }
 
 /**
+ * Context of the keymap.
+ *
  * @public
  */
 export interface KeymapContext extends KeymapInfo {
     /**
      * Interpreted virtual key.
+     *
      * @public
      */
     vkey: string;
 }
 
 /**
+ * Event handler for the keymap.
+ *
  * @public
  */
 export interface KeymapEventHandler extends KeymapInfo {
-    /** @public */
+    /**
+     * The scope of the keymap.
+     *
+     * @public
+     */
     scope: Scope;
 
 }
 
 /**
- * Return `false` to automatically preventDefault
+ * The event listener for the keymap.
+ * Return `false` to automatically preventDefault.
+ *
  * @public
  */
 export type KeymapEventListener = (evt: KeyboardEvent, ctx: KeymapContext) => false | any;
 
 /**
+ * Information about the key combination.
+ *
  * @public
  */
 export interface KeymapInfo {
-    /** @public */
+    /**
+     * The modifiers of the keymap.
+     *
+     * @public
+     */
     modifiers: string | null;
-    /** @public */
+    /**
+     * The main key of the keymap.
+     *
+     * @public */
     key: string | null;
 }
 
