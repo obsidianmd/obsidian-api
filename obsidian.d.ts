@@ -5791,12 +5791,12 @@ export function getLinkpath(linktext: string): string;
 export interface HeadingCache extends CacheItem {
     /**
      * The heading text.
-     * 
+     *
      * @example
      * ```ts
      * console.log(headingCache.heading); // foo
      * ```
-     * 
+     *
      * @public
      */
     heading: string;
@@ -5846,61 +5846,61 @@ export interface HeadingSubpathResult extends SubpathResult {
 
 /**
  * Hex strings are 6-digit hash-prefixed rgb strings in lowercase form.
- * 
+ *
  * @example
  * ```ts
  * const hexString: HexString = '#ffffff';
  * ```
- * 
+ *
  * @public
  */
 export type HexString = string;
 
-/** 
+/**
  * Converts a hex string to an ArrayBuffer.
- * 
+ *
  * @param hex - The hex string to convert.
  * @returns The ArrayBuffer.
- * 
+ *
  * @example
  * ```ts
  * console.log(hexToArrayBuffer('00112233445566778899aabbccddeeff'));
  * ```
- * 
+ *
  * @public
  */
 export function hexToArrayBuffer(hex: string): ArrayBuffer;
 
 /**
  * A hotkey.
- * 
+ *
  * @example
  * ```ts
  * const hotkey: Hotkey = { modifiers: ['Mod'], key: 'a' };
  * ```
- * 
+ *
  * @public
  */
 export interface Hotkey {
-    /** 
+    /**
      * The modifiers of the hotkey.
-     * 
+     *
      * @example
      * ```ts
      * console.log(hotkey.modifiers); // ['Mod']
      * ```
-     * 
+     *
      * @public
      */
     modifiers: Modifier[];
     /**
      * The main key of the hotkey.
-     * 
+     *
      * @example
      * ```ts
      * console.log(hotkey.key); // 'a'
      * ```
-     * 
+     *
      * @public
      */
     key: string;
@@ -5969,12 +5969,12 @@ export class HoverPopover extends Component {
      * @param targetEl - The target element of the hover popover.
      * @param waitTime - The wait time of the hover popover.
      * @param staticPos - The static position of the hover popover.
-     * 
+     *
      * @example
      * ```ts
      * const hoverPopover = new HoverPopover(parent, targetEl, 1000, { x: 100, y: 100 });
      * ```
-     * 
+     *
      * @public
      */
     constructor(parent: HoverParent, targetEl: HTMLElement | null, waitTime?: number, staticPos?: Point | null);
@@ -6036,14 +6036,14 @@ export function htmlToMarkdown(html: string | HTMLElement | Document | DocumentF
  * @public
  */
 export interface Instruction {
-    /** 
+    /**
      * The command or the key combination
      *
      * @example
      * ```ts
      * console.log(instruction.command); // '↑↓'
      * ```
-     * 
+     *
      * @public
      */
     command: string;
@@ -6054,7 +6054,7 @@ export interface Instruction {
      * ```ts
      * console.log(instruction.purpose); // 'Navigate'
      * ```
-     * 
+     *
      * @public
      */
     purpose: string;
@@ -6062,7 +6062,7 @@ export interface Instruction {
 
 /**
  * An owner that controls UI suggestions.
- * 
+ *
  * @typeParam T - The type of the suggestion.
  *
  * @public
@@ -6070,10 +6070,10 @@ export interface Instruction {
 export interface ISuggestOwner<T> {
     /**
      * Render the suggestion item into DOM.
-     * 
+     *
      * @param value - The value of the suggestion.
      * @param el - The DOM element to render the suggestion into.
-     * 
+     *
      * @example
      * ```ts
      * class MySuggestOwner implements ISuggestOwner<string> {
@@ -6087,10 +6087,10 @@ export interface ISuggestOwner<T> {
     renderSuggestion(value: T, el: HTMLElement): void;
     /**
      * Called when the user makes a selection.
-     * 
+     *
      * @param value - The value of the suggestion.
      * @param evt - The event that triggered the selection.
-     * 
+     *
      * @example
      * ```ts
      * class MySuggestOwner implements ISuggestOwner<string> {
