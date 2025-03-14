@@ -5872,12 +5872,37 @@ export type HexString = string;
 export function hexToArrayBuffer(hex: string): ArrayBuffer;
 
 /**
+ * A hotkey.
+ * 
+ * @example
+ * ```ts
+ * const hotkey: Hotkey = { modifiers: ['Mod'], key: 'a' };
+ * ```
+ * 
  * @public
  */
 export interface Hotkey {
-    /** @public */
+    /** 
+     * The modifiers of the hotkey.
+     * 
+     * @example
+     * ```ts
+     * console.log(hotkey.modifiers); // ['Mod']
+     * ```
+     * 
+     * @public
+     */
     modifiers: Modifier[];
-    /** @public */
+    /**
+     * The main key of the hotkey.
+     * 
+     * @example
+     * ```ts
+     * console.log(hotkey.key); // 'a'
+     * ```
+     * 
+     * @public
+     */
     key: string;
 
 }
