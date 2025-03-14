@@ -2204,11 +2204,11 @@ export interface CachedMetadata {
      * ```markdown
      * ---
      * tags:
-     *   - tag1
-     *   - tag2
+     *   - foo
+     *   - bar
      * ---
      *
-     * #tag3
+     * #baz
      * ```
      *
      * @public
