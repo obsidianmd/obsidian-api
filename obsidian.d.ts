@@ -1974,7 +1974,7 @@ export interface BlockCache extends CacheItem {
 }
 
 /**
- * Subpath result for a block from `resolveSubpath()`
+ * Subpath result for a block from {@link resolveSubpath}
  *
  * @example
  * ```ts
