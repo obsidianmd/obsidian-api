@@ -6320,27 +6320,59 @@ export interface KeymapInfo {
 }
 
 /**
+ * The cache of the link in the note.
+ *
+ * ```markdown
+ * [[wikilink]]
+ * [[wikilink|alias]]
+ * [alias](markdown-link)
+ * ```
+ *
  * @public
  */
 export interface LinkCache extends ReferenceCache {
 }
 
 /**
+ * Listed content of the folder.
+ *
  * @public
  */
 export interface ListedFiles {
-    /** @public */
+    /**
+     * List of files in the folder.
+     *
+     * @public
+     */
     files: string[];
-    /** @public */
+    /**
+     * List of subfolders in the folder.
+     *
+     * @public
+     */
     folders: string[];
 }
 
 /**
+ * The cache of the list item in the note.
+ * List items are markdown blocks that are used to create lists.
+ *
+ * ```markdown
+ * - Unordered List Item 1
+ * - Unordered List Item 2
+ * - Unordered List Item 3
+ *
+ * 1. Ordered List Item 1
+ * 2. Ordered List Item 2
+ * 3. Ordered List Item 3
+ * ```
+ *
  * @public
  */
 export interface ListItemCache extends CacheItem {
     /**
      * The block ID of this list item, if defined.
+     *
      * @public
      */
     id?: string | undefined;
@@ -6349,6 +6381,7 @@ export interface ListItemCache extends CacheItem {
      * The space character `' '` is interpreted as an incomplete task.
      * An other character is interpreted as completed task.
      * `undefined` if this item isn't a task.
+     *
      * @public
      */
     task?: string | undefined;
@@ -6359,6 +6392,7 @@ export interface ListItemCache extends CacheItem {
      *
      * Can be used to deduce which list items belongs to the same group (item1.parent === item2.parent).
      * Can be used to reconstruct hierarchy information (parentItem.position.start.line === childItem.parent).
+     *
      * @public
      */
     parent: number;
