@@ -7149,51 +7149,125 @@ export class MarkdownView extends TextFileView implements MarkdownFileInfo {
 export type MarkdownViewModeType = 'source' | 'preview';
 
 /**
+ * A component for context menus.
+ *
  * @public
  */
 export class Menu extends Component implements CloseableComponent {
 
     /**
+     * Create a new menu.
+     *
      * @public
      */
     constructor();
 
     /**
+     * Set the menu to not use an icon.
+     *
+     * @returns The menu instance.
+     *
      * @public
      */
     setNoIcon(): this;
     /**
      * Force this menu to use native or DOM.
      * (Only works on the desktop app)
+     *
+     * @param useNativeMenu - Whether to use a native menu.
+     * @returns The menu instance.
+     *
+     * @example
+     * ```ts
+     * menu.setUseNativeMenu(true);
+     * ```
+     *
      * @public
      */
     setUseNativeMenu(useNativeMenu: boolean): this;
     /**
      * Adds a menu item. Only works when menu is not shown yet.
+     *
+     * @param cb - The callback function.
+     * @returns The menu instance.
+     *
+     * @example
+     * ```ts
+     * menu.addItem((item) => {
+     *     item.setTitle('foo');
+     * });
+     * ```
+     *
      * @public
      */
     addItem(cb: (item: MenuItem) => any): this;
     /**
      * Adds a separator. Only works when menu is not shown yet.
+     *
+     * @returns The menu instance.
+     *
      * @public
      */
     addSeparator(): this;
 
     /**
+     * Show the menu at the position of the mouse event.
+     *
+     * @param evt - The mouse event.
+     * @returns The menu instance.
+     *
+     * @example
+     * ```ts
+     * menu.showAtMouseEvent(evt);
+     * ```
+     *
      * @public
      */
     showAtMouseEvent(evt: MouseEvent): this;
     /**
+     * Show the menu at a specific position.
+     *
+     * @param position - The position of the menu.
+     * @param doc - The document. Use if you need to show the menu in another window.
+     * @returns The menu instance.
+     *
+     * @example
+     * ```ts
+     * menu.showAtPosition({ x: 100, y: 100 });
+     * ```
+     *
      * @public
      */
     showAtPosition(position: MenuPositionDef, doc?: Document): this;
     /**
+     * Hide the menu.
+     *
+     * @returns The menu instance.
+     *
      * @public
      */
     hide(): this;
-    /** @public */
+    /**
+     * Close the menu.
+     *
+     * @returns The menu instance.
+     *
+     * @public
+     */
     close(): void;
     /**
+     * Add a callback to be called when the menu is hidden.
+     *
+     * @param callback - The callback function.
+     * @returns The menu instance.
+     *
+     * @example
+     * ```ts
+     * menu.onHide(() => {
+     *     console.log('Menu hidden');
+     * });
+     * ```
+     *
      * @public
      */
     onHide(callback: () => any): void;
@@ -7201,41 +7275,108 @@ export class Menu extends Component implements CloseableComponent {
 }
 
 /**
+ * A menu item.
+ *
  * @public
  */
 export class MenuItem {
 
     /**
      * Private constructor. Use {@link Menu.addItem} instead.
+     *
      * @public
      */
     private constructor();
     /**
+     * Set the title of the menu item.
+     *
+     * @param title - The title of the menu item.
+     * @returns The menu item instance.
+     *
+     * @example
+     * ```ts
+     * menuItem.setTitle('foo');
+     * const fragment = createFragment();
+     * fragment.createEl('span', { text: 'bar' });
+     * menuItem.setTitle(fragment);
+     * ```
+     *
      * @public
      */
     setTitle(title: string | DocumentFragment): this;
     /**
+     * Set the icon of the menu item.
+     *
      * @param icon - ID of the icon, can use any icon loaded with {@link addIcon} or from the built-in lucide library.
      * @see The Obsidian icon library includes the {@link https://lucide.dev/ Lucide icon library}, any icon name from their site will work here.
+     * @returns The menu item instance.
+     *
+     * @example
+     * ```ts
+     * menuItem.setIcon('dice');
+     * ```
+     *
      * @public
      */
     setIcon(icon: IconName | null): this;
 
     /**
+     * Set the checked state of the menu item.
+     *
+     * @param checked - Whether the menu item is checked.
+     * @returns The menu item instance.
+     *
+     * @example
+     * ```ts
+     * menuItem.setChecked(true);
+     * ```
+     *
      * @public
      */
     setChecked(checked: boolean | null): this;
     /**
+     * Set the disabled state of the menu item.
+     *
+     * @param disabled - Whether the menu item is disabled.
+     * @returns The menu item instance.
+     *
+     * @example
+     * ```ts
+     * menuItem.setDisabled(true);
+     * ```
+     *
      * @public
      */
     setDisabled(disabled: boolean): this;
 
     /**
+     * Set the menu item to be a label.
+     *
+     * @param isLabel - Whether the menu item is a label.
+     * @returns The menu item instance.
+     *
+     * @example
+     * ```ts
+     * menuItem.setIsLabel(true);
+     * ```
+     *
      * @public
      */
     setIsLabel(isLabel: boolean): this;
 
     /**
+     * Set the callback function to be called when the menu item is clicked.
+     *
+     * @param callback - The callback function.
+     * @returns The menu item instance.
+     *
+     * @example
+     * ```ts
+     * menuItem.onClick(() => {
+     *     console.log('Menu item clicked');
+     * });
+     * ```
+     *
      * @public
      */
     onClick(callback: (evt: MouseEvent | KeyboardEvent) => any): this;
@@ -7244,27 +7385,62 @@ export class MenuItem {
      * Sets the section this menu item should belong in.
      * To find the section IDs of an existing menu, inspect the DOM elements
      * to see their `data-section` attribute.
+     *
+     * @param section - The section of the menu item.
+     * @returns The menu item instance.
+     *
+     * @example
+     * ```ts
+     * menuItem.setSection('danger');
+     * ```
+     *
      * @public
      */
     setSection(section: string): this;
 
 }
 
-/** @public */
+/**
+ * A definition for the position of the menu.
+ *
+ * @public
+ */
 export interface MenuPositionDef {
-    /** @public */
+    /**
+     * The x position of the menu.
+     *
+     * @public
+     */
     x: number;
-    /** @public */
+    /**
+     * The y position of the menu.
+     *
+     * @public
+     */
     y: number;
-    /** @public */
+    /**
+     * The width of the menu.
+     *
+     * @public
+     */
     width?: number;
-    /** @public */
+    /**
+     * Whether the menu should overlap the position.
+     *
+     * @public
+     */
     overlap?: boolean;
-    /** @public */
+    /**
+     * Whether the menu should be aligned to the left.
+     *
+     * @public
+     */
     left?: boolean;
 }
 
 /**
+ * A separator for the menu.
+ *
  * @public
  */
 export class MenuSeparator {
