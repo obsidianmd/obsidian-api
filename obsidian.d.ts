@@ -3490,7 +3490,7 @@ export interface DataWriteOptions {
      * Omit this if you want to keep the default behaviour.
      *
      * @public
-     * */
+     */
     ctime?: number;
     /**
      * Time of last modification, represented as a unix timestamp, in milliseconds.
@@ -3860,7 +3860,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     * */
+     */
     abstract getRange(from: EditorPosition, to: EditorPosition): string;
     /**
      * Replace the range between two positions
@@ -3876,7 +3876,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract replaceRange(replacement: string, from: EditorPosition, to?: EditorPosition, origin?: string): void;
     /**
      * Get the cursor position
@@ -3889,7 +3889,7 @@ export abstract class Editor {
      * console.log(editor.getCursor('from'));
      * ```
      * @public
-     **/
+     */
     abstract getCursor(string?: 'from' | 'to' | 'head' | 'anchor'): EditorPosition;
     /**
      * Get the list of selections if multiple cursors are active
@@ -3902,7 +3902,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract listSelections(): EditorSelection[];
     /**
      * Set the cursor position
@@ -3917,7 +3917,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     setCursor(pos: EditorPosition | number, ch?: number): void;
     /**
      * Set the selection
@@ -3931,7 +3931,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract setSelection(anchor: EditorPosition, head?: EditorPosition): void;
     /**
      * Set the selections
@@ -3948,7 +3948,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract setSelections(ranges: EditorSelectionOrCaret[], main?: number): void;
     /**
      * Focus the editor
@@ -3959,7 +3959,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract focus(): void;
     /**
      * Blur the editor
@@ -3970,7 +3970,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract blur(): void;
     /**
      * Check if the editor is focused
@@ -3983,7 +3983,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract hasFocus(): boolean;
     /**
      * Get the scroll info (horizontal and vertical scroll positions)
@@ -3996,7 +3996,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract getScrollInfo(): {
         /** @public */
         top: number;
@@ -4015,7 +4015,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract scrollTo(x?: number | null, y?: number | null): void;
     /**
      * Scroll into view
@@ -4029,7 +4029,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract scrollIntoView(range: EditorRange, center?: boolean): void;
     /**
      * Undo the last action
@@ -4040,7 +4040,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract undo(): void;
     /**
      * Redo the last action
@@ -4051,7 +4051,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract redo(): void;
     /**
      * Execute a command
@@ -4064,7 +4064,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract exec(command: EditorCommandName): void;
     /**
      * Get the word at a specific position
@@ -4078,7 +4078,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract wordAt(pos: EditorPosition): EditorRange | null;
     /**
      * Convert a position to an offset
@@ -4092,7 +4092,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract posToOffset(pos: EditorPosition): number;
     /**
      * Convert an offset to a position
@@ -4106,7 +4106,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     abstract offsetToPos(offset: number): EditorPosition;
 
     /**
@@ -4127,7 +4127,7 @@ export abstract class Editor {
      * ```
      *
      * @public
-     **/
+     */
     processLines<T>(read: (line: number, lineText: string) => T | null, write: (line: number, lineText: string, value: T | null) => EditorChange | void, ignoreEmpty?: boolean): void;
 
 }
@@ -4136,13 +4136,13 @@ export abstract class Editor {
  * Represents a change to the editor
  *
  * @public
- **/
+ */
 export interface EditorChange extends EditorRangeOrCaret {
     /**
      * The text to replace the range with
      *
      * @public
-     **/
+     */
     text: string;
 }
 
@@ -4150,7 +4150,7 @@ export interface EditorChange extends EditorRangeOrCaret {
  * The name of a command you can execute with {@link Editor.exec}
  *
  * @public
- **/
+ */
 export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goStart' | 'goEnd' | 'goWordLeft' | 'goWordRight' | 'indentMore' | 'indentLess' | 'newlineAndIndent' | 'swapLineUp' | 'swapLineDown' | 'deleteLine' | 'toggleFold' | 'foldAll' | 'unfoldAll';
 
 /**
@@ -4171,26 +4171,26 @@ export const editorInfoField: StateField<MarkdownFileInfo>;
  * Use this {@link StateField} to check whether `Live Preview` is active
  *
  * @public
- **/
+ */
 export const editorLivePreviewField: StateField<boolean>;
 
 /**
  * Represents a position in the editor
  *
  * @public
- **/
+ */
 export interface EditorPosition {
     /**
      * The line number (0-based)
      *
      * @public
-     **/
+     */
     line: number;
     /**
      * The character index (0-based)
      *
      * @public
-     **/
+     */
     ch: number;
 }
 
@@ -4198,13 +4198,13 @@ export interface EditorPosition {
  * Represents a range in the editor
  *
  * @public
- **/
+ */
 export interface EditorRange {
     /**
      * The start position
      *
      * @public
-     **/
+     */
     from: EditorPosition;
     /**
      * The end position
@@ -4217,19 +4217,19 @@ export interface EditorRange {
  * Represents a range or caret in the editor
  *
  * @public
- **/
+ */
 export interface EditorRangeOrCaret {
     /**
      * The start position
      *
      * @public
-     **/
+     */
     from: EditorPosition;
     /**
      * The end position. If not provided, the caret is used.
      *
      * @public
-     **/
+     */
     to?: EditorPosition;
 }
 
@@ -4237,31 +4237,31 @@ export interface EditorRangeOrCaret {
  * Scroll info for the editor
  *
  * @public
- **/
+ */
 export interface EditorScrollInfo {
     /**
      * The horizontal scroll position
      *
      * @public
-     **/
+     */
     left: number;
     /**
      * The vertical scroll position
      *
      * @public
-     **/
+     */
     top: number;
     /**
      * The height of the editor
      *
      * @public
-     **/
+     */
     height: number;
     /**
      * The width of the editor
      *
      * @public
-     **/
+     */
     clientWidth: number;
 }
 
@@ -4269,19 +4269,19 @@ export interface EditorScrollInfo {
  * Represents a selection in the editor
  *
  * @public
- **/
+ */
 export interface EditorSelection {
     /**
      * The selection start position
      *
      * @public
-     **/
+     */
     anchor: EditorPosition;
     /**
      * The selection end position
      *
      * @public
-     **/
+     */
     head: EditorPosition;
 }
 
@@ -4289,19 +4289,19 @@ export interface EditorSelection {
  * Represents a selection or caret in the editor
  *
  * @public
- **/
+ */
 export interface EditorSelectionOrCaret {
     /**
      * The selection start position
      *
      * @public
-     **/
+     */
     anchor: EditorPosition;
     /**
      * The selection end position. If not provided, the caret is used.
      *
      * @public
-     **/
+     */
     head?: EditorPosition;
 }
 
@@ -4311,7 +4311,7 @@ export interface EditorSelectionOrCaret {
  * @typeParam T - The type of the suggestion items
  *
  * @public
- **/
+ */
 export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
 
     /**
@@ -4340,7 +4340,7 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
      * ```
      *
      * @public
-     **/
+     */
     constructor(app: App);
     /**
      * Set the instructions for the suggestion
@@ -5920,7 +5920,7 @@ export class Keymap {
      * Returns 'split' if Cmd/Ctrl+Alt is pressed.
      * Returns 'window' if Cmd/Ctrl+Alt+Shift is pressed.
      * @public
-     * */
+     */
     static isModEvent(evt?: UserEvent | null): PaneType | boolean;
 }
 
@@ -6200,7 +6200,7 @@ export interface MarkdownPostProcessorContext {
 
 }
 
-/** @public **/
+/** @public */
 export interface MarkdownPreviewEvents extends Component {
 
 }
@@ -7704,7 +7704,7 @@ export interface Stat {
     /**
      * Time of creation, represented as a unix timestamp.
      * @public
-     * */
+     */
     ctime: number;
     /**
      * Time of last modification, represented as a unix timestamp.
@@ -8496,7 +8496,7 @@ export class Workspace extends Events {
      * Runs the callback function right away if layout is already ready,
      * or push it to a queue to be called later when layout is ready.
      * @public
-     * */
+     */
     onLayoutReady(callback: () => any): void;
     /**
      * @public
