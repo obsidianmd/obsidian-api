@@ -1963,6 +1963,11 @@ export interface BlockCache extends CacheItem {
     /**
      * The ID of the block.
      *
+     * @example
+     * ```ts
+     * console.log(blockCache.id); // bar
+     * ```
+     *
      * @public
      */
     id: string;
@@ -1973,7 +1978,7 @@ export interface BlockCache extends CacheItem {
  *
  * @example
  * ```ts
- * const result = resolveSubpath(myNoteCache, '#^my-block-id');
+ * console.log(resolveSubpath(myNoteCache, '#^my-block-id'));
  * ```
  *
  * @public
@@ -1992,7 +1997,7 @@ export interface BlockSubpathResult extends SubpathResult {
      */
     block: BlockCache;
     /**
-     * The list item cache.
+     * The list item cache, in case the block is a list item.
      *
      * @public
      */
@@ -2228,6 +2233,10 @@ export interface CachedMetadata {
      * foo [^1]
      *
      * [^1]: bar
+     *
+     * baz [^qux]
+     *
+     * [^qux]: quux
      * ```
      *
      * @public
@@ -2240,6 +2249,10 @@ export interface CachedMetadata {
      * foo [^1]
      *
      * [^1]: bar
+     *
+     * baz [^qux]
+     *
+     * [^qux]: quux
      * ```
      *
      * @public
@@ -5336,12 +5349,24 @@ export function finishRenderMath(): Promise<void>;
  * foo [^1]
  *
  * [^1]: bar
+ *
+ * baz [^qux]
+ *
+ * [^qux]: quux
  * ```
  *
  * @public
  */
 export interface FootnoteCache extends CacheItem {
     /**
+     * The ID of the footnote.
+     *
+     * @example
+     * ```ts
+     * console.log(footnoteCache.id); // 1
+     * console.log(footnoteCache.id); // qux
+     * ```
+     *
      * @public
      */
     id: string;
@@ -5354,12 +5379,23 @@ export interface FootnoteCache extends CacheItem {
  * foo [^1]
  *
  * [^1]: bar
+ *
+ * baz [^qux]
+ *
+ * [^qux]: quux
  * ```
  *
  * @public
  */
 export interface FootnoteRefCache extends CacheItem {
     /**
+     * The ID of the footnote reference.
+     *
+     * @example
+     * ```ts
+     * console.log(footnoteRefCache.id); // 1
+     * console.log(footnoteRefCache.id); // qux
+     * ```
      * @public
      */
     id: string;
@@ -5402,30 +5438,74 @@ export interface FrontMatterCache {
     /**
      * The key-value pairs in the frontmatter.
      *
+     * @example
+     * ```ts
+     * console.log(frontmatterCache['key1']); // value1
+     * console.log(frontmatterCache['key2']); // 42
+     * ```
+     *
      * @public
      */
     [key: string]: any;
 }
 
-/** @public */
+/**
+ * The information about the frontmatter in the note.
+ *
+ * @public
+ */
 export interface FrontMatterInfo {
-    /** @public Whether this file has a frontmatter block */
+    /**
+     * Whether this file has a frontmatter block
+     *
+     * @public
+     */
     exists: boolean;
-    /** @public String representation of the frontmatter */
+    /**
+     * @public String representation of the frontmatter
+     */
     frontmatter: string;
-    /** @public Start of the frontmatter contents (excluding the ---) */
+    /**
+     * Start offset of the frontmatter contents (excluding the ---)
+     *
+     * @public
+     */
     from: number;
-    /** @public End of the frontmatter contents (excluding the ---) */
+    /**
+     * End offset of the frontmatter contents (excluding the ---)
+     *
+     * @public
+     */
     to: number;
-    /** @public Offset where the frontmatter block ends (including the ---) */
+    /** Offset where the frontmatter block ends (including the ---)
+     *
+     * @public
+     */
     contentStart: number;
 }
 
 /**
+ * The cache of the links in the frontmatter.
+ *
+ * ```markdown
+ * ---
+ * key1: "[[wikilink]]"
+ * key2: "[[wikilink|alias]]"
+ * ---
+ * ```
+ *
  * @public
  */
 export interface FrontmatterLinkCache extends Reference {
     /**
+     * The key of the link
+     *
+     * @example
+     * ```ts
+     * console.log(frontmatterLinkCache.key); // key1
+     * console.log(frontmatterLinkCache.key); // key2
+     * ```
+     *
      * @public
      */
     key: string;
