@@ -4515,6 +4515,8 @@ export interface EmbedCache extends ReferenceCache {
 }
 
 /**
+ * Event reference
+ *
  * @public
  */
 export interface EventRef {
@@ -4522,27 +4524,82 @@ export interface EventRef {
 }
 
 /**
+ * Event emitter implementation
+ *
  * @public
  */
 export class Events {
 
     /**
+     * Add an event listener
+     *
+     * @param name - The name of the event
+     * @param callback - The callback to call when the event is triggered
+     * @param ctx - The context passed as `this` to the `callback`
+     * @returns A reference to the event listener
+     *
+     * @example
+     * ```ts
+     * events.on('my-event', (arg1, arg2) => {
+     *     console.log(arg1, arg2);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: string, callback: (...data: unknown[]) => unknown, ctx?: any): EventRef;
     /**
+     * Remove an event listener
+     *
+     * @param name - The name of the event
+     * @param callback - The callback to remove
+     *
+     * @example
+     * ```ts
+     * events.off('my-event', myListener);
+     * ```
+     *
      * @public
      */
     off(name: string, callback: (...data: unknown[]) => unknown): void;
     /**
+     * Remove an event listener by reference
+     *
+     * @param ref - The reference to the event listener
+     *
+     * @example
+     * ```ts
+     * events.offref(myRef);
+     * ```
+     *
      * @public
      */
     offref(ref: EventRef): void;
     /**
+     * Trigger an event, executing all the listeners in order even if some of them throw an error.
+     *
+     * @param name - The name of the event
+     * @param data - The data to pass to the event listeners
+     *
+     * @example
+     * ```ts
+     * events.trigger('my-event', 'arg1', 'arg2');
+     * ```
+     *
      * @public
      */
     trigger(name: string, ...data: unknown[]): void;
     /**
+     * Try to trigger an event, executing all the listeners in order even if some of them throw an error.
+     *
+     * @param evt - The event reference
+     * @param args - The data to pass to the event listeners
+     *
+     * @example
+     * ```ts
+     * events.tryTrigger(myRef, ['arg1', 'arg2']);
+     * ```
+     *
      * @public
      */
     tryTrigger(evt: EventRef, args: unknown[]): void;
