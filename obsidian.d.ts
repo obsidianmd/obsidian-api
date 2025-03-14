@@ -5814,18 +5814,31 @@ export interface HeadingCache extends CacheItem {
 }
 
 /**
+ * Subpath result for a heading from {@link resolveSubpath}
+ *
+ * @example
+ * ```ts
+ * console.log(resolveSubpath(myNoteCache, '#foo'));
+ * ```
+ *
  * @public
  */
 export interface HeadingSubpathResult extends SubpathResult {
     /**
+     * The type of the subpath result.
+     *
      * @public
      */
     type: 'heading';
     /**
+     * The cache of the found heading.
+     *
      * @public
      */
     current: HeadingCache;
     /**
+     * The cache of the next heading on the same or higher level.
+     *
      * @public
      */
     next: HeadingCache;
