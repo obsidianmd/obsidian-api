@@ -6106,19 +6106,49 @@ export interface ISuggestOwner<T> {
 }
 
 /**
+ * A view that displays an item.
+ *
  * @public
  */
 export abstract class ItemView extends View {
 
-    /** @public */
+    /**
+     * The parent element of the content.
+     *
+     * @public
+     */
     contentEl: HTMLElement;
 
     /**
+     * Create a new item view.
+     *
+     * @param leaf - The workspace leaf to create the item view in.
+     *
+     * @example
+     * ```ts
+     * class MyItemView extends ItemView {}
+     * const itemView = new MyItemView(leaf);
+     * ```
+     *
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
 
     /**
+     * Add an action to the item view.
+     *
+     * @param icon - The icon of the action.
+     * @param title - The title of the action.
+     * @param callback - The callback to call when the action is clicked.
+     * @returns The DOM element of the action.
+     *
+     * @example
+     * ```ts
+     * const action = itemView.addAction('dice', 'foo', () => {
+     *     console.log('bar');
+     * });
+     * ```
+     *
      * @public
      */
     addAction(icon: IconName, title: string, callback: (evt: MouseEvent) => any): HTMLElement;
