@@ -4606,33 +4606,88 @@ export class Events {
 }
 
 /**
+ * Extra button component, for secondary actions.
+ *
  * @public
  */
 export class ExtraButtonComponent extends BaseComponent {
     /**
+     * The HTML element representation of the extra button
+     *
      * @public
      */
     extraSettingsEl: HTMLElement;
 
     /**
+     * Create a new ExtraButtonComponent
+     *
+     * @param containerEl - The container element
+     *
+     * @example
+     * ```ts
+     * const extraButton = new ExtraButtonComponent(containerEl);
+     * ```
+     *
      * @public
      */
     constructor(containerEl: HTMLElement);
     /**
+     * Set the disabled state of the extra button
+     *
+     * @param disabled - Whether the button is disabled
+     * @returns The extra button component
+     *
+     * @example
+     * ```ts
+     * extraButton.setDisabled(true);
+     * ```
+     *
      * @public
      */
     setDisabled(disabled: boolean): this;
     /**
+     * Set the tooltip of the extra button
+     *
+     * @param tooltip - The tooltip text
+     * @param options - The tooltip options
+     * @returns The extra button component
+     *
+     * @example
+     * ```ts
+     * extraButton.setTooltip('Tooltip text');
+     * ```
+     *
      * @public
      */
     setTooltip(tooltip: string, options?: TooltipOptions): this;
     /**
+     * Set the icon of the extra button
+     *
      * @param icon - ID of the icon, can use any icon loaded with {@link addIcon} or from the inbuilt library.
      * @see The Obsidian icon library includes the {@link https://lucide.dev/ Lucide icon library}, any icon name from their site will work here.
+     * @returns The extra button component
+     *
+     * @example
+     * ```ts
+     * extraButton.setIcon('icon-name');
+     * ```
+     *
      * @public
      */
     setIcon(icon: IconName): this;
     /**
+     * Set the click callback of the extra button
+     *
+     * @param callback - The callback to call when the button is clicked
+     * @returns The extra button component
+     *
+     * @example
+     * ```ts
+     * extraButton.onClick(() => {
+     *     console.log('Button clicked');
+     * });
+     * ```
+     *
      * @public
      */
     onClick(callback: () => any): this;
