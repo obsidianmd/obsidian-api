@@ -4501,6 +4501,14 @@ export interface EditorTransaction {
 export const editorViewField: StateField<MarkdownFileInfo>;
 
 /**
+ * The embeds in the note.
+ *
+ * ```markdown
+ * ![[wikilink]]
+ * ![[wikilink|alias]]
+ * ![alias](markdown-link)
+ * ```
+ *
  * @public
  */
 export interface EmbedCache extends ReferenceCache {
