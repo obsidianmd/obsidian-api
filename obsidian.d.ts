@@ -6200,27 +6200,64 @@ export class Keymap {
 
     /**
      * Push a scope onto the scope stack, setting it as the active scope to handle all key events.
+     *
+     * @param scope - The scope to push.
+     *
+     * @example
+     * ```ts
+     * keymap.pushScope(new Scope());
+     * ```
+     *
      * @public
      */
     pushScope(scope: Scope): void;
     /**
      * Remove a scope from the scope stack.
      * If the given scope is active, the next scope in the stack will be made active.
+     *
+     * @param scope - The scope to pop.
+     *
+     * @example
+     * ```ts
+     * keymap.popScope(new Scope());
+     *
      * @public
      */
     popScope(scope: Scope): void;
 
     /**
      * Checks whether the modifier key is pressed during this event.
+     *
+     * @param evt - The event to check.
+     * @param modifier - The modifier to check.
+     * @returns `true` if the modifier key is pressed, `false` otherwise.
+     *
+     * @example
+     * ```ts
+     * if (Keymap.isModifier(evt, 'Ctrl')) {
+     *     console.log('Ctrl is pressed');
+     * }
+     * ```
+     *
      * @public
      */
     static isModifier(evt: MouseEvent | TouchEvent | KeyboardEvent, modifier: Modifier): boolean;
 
     /**
      * Translates an event into the type of pane that should open.
-     * Returns 'tab' if the modifier key Cmd/Ctrl is pressed OR if this is a middle-click MouseEvent.
-     * Returns 'split' if Cmd/Ctrl+Alt is pressed.
-     * Returns 'window' if Cmd/Ctrl+Alt+Shift is pressed.
+     *
+     * @param evt - The event to check.
+     * @returns The type of pane that should open.
+     * - Returns `false` if `evt` is `null`, `undefined` or none of the modifier keys are pressed.
+     * - Returns `'tab'` if the modifier key Cmd/Ctrl is pressed OR if `evt` is a middle-click {@link MouseEvent}.
+     * - Returns `'split'` if Cmd/Ctrl+Alt is pressed.
+     * - Returns `'window'` if Cmd/Ctrl+Alt+Shift is pressed.
+     *
+     * @example
+     * ```ts
+     * console.log(Keymap.isModEvent(evt));
+     * ```
+     *
      * @public
      */
     static isModEvent(evt?: UserEvent | null): PaneType | boolean;
