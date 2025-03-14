@@ -3011,7 +3011,7 @@ export class Component {
      * @example
      * ```ts
      * class MyComponent extends Component {
-     *   onload() {
+     *   public override onload(): void {
      *     console.log('MyComponent loaded');
      *   }
      * }
@@ -3038,7 +3038,7 @@ export class Component {
      * @example
      * ```ts
      * class MyComponent extends Component {
-     *   onunload() {
+     *   public override onunload(): void {
      *     console.log('MyComponent unloaded');
      *   }
      * }
@@ -4372,7 +4372,7 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
      * @example
      * ```ts
      * class MyEditorSuggest extends EditorSuggest<string> {
-     *     onTrigger(cursor: EditorPosition, editor: Editor, file: TFile | null): EditorSuggestTriggerInfo | null {
+     *     public override onTrigger(cursor: EditorPosition, editor: Editor, file: TFile | null): EditorSuggestTriggerInfo | null {
      *         return {
      *             start: cursor,
      *             end: cursor,
@@ -4395,7 +4395,7 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
      * @example
      * ```ts
      * class MyEditorSuggest extends EditorSuggest<string> {
-     *     getSuggestions(context: EditorSuggestContext): string[] {
+     *     public override getSuggestions(context: EditorSuggestContext): string[] {
      *         return ['Item 1', 'Item 2', 'Item 3'];
      *     }
      * }
@@ -4404,7 +4404,7 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
      * @example
      * ```ts
      * class MyEditorSuggest extends EditorSuggest<string> {
-     *     async getSuggestions(context: EditorSuggestContext): Promise<string[]> {
+     *     public override getSuggestions(context: EditorSuggestContext): Promise<string[]> {
      *         return Promise.resolve(['Item 1', 'Item 2', 'Item 3']);
      *     }
      * }
@@ -5278,7 +5278,8 @@ export abstract class FileView extends ItemView {
      * @example
      * ```ts
      * class MyFileView extends FileView {
-     *     onLoadFile(file: TFile) {
+     *     public override async onLoadFile(file: TFile): Promise<void> {
+     *         await super.onLoadFile(file);
      *         console.log(file);
      *     }
      * }
@@ -5296,7 +5297,8 @@ export abstract class FileView extends ItemView {
      * @example
      * ```ts
      * class MyFileView extends FileView {
-     *     onUnloadFile(file: TFile) {
+     *     public override async onUnloadFile(file: TFile): Promise<void> {
+     *         await super.onUnloadFile(file);
      *         console.log(file);
      *     }
      * }
@@ -5312,7 +5314,8 @@ export abstract class FileView extends ItemView {
      * @example
      * ```ts
      * class MyFileView extends FileView {
-     *     onRename(file: TFile) {
+     *     public override async onRename(file: TFile): Promise<void> {
+     *         await super.onRename(file);
      *         console.log(file);
      *     }
      * }
