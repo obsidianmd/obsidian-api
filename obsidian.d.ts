@@ -5179,60 +5179,156 @@ export class FileSystemAdapter implements DataAdapter {
 }
 
 /**
+ * File view
+ *
  * @public
  */
 export abstract class FileView extends ItemView {
     /**
+     * Whether to allow no file
+     *
      * @public
      */
     allowNoFile: boolean;
     /**
+     * The file that is currently being viewed
+     *
      * @public
      */
     file: TFile | null;
     /**
-     * File views can be navigated by default.
+     * Whether the file view can be navigated (`true` by default)
+     *
      * @inheritDoc
      * @public
      */
     navigation: boolean;
     /**
+     * Create a new file view
+     *
+     * @param leaf - The workspace leaf to create the file view in
+     *
+     * @example
+     * ```ts
+     * const leaf = app.workspace.createLeafInTabGroup();
+     * class MyFileView extends FileView {}
+     * const fileView = new MyFileView(leaf);
+     * ```
+     *
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
 
     /**
+     * Get the display text for the file view
+     *
+     * @returns The display text for the file view
+     *
+     * @example
+     * ```ts
+     * console.log(fileView.getDisplayText());
+     * ```
+     *
      * @public
      */
     getDisplayText(): string;
     /**
+     * Called when the file view is loaded
+     *
      * @public
      */
     onload(): void;
     /**
+     * Get the state of the file view
+     *
+     * @returns The state of the file view
+     *
+     * @example
+     * ```ts
+     * console.log(fileView.getState());
+     * ```
+     *
      * @public
      */
     getState(): Record<string, unknown>;
 
     /**
+     * Set the state of the file view
+     *
+     * @param state - The state to set
+     * @param result - The result of the state
+     * @returns A promise that resolves when the state is set
+     *
+     * @example
+     * ```ts
+     * await fileView.setState({ foo: 'bar' }, { history: true });
+     * ```
+     *
      * @public
      */
     setState(state: any, result: ViewStateResult): Promise<void>;
 
     /**
+     * Called when the file is loaded
+     *
+     * @param file - The file that is being loaded
+     * @returns A promise that resolves when the file is loaded
+     *
+     * @example
+     * ```ts
+     * class MyFileView extends FileView {
+     *     onLoadFile(file: TFile) {
+     *         console.log(file);
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     onLoadFile(file: TFile): Promise<void>;
     /**
+     * Called when the file is unloaded
+     *
+     * @param file - The file that is being unloaded
+     * @returns A promise that resolves when the file is unloaded
+     *
+     * @example
+     * ```ts
+     * class MyFileView extends FileView {
+     *     onUnloadFile(file: TFile) {
+     *         console.log(file);
+     *     }
+     * }
      * @public
      */
     onUnloadFile(file: TFile): Promise<void>;
     /**
+     * Called when the file is renamed
+     *
+     * @param file - The file that is being renamed
+     * @returns A promise that resolves when the file is renamed
+     *
+     * @example
+     * ```ts
+     * class MyFileView extends FileView {
+     *     onRename(file: TFile) {
+     *         console.log(file);
+     *     }
+     * }
      * @public
      */
     onRename(file: TFile): Promise<void>;
 
     /**
+     * Whether the file view can accept an extension
+     *
+     * @param extension - The extension to check
+     * @returns Whether the file view can accept the extension
+     *
+     * @example
+     * ```ts
+     * console.log(fileView.canAcceptExtension('md'));
+     * ```
      * @public
      */
     canAcceptExtension(extension: string): boolean;
