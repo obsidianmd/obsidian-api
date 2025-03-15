@@ -6078,7 +6078,7 @@ export interface ISuggestOwner<T> {
      * ```ts
      * class MySuggestOwner implements ISuggestOwner<string> {
      *     public renderSuggestion(value: string, el: HTMLElement): void {
-     *         el.createEl('div', { text: value });
+     *         el.createEl('strong', { text: value });
      *     }
      * }
      * ```
@@ -7296,8 +7296,9 @@ export class MenuItem {
      * @example
      * ```ts
      * menuItem.setTitle('foo');
+     *
      * const fragment = createFragment();
-     * fragment.createEl('span', { text: 'bar' });
+     * fragment.createEl('strong', { text: 'bar' });
      * menuItem.setTitle(fragment);
      * ```
      *
@@ -7748,7 +7749,7 @@ export class Modal implements CloseableComponent {
      * modal.setContent('foo');
      *
      * const fragment = createFragment();
-     * fragment.createEl('p', { text: 'foo' });
+     * fragment.createEl('strong', { text: 'foo' });
      * modal.setContent(fragment);
      * ```
      *
