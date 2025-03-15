@@ -7940,20 +7940,45 @@ export class Notice {
 }
 
 /**
+ * A data object for `obsidian://` URLs.
+ *
+ * @example
+ * `obsidian://foo?bar=baz&qux=true`
+ *
  * @public
  */
 export interface ObsidianProtocolData {
     /**
+     * The action to perform.
+     *
+     * @example
+     * ```ts
+     * console.log(obsidianProtocolData.action); // foo
+     * ```
+     *
      * @public
      */
     action: string;
     /**
+     * Additional parameters.
+     *
+     * @example
+     * ```ts
+     * console.log(obsidianProtocolData['bar']); // baz
+     * console.log(obsidianProtocolData['qux']); // true
+     * ```
+     *
      * @public
      */
     [key: string]: string | 'true';
 }
 
 /**
+ * A handler for `obsidian://` URLs.
+ *
+ * @param params - The parameters of the `obsidian://` URL.
+ * @returns The result of the handler. The result is discarded. Usually it's `void` or `Promise<void>`.
+ *
  * @public
  */
 export type ObsidianProtocolHandler = (params: ObsidianProtocolData) => any;
