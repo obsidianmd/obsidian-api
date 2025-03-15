@@ -51,6 +51,7 @@ declare global {
         /**
          * Combines an array of arrays into a single array.
          *
+         * @typeParam T - The type of the elements in the arrays.
          * @param arrays - The array of arrays to combine.
          * @returns A single array containing all elements from the input arrays.
          *
