@@ -8228,6 +8228,8 @@ export const Platform: {
 };
 
 /**
+ * Base class for all plugins.
+ *
  * @public
  */
 export abstract class Plugin extends Component {
@@ -8239,23 +8241,42 @@ export abstract class Plugin extends Component {
      */
     app: App;
     /**
+     * The plugin manifest.
+     *
      * @public
      */
     manifest: PluginManifest;
     /**
+     * The constructor for the plugin.
+     *
+     * @param app - The Obsidian app instance.
+     * @param manifest - The plugin manifest.
+     *
      * @public
      */
     constructor(app: App, manifest: PluginManifest);
 
     /**
+     * Called when the plugin is loaded.
+     *
      * @public
      */
     onload(): Promise<void> | void;
     /**
      * Adds a ribbon icon to the left bar.
+     *
      * @param icon - The icon name to be used. See {@link addIcon}.
      * @param title - The title to be displayed in the tooltip.
      * @param callback - The `click` callback.
+     * @returns The HTMLElement for the ribbon icon.
+     *
+     * @example
+     * ```ts
+     * plugin.addRibbonIcon('dice', 'foo', (evt) => {
+     *     console.log('clicked');
+     * });
+     * ```
+     *
      * @public
      */
     addRibbonIcon(icon: IconName, title: string, callback: (evt: MouseEvent) => any): HTMLElement;
@@ -8263,45 +8284,121 @@ export abstract class Plugin extends Component {
      * Adds a status bar item to the bottom of the app.
      * Not available on mobile.
      * @see {@link https://docs.obsidian.md/Plugins/User+interface/Status+bar}.
+     *
      * @return HTMLElement - element to modify.
+     *
      * @public
      */
     addStatusBarItem(): HTMLElement;
     /**
      * Register a command globally.
-     * Registered commands will be available from the @{link https://help.obsidian.md/Plugins/Command+palette Command palette}.
+     * Registered commands will be available from the {@link https://help.obsidian.md/Plugins/Command+palette Command palette}.
      * The command id and name will be automatically prefixed with this plugin's id and name.
+     *
+     * @param command - The command to register.
+     * @returns The command object.
+     *
+     * @example
+     * ```ts
+     * plugin.addCommand({
+     *     id: 'foo',
+     *     name: 'Foo',
+     * });
+     * ```
+     *
      * @public
      */
     addCommand(command: Command): Command;
     /**
      * Manually remove a command from the list of global commands.
      * This should not be needed unless your plugin registers commands dynamically.
+     *
+     * @param commandId - The id of the command to remove.
+     *
+     * @example
+     * ```ts
+     * plugin.removeCommand('foo');
+     * ```
+     *
      * @public
      */
     removeCommand(commandId: string): void;
     /**
      * Register a settings tab, which allows users to change settings.
      * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings#Register+a+settings+tab}.
+     *
+     * @param settingTab - The setting tab to register.
+     *
+     * @example
+     * ```ts
+     * plugin.addSettingTab(mySettingTab);
+     * ```
+     *
      * @public
      */
     addSettingTab(settingTab: PluginSettingTab): void;
     /**
+     * Register a custom view.
+     *
+     * @param type - The type of the view to register.
+     * @param viewCreator - The view creator to register.
+     *
+     * @example
+     * ```ts
+     * plugin.registerView('my-view', (leaf) => {
+     *     return new MyView(leaf);
+     * });
+     * ```
+     *
      * @public
      */
     registerView(type: string, viewCreator: ViewCreator): void;
     /**
      * Registers a view with the 'Page preview' core plugin as an emitter of the 'hover-link' event.
+     *
+     * @param id - The id of the view to register.
+     * @param info - The info of the view to register.
+     *
+     * @example
+     * ```ts
+     * plugin.registerHoverLinkSource('foo', {
+     *     display: 'bar',
+     *     defaultMod: true,
+     * });
+     * ```
+     *
      * @public
      */
     registerHoverLinkSource(id: string, info: HoverLinkSource): void;
     /**
+     * Register a set of extensions for a view type.
+     *
+     * @param extensions - The extensions to register.
+     * @param viewType - The type of the view to register.
+     *
+     * @example
+     * ```ts
+     * plugin.registerExtensions(['foo', 'bar'], 'baz');
+     * ```
+     *
      * @public
      */
     registerExtensions(extensions: string[], viewType: string): void;
     /**
      * Registers a post processor, to change how the document looks in reading mode.
      * @see {@link https://docs.obsidian.md/Plugins/Editor/Markdown+post+processing}.
+     *
+     * @param postProcessor - The post processor to register.
+     * @param sortOrder - The sort order of the post processor.
+     * @returns The post processor.
+     *
+     * @example
+     * ```ts
+     * plugin.registerMarkdownPostProcessor((el, ctx) => {
+     *     el.createEl('strong');
+     * });
+     * ```
+     *
      * @public
      */
     registerMarkdownPostProcessor(postProcessor: MarkdownPostProcessor, sortOrder?: number): MarkdownPostProcessor;
@@ -8310,6 +8407,19 @@ export abstract class Plugin extends Component {
      * This special post processor takes care of removing the `<pre><code>` and create a `<div>` that
      * will be passed to the handler, and is expected to be filled with custom elements.
      * @see {@link https://docs.obsidian.md/Plugins/Editor/Markdown+post+processing#Post-process+Markdown+code+blocks}.
+     *
+     * @param language - The language of the code block to register.
+     * @param handler - The handler to register.
+     * @param sortOrder - The sort order of the post processor.
+     * @returns The post processor.
+     *
+     * @example
+     * ```ts
+     * plugin.registerMarkdownCodeBlockProcessor('foo', (source, el, ctx) => {
+     *     el.createEl('strong');
+     * });
+     * ```
+     *
      * @public
      */
     registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void, sortOrder?: number): MarkdownPostProcessor;
@@ -8319,19 +8429,44 @@ export abstract class Plugin extends Component {
      * To reconfigure cm6 extensions for a plugin on the fly, an array should be passed in, and modified dynamically.
      * Once this array is modified, calling {@link Workspace.updateOptions} will apply the changes.
      * @param extension - must be a CodeMirror 6 `Extension`, or an array of Extensions.
+     *
+     * @example
+     * ```ts
+     * const myViewPlugin = ViewPlugin.fromClass(MyViewPlugin);
+     * const myStateField = StateField.define<DecorationSet>(myStateField);
+     * plugin.registerEditorExtension([myViewPlugin, myStateField]);
+     * ```
+     *
      * @public
      */
     registerEditorExtension(extension: Extension): void;
     /**
      * Register a handler for obsidian:// URLs.
+     *
      * @param action - the action string. For example, 'open' corresponds to `obsidian://open`.
      * @param handler - the callback to trigger. A key-value pair that is decoded from the query will be passed in.
      *                  For example, `obsidian://open?key=value` would generate `{'action': 'open', 'key': 'value'}`.
+     *
+     * @example
+     * ```ts
+     * plugin.registerObsidianProtocolHandler('foo', (params) => {
+     *     console.log(params);
+     * });
+     * ```
+     *
      * @public
      */
     registerObsidianProtocolHandler(action: string, handler: ObsidianProtocolHandler): void;
     /**
      * Register an EditorSuggest which can provide live suggestions while the user is typing.
+     *
+     * @param editorSuggest - The editor suggest to register.
+     *
+     * @example
+     * ```ts
+     * plugin.registerEditorSuggest(myEditorSuggest);
+     * ```
+     *
      * @public
      */
     registerEditorSuggest(editorSuggest: EditorSuggest<any>): void;
@@ -8339,6 +8474,9 @@ export abstract class Plugin extends Component {
      * Load settings data from disk.
      * Data is stored in `data.json` in the plugin folder.
      * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings}.
+     *
+     * @returns The promise that resolves to the settings data.
+     *
      * @public
      */
     loadData(): Promise<any>;
@@ -8346,6 +8484,15 @@ export abstract class Plugin extends Component {
      * Write settings data to disk.
      * Data is stored in `data.json` in the plugin folder.
      * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings}.
+     *
+     * @param data - The settings data to save.
+     * @returns The promise that resolves when the data is saved.
+     *
+     * @example
+     * ```ts
+     * await plugin.saveData({ foo: 'bar' });
+     * ```
+     *
      * @public
      */
     saveData(data: any): Promise<void>;
@@ -8354,6 +8501,7 @@ export abstract class Plugin extends Component {
      * Perform any initial setup code. The user has explicitly interacted with the plugin.
      * so its safe to engage with the user. If your plugin registers a custom view,
      * you can open it here.
+     *
      * @public
      */
     onUserEnable(): void;
@@ -8365,6 +8513,8 @@ export abstract class Plugin extends Component {
      *
      * Implement this method to reload plugin settings when they have changed externally.
      *
+     * @returns The result is discarded. The result is discarded. Usually it's `void` or `Promise<void>`.
+     *
      * @public
      */
     onExternalSettingsChange?(): any;
@@ -8374,52 +8524,62 @@ export abstract class Plugin extends Component {
 /**
  * Metadata about a Community plugin.
  * @see {@link https://docs.obsidian.md/Reference/Manifest}.
+ *
  * @public
  */
 export interface PluginManifest {
     /**
      * Vault path to the plugin folder in the config directory.
+     *
      * @public
      */
     dir?: string;
     /**
      * The plugin ID.
+     *
      * @public
      */
     id: string;
     /**
      * The display name.
+     *
      * @public
      */
     name: string;
     /**
      * The author's name.
+     *
      * @public
      */
     author: string;
     /**
      * The current version, using {@link https://semver.org/ Semantic Versioning}.
+     *
      * @public
      */
     version: string;
     /**
      * The minimum required Obsidian version to run this plugin.
+     *
      * @public
      */
     minAppVersion: string;
     /**
      * A description of the plugin.
+     *
      * @public
      */
     description: string;
     /**
      * A URL to the author's website.
+     *
      * @public
      */
     authorUrl?: string;
 
     /**
      * Whether the plugin can be used only on desktop.
+     *
      * @public
      */
     isDesktopOnly?: boolean;
@@ -8428,11 +8588,17 @@ export interface PluginManifest {
 /**
  * Provides a unified interface for users to configure the plugin.
  * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings#Register+a+settings+tab}.
+ *
  * @public
  */
 export abstract class PluginSettingTab extends SettingTab {
 
     /**
+     * Creates a new PluginSettingTab.
+     *
+     * @param app - The Obsidian app instance.
+     * @param plugin - The plugin instance.
+     *
      * @public
      */
     constructor(app: App, plugin: Plugin);
