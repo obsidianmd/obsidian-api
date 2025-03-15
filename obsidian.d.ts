@@ -8839,20 +8839,44 @@ export interface Reference {
 }
 
 /**
+ * A reference to a link.
+ *
  * @public
  */
 export interface ReferenceCache extends Reference, CacheItem {
 }
 
 /**
+ * The cache of the reference link in the note.
+ *
+ * ```markdown
+ * [google]
+ *
+ * [google]: https://google.com
+ * ```
+ *
  * @public
  */
 export interface ReferenceLinkCache extends CacheItem {
     /**
+     * The ID of the reference link.
+     *
+     * @example
+     * ```ts
+     * console.log(referenceLinkCache.id); // google
+     * ```
+     *
      * @public
      */
     id: string;
     /**
+     * The link of the reference link.
+     *
+     * @example
+     * ```ts
+     * console.log(referenceLinkCache.link); // https://google.com
+     * ```
+     *
      * @public
      */
     link: string;
@@ -8860,12 +8884,31 @@ export interface ReferenceLinkCache extends CacheItem {
 
 /**
  * Remove a custom icon from the library.
+ *
  * @param iconId - the icon ID.
+ *
+ * @example
+ * ```ts
+ * removeIcon('my-icon');
+ * ```
+ *
  * @public
  */
 export function removeIcon(iconId: string): void;
 
 /**
+ * Render the matches of a search.
+ *
+ * @param el - The element to render the matches to.
+ * @param text - The text to render the matches to.
+ * @param matches - The matches to render.
+ * @param offset - The offset to render the matches to.
+ *
+ * @example
+ * ```ts
+ * renderMatches(document.body, 'foo', [[0, 3]]);
+ * ```
+ *
  * @public
  */
 export function renderMatches(el: HTMLElement | DocumentFragment, text: string, matches: SearchMatches | null, offset?: number): void;
@@ -8873,99 +8916,205 @@ export function renderMatches(el: HTMLElement | DocumentFragment, text: string, 
 /**
  * Render some LaTeX math using the MathJax engine. Returns an HTMLElement.
  * Requires calling `finishRenderMath` when rendering is all done to flush the MathJax stylesheet.
+ *
+ * @param source - The LaTeX source code.
+ * @param display - Whether to render the math in display mode.
+ * @returns The rendered math element.
+ *
+ * @example
+ * ```ts
+ * console.log(renderMath('\\frac{1}{2}', true));
+ * ```
+ *
  * @public
  */
 export function renderMath(source: string, display: boolean): HTMLElement;
 
 /**
+ * Render the results of a search.
+ *
+ * @param el - The element to render the results to.
+ * @param text - The text to render the results to.
+ * @param result - The result to render.
+ * @param offset - The offset to render the results to.
+ *
+ * @example
+ * ```ts
+ * renderResults(document.body, 'foo', {
+ *     score: 0.5,
+ *     matches: [[0, 3]],
+ * });
+ * ```
+ *
  * @public
  */
 export function renderResults(el: HTMLElement, text: string, result: SearchResult, offset?: number): void;
 
 /**
  * Similar to `fetch()`, request a URL using HTTP/HTTPS, without any CORS restrictions.
- * Returns the text value of the response.
+ *
+ * @param request - The request parameters.
+ * @returns The promise that resolves to the text value of the response.
+ *
+ * @example
+ * ```ts
+ * console.log(await request({ url: 'https://google.com' }));
+ * console.log(await request('https://google.com'));
+ * ```
+ *
  * @public
  */
 export function request(request: RequestUrlParam | string): Promise<string>;
 
 /**
  * Similar to `fetch()`, request a URL using HTTP/HTTPS, without any CORS restrictions.
+ *
+ * @param request - The request parameters.
+ * @returns The response.
+ *
+ * @example
+ * ```ts
+ * const response = requestUrl({ url: 'https://google.com' });
+ * console.log(await response);
+ * console.log(await response.arrayBuffer());
+ * console.log(await response.json());
+ * console.log(await response.text());
+ * console.log(await requestUrl('https://google.com'));
+ * ```
+ *
  * @public
  */
 export function requestUrl(request: RequestUrlParam | string): RequestUrlResponsePromise;
 
 /**
+ * The parameters for the {@link requestUrl} function.
+ *
  * @public
  */
 export interface RequestUrlParam {
     /**
+     * The URL to request.
+     *
+     * @example https://google.com
+     *
      * @public
      */
     url: string;
     /**
+     * The method to use for the request.
+     *
+     * @example GET
+     * @example POST
+     *
      * @public
      */
     method?: string;
     /**
+     * The content type of the request.
+     *
+     * @example application/json
+     *
      * @public
      */
     contentType?: string;
     /**
+     * The body of the request.
+     *
+     * @example
+     * ```ts
+     * 'foo'
+     * new ArrayBuffer(10)
+     * ```
+     *
      * @public
      */
     body?: string | ArrayBuffer;
     /**
+     * The headers of the request.
+     *
+     * @example
+     * ```ts
+     * { 'Content-Type': 'application/json' }
+     * ```
+     *
      * @public
      */
     headers?: Record<string, string>;
     /**
      * Whether to throw an error when the status code is 400+.
      * Defaults to `true`.
+     *
      * @public
      */
     throw?: boolean;
 }
 
 /**
+ * The response from the {@link requestUrl} function.
+ *
  * @public
  */
 export interface RequestUrlResponse {
     /**
+     * The status code of the response.
+     *
+     * @example 200
+     *
      * @public
      */
     status: number;
     /**
+     * The headers of the response.
+     *
+     * @example
+     * ```ts
+     * { 'Content-Type': 'application/json' }
+     * ```
+     *
      * @public
      */
     headers: Record<string, string>;
     /**
+     * The body of the response as an ArrayBuffer.
+     *
      * @public
      */
     arrayBuffer: ArrayBuffer;
     /**
+     * The body of the response as a JSON object.
+     *
      * @public
      */
     json: any;
     /**
+     * The body of the response as a string.
+     *
      * @public
      */
     text: string;
 }
 
 /**
+ * The promise of the {@link requestUrl} function.
+ *
  * @public
  */
 export interface RequestUrlResponsePromise extends Promise<RequestUrlResponse> {
     /**
+     * The promise that resolves to the body of the response as an {@link ArrayBuffer}.
+     *
      * @public
      */
     arrayBuffer: Promise<ArrayBuffer>;
     /**
+     * The promise that resolves to the body of the response as a JSON object.
+     *
      * @public
      */
     json: Promise<any>;
     /**
+     * The promise that resolves to the body of the response as a string.
+     *
      * @public
      */
     text: Promise<string>;
@@ -8975,12 +9124,31 @@ export interface RequestUrlResponsePromise extends Promise<RequestUrlResponse> {
  * Returns `true` if the API version is equal or higher than the requested version.
  * Use this to limit functionality that require specific API versions to avoid
  * crashing on older Obsidian builds.
+ *
+ * @param version - The version to check against.
+ * @returns `true` if the API version is equal or higher than the requested version.
+ *
+ * @example
+ * ```ts
+ * console.log(requireApiVersion('1.8.9')); // true
+ * ```
+ *
  * @public
  */
 export function requireApiVersion(version: string): boolean;
 
 /**
  * Resolve the given subpath to a reference in the MetadataCache.
+ *
+ * @param cache - The cached metadata to resolve the subpath in.
+ * @param subpath - The subpath to resolve.
+ * @returns The resolved subpath or `null` if the subpath is not found.
+ *
+ * @example
+ * ```ts
+ * console.log(resolveSubpath(cache, '#foo'));
+ * ```
+ *
  * @public
  */
 export function resolveSubpath(cache: CachedMetadata, subpath: string): HeadingSubpathResult | BlockSubpathResult | FootnoteSubpathResult | null;
