@@ -8759,20 +8759,34 @@ export function prepareFuzzySearch(query: string): (text: string) => SearchResul
 export function prepareSimpleSearch(query: string): (text: string) => SearchResult | null;
 
 /**
+ * A component that displays a progress bar.
+ *
  * @public
  */
 export class ProgressBarComponent extends ValueComponent<number> {
 
     /**
+     * Creates a new ProgressBarComponent.
+     *
+     * @param containerEl - The container element.
+     *
      * @public
      */
     constructor(containerEl: HTMLElement);
     /**
+     * Get the current value of the progress bar (0-100).
+     *
+     * @returns The current value of the progress bar.
+     *
      * @public
      */
     getValue(): number;
     /**
+     * Set the current value of the progress bar.
+     *
      * @param value - The progress amount, a value between 0-100.
+     * @returns The progress bar component.
+     *
      * @public
      */
     setValue(value: number): this;
