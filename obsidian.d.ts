@@ -1852,7 +1852,22 @@ export class App {
  *
  * @example
  * ```ts
- * const base64 = arrayBufferToBase64(new ArrayBuffer(10));
+ * console.log(arrayBufferToBase64(new Uint8Array([1,2,3]).buffer)); // AQID
+ * ```
+ *
+ * @public
+ */
+export function arrayBufferToBase64(buffer: ArrayBuffer): string;
+
+/**
+ * Converts an `ArrayBuffer` to a hex string.
+ *
+ * @param buffer - The `ArrayBuffer` to convert.
+ * @returns The hex string.
+ * 
+ * @example
+ * ```ts
+ * console.log(arrayBufferToHex(new Uint8Array([1,2,3]).buffer)); // 010203
  * ```
  *
  * @public
@@ -1867,7 +1882,7 @@ export function arrayBufferToHex(data: ArrayBuffer): string;
  *
  * @example
  * ```ts
- * const arrayBuffer = base64ToArrayBuffer('my-base64-string');
+ * console.log(base64ToArrayBuffer('AQID'));
  * ```
  *
  * @public
