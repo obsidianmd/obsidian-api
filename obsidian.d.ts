@@ -2926,11 +2926,6 @@ export class Component {
     /**
      * Load this component and its children.
      *
-     * @example
-     * ```ts
-     * component.load();
-     * ```
-     *
      * @public
      */
     load(): void;
@@ -2952,11 +2947,6 @@ export class Component {
     onload(): void;
     /**
      * Unload this component and its children.
-     *
-     * @example
-     * ```ts
-     * component.unload();
-     * ```
      *
      * @public
      */
