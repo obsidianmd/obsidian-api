@@ -7984,56 +7984,130 @@ export interface ObsidianProtocolData {
 export type ObsidianProtocolHandler = (params: ObsidianProtocolData) => any;
 
 /**
+ * View state for the `open` action.
+ *
  * @public
  */
 export interface OpenViewState {
     /**
+     * The state of the view.
+     *
      * @public
      */
     state?: Record<string, unknown>;
     /**
+     * The ephemeral state of the view.
+     *
      * @public
      */
     eState?: Record<string, unknown>;
     /**
+     * Whether the view is active.
+     *
      * @public
      */
     active?: boolean;
     /**
+     * The group leaf of the view.
+     *
      * @public
      */
     group?: WorkspaceLeaf;
 }
 
 /**
+ * The pane type of the leaf.
+ *
  * @public
  */
 export type PaneType = 'tab' | 'split' | 'window';
 
 /**
+ * Parses the frontmatter aliases from the frontmatter object.
+ *
+ * @param frontmatter - The frontmatter object.
+ * @returns The aliases of the note or `null` if no aliases are found.
+ *
+ * @example
+ * ```ts
+ * console.log(parseFrontMatterAliases({ aliases: ['foo', 'bar'] })); // ['foo', 'bar']
+ * console.log(parseFrontMatterAliases({ alias: ['foo', 'bar'] })); // ['foo', 'bar']
+ * console.log(parseFrontMatterAliases({ aliases: 'baz' })); // ['baz']
+ * ```
+ *
  * @public
  */
 export function parseFrontMatterAliases(frontmatter: any | null): string[] | null;
 
 /**
+ * Parses a frontmatter entry from the frontmatter object.
+ *
+ * @param frontmatter - The frontmatter object.
+ * @param key - The key to parse.
+ * @returns The parsed entry or `null` if the key is not found.
+ *
+ * @example
+ * ```ts
+ * console.log(parseFrontMatterEntry({ foo: 'bar' }, 'foo')); // bar
+ * console.log(parseFrontMatterEntry({ baz: 'qux' }, /ba./)); // qux
+ * ```
+ *
  * @public
  */
 export function parseFrontMatterEntry(frontmatter: any | null, key: string | RegExp): any | null;
 
 /**
+ * Parses a frontmatter string array from the frontmatter object.
+ *
+ * @param frontmatter - The frontmatter object.
+ * @param key - The key to parse.
+ * @param nospaces - Whether to remove spaces from the array.
+ * @returns The parsed entry or `null` if the key is not found.
+ *
+ * @example
+ * ```ts
+ * console.log(parseFrontMatterStringArray({ foo: ['bar', 'baz'] }, 'foo')); // ['bar', 'baz']
+ * console.log(parseFrontMatterStringArray({ foo: 'bar,baz' }, 'foo')); // ['bar', 'baz']
+ * console.log(parseFrontMatterStringArray({ foo: 'bar\nbaz' }, 'foo')); // ['bar', 'baz']
+ * console.log(parseFrontMatterStringArray({ foo: 'bar baz' }, 'foo')); // ['bar baz']
+ * console.log(parseFrontMatterStringArray({ foo: 'bar baz' }, 'foo', false)); // ['bar baz']
+ * console.log(parseFrontMatterStringArray({ foo: 'bar baz' }, 'foo', true)); // ['bar', 'baz']
+ * console.log(parseFrontMatterStringArray({ foo: ['bar', 'baz'] }, /fo./)); // ['bar', 'baz']
+ * ```
+ *
  * @public
  */
 export function parseFrontMatterStringArray(frontmatter: any | null, key: string | RegExp, nospaces?: boolean): string[] | null;
 
 /**
+ * Parses the frontmatter tags from the frontmatter object.
+ *
+ * @param frontmatter - The frontmatter object.
+ * @returns The tags of the note or `null` if no tags are found.
+ *
+ * @example
+ * ```ts
+ * console.log(parseFrontMatterTags({ tags: ['foo', 'bar'] })); // ['#foo', '#bar']
+ * console.log(parseFrontMatterTags({ tag: ['foo', 'bar'] })); // ['#foo', '#bar']
+ * console.log(parseFrontMatterTags({ tags: 'foo bar' })); // ['#foo', '#bar']
+ * ```
+ *
  * @public
  */
 export function parseFrontMatterTags(frontmatter: any | null): string[] | null;
 
 /**
  * Parses the linktext of a wikilink into its component parts.
+ *
  * @param linktext A wikilink without the leading [[ and trailing ]].
  * @returns filepath and subpath (subpath can refer either to a block id, or a heading).
+ *
+ * @example
+ * ```ts
+ * console.log(parseLinktext('[[foo]]')); // { path: 'foo', subpath: '' }
+ * console.log(parseLinktext('[[foo#bar]]')); // { path: 'foo', subpath: 'bar' }
+ * ```
+ *
  * @public
  */
 export function parseLinktext(linktext: string): {
@@ -8048,6 +8122,16 @@ export function parseLinktext(linktext: string): {
 };
 
 /**
+ * Parses a YAML string into an object.
+ *
+ * @param yaml - The YAML string to parse.
+ * @returns The parsed object.
+ *
+ * @example
+ * ```ts
+ * console.log(parseYaml('foo: bar')); // { foo: 'bar' }
+ * ```
+ *
  * @public
  */
 export function parseYaml(yaml: string): any;
