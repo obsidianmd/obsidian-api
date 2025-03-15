@@ -7554,7 +7554,7 @@ export class MetadataCache extends Events {
      * @example
      * ```ts
      * app.metadataCache.on('changed', (file, data, cache) => {
-     *     console.log(file.name, data, cache);
+     *     console.log(file, data, cache);
      * });
      * ```
      *
@@ -7576,7 +7576,7 @@ export class MetadataCache extends Events {
      * @example
      * ```ts
      * app.metadataCache.on('deleted', (file, prevCache) => {
-     *     console.log(file.name, prevCache);
+     *     console.log(file, prevCache);
      * });
      * ```
      *
@@ -7596,7 +7596,7 @@ export class MetadataCache extends Events {
      * @example
      * ```ts
      * app.metadataCache.on('resolve', (file) => {
-     *     console.log(file.name);
+     *     console.log(file);
      * });
      * ```
      *
@@ -10308,51 +10308,78 @@ export class TextComponent extends AbstractTextComponent<HTMLInputElement> {
  *
  * Note that by default, this view only saves when it's closing. To implement auto-save, your editor should
  * call `this.requestSave()` when the content is changed.
+ *
  * @public
  */
 export abstract class TextFileView extends EditableFileView {
 
     /**
-     * In memory data.
+     * In-memory data.
+     *
      * @public
      */
     data: string;
     /**
      * Debounced save in 2 seconds from now.
+     *
      * @public
      */
     requestSave: () => void;
 
     /**
+     * Create a new text file view.
+     *
+     * @param leaf - The leaf to create the view in.
+     *
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
 
     /**
+     * On unload file.
+     *
+     * @param file - The file to unload.
+     * @returns The promise that resolves when the file is unloaded.
+     *
      * @public
      */
     onUnloadFile(file: TFile): Promise<void>;
     /**
+     * On load file.
+     *
+     * @param file - The file to load.
+     * @returns The promise that resolves when the file is loaded.
+     *
      * @public
      */
     onLoadFile(file: TFile): Promise<void>;
 
     /**
+     * Save the file.
+     *
+     * @param clear - Whether to clear the file.
+     * @returns The promise that resolves when the file is saved.
+     *
      * @public
      */
     save(clear?: boolean): Promise<void>;
 
     /**
      * Gets the data from the editor. This will be called to save the editor contents to the file.
+     *
      * @public
      */
     abstract getViewData(): string;
     /**
      * Set the data to the editor. This is used to load the file contents.
      *
-     * If clear is set, then it means we're opening a completely different file.
-     * In that case, you should call clear(), or implement a slightly more efficient
+     * If `clear` is set, then it means we're opening a completely different file.
+     * In that case, you should call {@link TextFileView.clear}(), or implement a slightly more efficient
      * clearing mechanism given the new data to be set.
+     *
+     * @param data - The data to set.
+     * @param clear - Whether to clear the file.
+     *
      * @public
      */
     abstract setViewData(data: string, clear: boolean): void;
@@ -10360,40 +10387,63 @@ export abstract class TextFileView extends EditableFileView {
      * Clear the editor. This is usually called when we're about to open a completely.
      * different file, so it's best to clear any editor states like undo-redo history,
      * and any caches/indexes associated with the previous file contents.
+     *
      * @public
      */
     abstract clear(): void;
 }
 
 /**
+ * A file.
+ *
  * @public
  */
 export class TFile extends TAbstractFile {
     /**
+     * The stats of the file.
+     *
      * @public
      */
     stat: FileStats;
     /**
+     * The basename of the file (name without extension).
+     *
      * @public
      */
     basename: string;
     /**
+     * The extension of the file.
+     *
      * @public
      */
     extension: string;
+    /**
+     * The name of the file (with extension).
+     *
+     * @public
+     */
+    name: string;
 
 }
 
 /**
+ * A folder.
+ *
  * @public
  */
 export class TFolder extends TAbstractFile {
     /**
+     * The children of the folder.
+     *
      * @public
      */
     children: TAbstractFile[];
 
     /**
+     * Check if the folder is the root folder.
+     *
+     * @returns Whether the folder is the root folder.
+     *
      * @public
      */
     isRoot(): boolean;
@@ -10401,91 +10451,187 @@ export class TFolder extends TAbstractFile {
 }
 
 /**
+ * A toggle component.
+ *
  * @public
  */
 export class ToggleComponent extends ValueComponent<boolean> {
     /**
+     * The HTML element that represents the toggle.
+     *
      * @public
      */
     toggleEl: HTMLElement;
 
     /**
+     * Create a new toggle component.
+     *
+     * @param containerEl - The container element.
+     *
      * @public
      */
     constructor(containerEl: HTMLElement);
     /**
+     * Disable the toggle.
+     *
+     * @param disabled - Whether to disable the toggle.
+     * @returns The toggle.
+     *
+     * @example
+     * ```ts
+     * toggle.setDisabled(true);
+     * ```
+     *
      * @public
      */
     setDisabled(disabled: boolean): this;
     /**
+     * Get the value of the toggle.
+     *
+     * @returns The value of the toggle.
+     *
      * @public
      */
     getValue(): boolean;
     /**
+     * Set the value of the toggle.
+     *
+     * @param on - Whether the toggle is on.
+     * @returns The toggle.
+     *
+     * @example
+     * ```ts
+     * toggle.setValue(true);
+     * ```
+     *
      * @public
      */
     setValue(on: boolean): this;
 
     /**
+     * Set the tooltip of the toggle.
+     *
+     * @param tooltip - The tooltip text to show.
+     * @param options - The options for the tooltip.
+     * @returns The toggle.
+     *
      * @public
      */
     setTooltip(tooltip: string, options?: TooltipOptions): this;
     /**
+     * Handle the click event of the toggle.
+     *
      * @public
      */
     onClick(): void;
     /**
+     * Handle the change event of the toggle.
+     *
+     * @param callback - The callback to handle the change event.
+     * @returns The toggle.
+     *
+     * @example
+     * ```ts
+     * toggle.onChange((value) => {
+     *     console.log(value);
+     * });
+     * ```
+     *
      * @public
      */
     onChange(callback: (value: boolean) => any): this;
 }
 
 /**
+ * Options for the tooltip.
+ *
  * @public
  */
 export interface TooltipOptions {
     /**
+     * The placement of the tooltip.
+     *
      * @public
      */
     placement?: TooltipPlacement;
     /**
+     * The classes of the tooltip.
+     *
      * @public
      */
     classes?: string[];
     /**
+     * The gap of the tooltip in pixels.
+     *
      * @public
      */
     gap?: number;
 
     /**
+     * The delay of showing the tooltip in milliseconds.
+     *
      * @public
      */
     delay?: number;
 }
 
 /**
+ * The placement of the tooltip.
+ *
  * @public
  */
 export type TooltipPlacement = 'bottom' | 'right' | 'left' | 'top';
 
 /**
+ * The user event.
+ *
  * @public
  */
 export type UserEvent = MouseEvent | KeyboardEvent | TouchEvent | PointerEvent;
 
 /**
+ * A value component.
+ *
  * @public
  */
 export abstract class ValueComponent<T> extends BaseComponent {
     /**
+     * Register an option listener.
+     *
+     * @param listeners - The listeners to register.
+     * @param key - The key of the option.
+     * @returns The component.
+     *
+     * @example
+     * ```ts
+     * valueComponent.registerOptionListener({
+     *     'foo': (value) => {
+     *         console.log(value);
+     *     }
+     * }, 'foo');
+     * ```
      * @public
      */
     registerOptionListener(listeners: Record<string, (value?: T) => T>, key: string): this;
     /**
+     * Get the value of the component.
+     *
+     * @returns The value of the component.
+     *
      * @public
      */
     abstract getValue(): T;
     /**
+     * Set the value of the component.
+     *
+     * @param value - The value to set.
+     * @returns The component.
+     *
+     * @example
+     * ```ts
+     * valueComponent.setValue('foo');
+     * ```
+     *
      * @public
      */
     abstract setValue(value: T): this;
@@ -10494,10 +10640,13 @@ export abstract class ValueComponent<T> extends BaseComponent {
 /**
  * Work with files and folders stored inside a vault.
  * @see {@link https://docs.obsidian.md/Plugins/Vault}.
+ *
  * @public
  */
 export class Vault extends Events {
     /**
+     * The low-level adapter of the vault.
+     *
      * @public
      */
     adapter: DataAdapter;
@@ -10505,68 +10654,121 @@ export class Vault extends Events {
     /**
      * Gets the path to the config folder.
      * This value is typically `.obsidian` but it could be different.
+     *
      * @public
      */
     configDir: string;
 
     /**
      * Gets the name of the vault.
+     *
      * @public
      */
     getName(): string;
 
     /**
      * Get a file inside the vault at the given path.
-     * Returns `null` if the file does not exist.
      *
-     * @param path.
+     * @param path - The path to the file.
+     * @returns The file or `null` if it does not exist.
+     *
+     * @example
+     * ```ts
+     * console.log(vault.getFileByPath('existent-file.md')); // TFile
+     * console.log(vault.getFileByPath('non-existent-file.md')); // null
+     * ```
+     *
      * @public
      */
     getFileByPath(path: string): TFile | null;
     /**
      * Get a folder inside the vault at the given path.
-     * Returns `null` if the folder does not exist.
      *
-     * @param path.
+     * @param path - The path to the folder.
+     * @returns The folder or `null` if it does not exist.
+     *
+     * @example
+     * ```ts
+     * console.log(vault.getFolderByPath('existent-folder')); // TFolder
+     * console.log(vault.getFolderByPath('non-existent-folder')); // null
+     * ```
+     *
      * @public
      */
     getFolderByPath(path: string): TFolder | null;
     /**
      * Get a file or folder inside the vault at the given path. To check if the return type is.
      * a file, use `instanceof TFile`. To check if it is a folder, use `instanceof TFolder`.
+     *
      * @param path - vault absolute path to the folder or file, with extension, case sensitive.
      * @returns the abstract file, if it's found.
+     *
+     * @example
+     * ```ts
+     * console.log(vault.getAbstractFileByPath('existent-file.md')); // TFile
+     * console.log(vault.getAbstractFileByPath('existent-folder')); // TFolder
+     * console.log(vault.getAbstractFileByPath('non-existent-file.md')); // null
+     * console.log(vault.getAbstractFileByPath('non-existent-folder')); // null
+     * ```
+     *
      * @public
      */
     getAbstractFileByPath(path: string): TAbstractFile | null;
 
     /**
      * Get the root folder of the current vault.
+     *
+     * @returns The root folder of the current vault.
+     *
      * @public
      */
     getRoot(): TFolder;
 
     /**
      * Create a new plaintext file inside the vault.
+     *
      * @param path - Vault absolute path for the new file, with extension.
-     * @param data - text content for the new file.
-     * @param options - (Optional).
+     * @param data - Text content for the new file.
+     * @param options - Write options.
+     * @returns The promise that resolves to the new file.
+     *
+     * @example
+     * ```ts
+     * await vault.create('foo.md', 'bar');
+     * ```
+     *
      * @public
      */
     create(path: string, data: string, options?: DataWriteOptions): Promise<TFile>;
     /**
      * Create a new binary file inside the vault.
+     *
      * @param path - Vault absolute path for the new file, with extension.
-     * @param data - content for the new file.
-     * @param options - (Optional).
+     * @param data - Content for the new file.
+     * @param options - Write options.
+     * @returns The promise that resolves to the new file.
      * @throws Error if file already exists.
+     *
+     * @example
+     * ```ts
+     * await vault.createBinary('foo.png', new Uint8Array([1, 2, 3]));
+     * ```
+     *
      * @public
      */
     createBinary(path: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<TFile>;
     /**
      * Create a new folder inside the vault.
+     *
      * @param path - Vault absolute path for the new folder.
      * @throws Error if folder already exists.
+     * @returns The promise that resolves to the new folder.
+     *
+     * @example
+     * ```ts
+     * await vault.createFolder('foo');
+     * ```
+     *
      * @public
      */
     createFolder(path: string): Promise<TFolder>;
@@ -10574,6 +10776,10 @@ export class Vault extends Events {
      * Read a plaintext file that is stored inside the vault, directly from disk.
      * Use this if you intend to modify the file content afterwards.
      * Use {@link Vault.cachedRead} otherwise for better performance.
+     *
+     * @param file - The file to read.
+     * @returns The promise that resolves to the file content.
+     *
      * @public
      */
     read(file: TFile): Promise<string>;
@@ -10581,111 +10787,171 @@ export class Vault extends Events {
      * Read the content of a plaintext file stored inside the vault.
      * Use this if you only want to display the content to the user.
      * If you want to modify the file content afterward use {@link Vault.read}
+     *
+     * @param file - The file to read.
+     * @returns The promise that resolves to the cached file content.
+     *
      * @public
      */
     cachedRead(file: TFile): Promise<string>;
     /**
      * Read the content of a binary file stored inside the vault.
+     *
+     * @param file - The file to read.
+     * @returns The promise that resolves to the binary file content.
+     *
      * @public
      */
     readBinary(file: TFile): Promise<ArrayBuffer>;
 
     /**
      * Returns an URI for the browser engine to use, for example to embed an image.
+     *
+     * @param file - The file to get the resource path for.
+     * @returns The resource path for the file.
+     *
      * @public
      */
     getResourcePath(file: TFile): string;
     /**
      * Deletes the file completely.
+     *
      * @param file - The file or folder to be deleted.
      * @param force - Should attempt to delete folder even if it has hidden children.
+     * @returns The promise that resolves when the file is deleted.
+     *
      * @public
      */
     delete(file: TAbstractFile, force?: boolean): Promise<void>;
     /**
      * Tries to move to system trash. If that isn't successful/allowed, use local trash.
-     * @param file - The file or folder to be deleted.
+     *
+     * @param file - The file or folder to be trashed.
      * @param system - Set to `false` to use local trash by default.
+     * @returns The promise that resolves when the file is trashed.
+     *
      * @public
      */
     trash(file: TAbstractFile, system: boolean): Promise<void>;
     /**
      * Rename or move a file. To ensure links are automatically renamed,.
      * use {@link FileManager.renameFile} instead.
-     * @param file - the file to rename/move.
-     * @param newPath - vault absolute path to move file to.
+     *
+     * @param file - The file to rename/move.
+     * @param newPath - Vault absolute path to move file to.
+     * @returns The promise that resolves when the file is renamed.
+     *
      * @public
      */
     rename(file: TAbstractFile, newPath: string): Promise<void>;
     /**
      * Modify the contents of a plaintext file.
+     *
      * @param file - The file.
      * @param data - The new file content.
-     * @param options - (Optional).
+     * @param options - Write options.
+     * @returns The promise that resolves when the file is modified.
+     *
      * @public
      */
     modify(file: TFile, data: string, options?: DataWriteOptions): Promise<void>;
     /**
      * Modify the contents of a binary file.
+     *
      * @param file - The file.
      * @param data - The new file content.
-     * @param options - (Optional).
+     * @param options - Write options.
+     * @returns The promise that resolves when the file is modified.
+     *
      * @public
      */
     modifyBinary(file: TFile, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
     /**
      * Add text to the end of a plaintext file inside the vault.
+     *
      * @param file - The file.
-     * @param data - the text to add.
-     * @param options - (Optional).
+     * @param data - The text to append.
+     * @param options - Write options.
+     * @returns The promise that resolves when the text is appended.
+     *
      * @public
      */
     append(file: TFile, data: string, options?: DataWriteOptions): Promise<void>;
     /**
      * Atomically read, modify, and save the contents of a note.
-     * @param file - the file to be read and modified.
-     * @param fn - a callback function which returns the new content of the note synchronously.
-     * @param options - write options.
-     * @returns string - the text value of the note that was written.
+     *
+     * @param file - The file to be read and modified.
+     * @param fn - A callback function which returns the new content of the note synchronously.
+     * @param options - Write options.
+     * @returns The promise that resolves to the text value of the note that was written.
+     *
      * @example
      * ```ts
-     * app.vault.process(file, (data) => {
-     *  return data.replace('foo', 'bar');
+     * await app.vault.process(file, (data) => {
+     *     return data.replace('foo', 'bar');
      * });
      * ```
+     *
      * @public
      */
     process(file: TFile, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
     /**
      * Create a copy of a file or folder.
+     *
      * @param file - The file or folder.
      * @param newPath - Vault absolute path for the new copy.
+     * @returns The promise that resolves to the new copy.
+     *
      * @public
      */
     copy<T extends TAbstractFile>(file: T, newPath: string): Promise<T>;
     /**
      * Get all files and folders in the vault.
+     *
+     * @returns All files and folders in the vault.
+     *
      * @public
      */
     getAllLoadedFiles(): TAbstractFile[];
     /**
      * Get all folders in the vault.
+     *
      * @param includeRoot - Should the root folder (`/`) be returned.
+     * @returns All folders in the vault.
+     *
      * @public
      */
     getAllFolders(includeRoot?: boolean): TFolder[];
 
     /**
+     * Recursively iterate over all files and folders in the vault.
+     *
+     * @param root - The root folder to iterate over.
+     * @param cb - A callback function that will be called for each file and folder.
+     *
+     * @example
+     * ```ts
+     * Vault.recurseChildren(vault.getRoot(), (file) => {
+     *     console.log(file);
+     * });
+     * ```
+     *
      * @public
      */
     static recurseChildren(root: TFolder, cb: (file: TAbstractFile) => any): void;
     /**
      * Get all Markdown files in the vault.
+     *
+     * @returns All Markdown files in the vault.
+     *
      * @public
      */
     getMarkdownFiles(): TFile[];
     /**
      * Get all files in the vault.
+     *
+     * @returns All files in the vault.
+     *
      * @public
      */
     getFiles(): TFile[];
@@ -10694,21 +10960,73 @@ export class Vault extends Events {
      * Called when a file is created.
      * This is also called when the vault is first loaded for each existing file
      * If you do not wish to receive create events on vault load, register your event handler inside {@link Workspace.onLayoutReady}.
+     *
+     * @param name - Should be `'create'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.vault.on('create', (file) => {
+     *     console.log(file);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'create', callback: (file: TAbstractFile) => any, ctx?: any): EventRef;
     /**
      * Called when a file is modified.
+     *
+     * @param name - Should be `'modify'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.vault.on('modify', (file) => {
+     *     console.log(file);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'modify', callback: (file: TAbstractFile) => any, ctx?: any): EventRef;
     /**
      * Called when a file is deleted.
+     *
+     * @param name - Should be `'delete'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.vault.on('delete', (file) => {
+     *     console.log(file);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'delete', callback: (file: TAbstractFile) => any, ctx?: any): EventRef;
     /**
      * Called when a file is renamed.
+     *
+     * @param name - Should be `'rename'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.vault.on('rename', (file, oldPath) => {
+     *     console.log(file, oldPath);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'rename', callback: (file: TAbstractFile, oldPath: string) => any, ctx?: any): EventRef;
@@ -10716,6 +11034,8 @@ export class Vault extends Events {
 }
 
 /**
+ * Base class for all views.
+ *
  * @public
  */
 export abstract class View extends Component {
@@ -10726,6 +11046,8 @@ export abstract class View extends Component {
      */
     app: App;
     /**
+     * The icon of the view.
+     *
      * @public
      */
     icon: IconName;
@@ -10740,6 +11062,8 @@ export abstract class View extends Component {
      */
     navigation: boolean;
     /**
+     * The leaf of the view.
+     *
      * @public
      */
     leaf: WorkspaceLeaf;
@@ -10757,53 +11081,108 @@ export abstract class View extends Component {
      * ```ts
      * this.scope = new Scope(this.app.scope);
      * ```
+     *
      * @default `null`
      * @public
      */
     scope: Scope | null;
     /**
+     * Creates a new view.
+     *
+     * @param leaf - The leaf of the view.
+     *
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
 
     /**
+     * Called when the view is opened.
+     *
+     * @returns A promise that resolves when the view is opened.
+     *
      * @public
      */
     protected onOpen(): Promise<void>;
     /**
+     * Called when the view is closed.
+     *
+     * @returns A promise that resolves when the view is closed.
+     *
      * @public
      */
     protected onClose(): Promise<void>;
     /**
+     * The type of the view.
+     *
+     * @returns The type of the view.
+     *
      * @public
      */
     abstract getViewType(): string;
     /**
+     * Get the state of the view.
+     *
+     * @returns The state of the view.
+     *
      * @public
      */
     getState(): Record<string, unknown>;
     /**
+     * Set the state of the view.
+     *
+     * @param state - The state of the view.
+     * @param result - The result of the view.
+     *
+     * @returns A promise that resolves when the state is set.
+     *
+     * @example
+     * ```ts
+     * this.setState({ foo: 'bar' }, { history: true });
+     * ```
+     *
      * @public
      */
     setState(state: unknown, result: ViewStateResult): Promise<void>;
     /**
+     * Get the ephemeral state of the view.
+     *
+     * @returns The ephemeral state of the view.
+     *
      * @public
      */
     getEphemeralState(): Record<string, unknown>;
     /**
+     * Set the ephemeral state of the view.
+     *
+     * @param state - The ephemeral state of the view.
+     *
+     * @example
+     * ```ts
+     * this.setEphemeralState({ foo: 'bar' });
+     * ```
+     *
      * @public
      */
     setEphemeralState(state: unknown): void;
     /**
+     * Get the icon of the view.
+     *
+     * @returns The icon of the view.
+     *
      * @public
      */
     getIcon(): IconName;
     /**
      * Called when the size of this view is changed.
+     *
      * @public
      */
     onResize(): void;
     /**
+     * Get the display text of the view.
+     *
+     * @returns The display text of the view.
+     *
      * @public
      */
     abstract getDisplayText(): string;
@@ -10811,6 +11190,10 @@ export abstract class View extends Component {
      * Populates the pane menu.
      *
      * (Replaces the previously removed `onHeaderMenu` and `onMoreOptionsMenu`)
+     *
+     * @param menu - The menu to populate.
+     * @param source - The source of the menu.
+     *
      * @public
      */
     onPaneMenu(menu: Menu, source: 'more-options' | 'tab-header' | string): void;
@@ -10818,32 +11201,46 @@ export abstract class View extends Component {
 }
 
 /**
+ * A view creator.
+ *
  * @public
  */
 export type ViewCreator = (leaf: WorkspaceLeaf) => View;
 
 /**
+ * The state of the view.
+ *
  * @public
  */
 export interface ViewState {
 
     /**
+     * The type of the view.
+     *
      * @public
      */
     type: string;
     /**
+     * The state of the view.
+     *
      * @public
      */
     state?: Record<string, unknown>;
     /**
+     * Whether the view is active.
+     *
      * @public
      */
     active?: boolean;
     /**
+     * Whether the view is pinned.
+     *
      * @public
      */
     pinned?: boolean;
     /**
+     * The leaf group of the view.
+     *
      * @public
      */
     group?: WorkspaceLeaf;
@@ -10851,11 +11248,14 @@ export interface ViewState {
 }
 
 /**
+ * The result of the view state.
+ *
  * @public
  */
 export interface ViewStateResult {
     /**
      * Set this to `true` to indicate that there is a state change which should be recorded in the navigation history.
+     *
      * @public
      */
     history: boolean;
@@ -10863,28 +11263,40 @@ export interface ViewStateResult {
 }
 
 /**
+ * A workspace.
+ *
  * @public
  */
 export class Workspace extends Events {
 
     /**
+     * The left split of the workspace.
+     *
      * @public
      */
     leftSplit: WorkspaceSidedock | WorkspaceMobileDrawer;
     /**
+     * The right split of the workspace.
+     *
      * @public
      */
     rightSplit: WorkspaceSidedock | WorkspaceMobileDrawer;
     /**
+     * The left ribbon of the workspace.
+     *
      * @public
      */
     leftRibbon: WorkspaceRibbon;
     /**
+     * The right ribbon of the workspace.
+     *
      * @public
      * @deprecated No longer used
      */
     rightRibbon: WorkspaceRibbon;
     /**
+     * The root split of the workspace.
+     *
      * @public
      */
     rootSplit: WorkspaceRoot;
@@ -10904,18 +11316,21 @@ export class Workspace extends Events {
     activeLeaf: WorkspaceLeaf | null;
 
     /**
+     * The container element of the workspace.
      *
      * @public
      */
     containerEl: HTMLElement;
     /**
-     * If the layout of the app has been successfully initialized.
+     * Whether the layout of the app has been successfully initialized.
      * To react to the layout becoming ready, use {@link Workspace.onLayoutReady}
+     *
      * @public
      */
     layoutReady: boolean;
     /**
      * Save the state of the current workspace layout.
+     *
      * @public
      */
     requestSaveLayout: Debouncer<[], Promise<void>>;
@@ -10923,6 +11338,7 @@ export class Workspace extends Events {
     /**
      * A component managing the current editor.
      * This can be `null` if the active view has no editor.
+     *
      * @public
      */
     activeEditor: MarkdownFileInfo | null;
@@ -10930,44 +11346,98 @@ export class Workspace extends Events {
     /**
      * Runs the callback function right away if layout is already ready,.
      * or push it to a queue to be called later when layout is ready.
+     *
+     * @param callback - The callback to run.
+     *
+     * @example
+     * ```ts
+     * workspace.onLayoutReady(() => {
+     *     console.log('layout is ready');
+     * });
+     * ```
+     *
      * @public
      */
     onLayoutReady(callback: () => any): void;
     /**
+     * Change the layout of the workspace.
+     *
+     * @param workspace - The workspace to change the layout to.
+     * @returns A promise that resolves when the layout is changed.
+     *
      * @public
      */
     changeLayout(workspace: any): Promise<void>;
 
     /**
+     * Get the layout of the workspace.
+     *
+     * @returns The layout of the workspace.
+     *
      * @public
      */
     getLayout(): Record<string, unknown>;
 
     /**
+     * Create a leaf in a parent.
+     *
+     * @param parent - The parent to create the leaf in.
+     * @param index - The index to create the leaf in.
+     * @returns The leaf that was created.
+     *
      * @public
      */
     createLeafInParent(parent: WorkspaceSplit, index: number): WorkspaceLeaf;
 
     /**
+     * Create a leaf by a split.
+     *
+     * @param leaf - The leaf to create the leaf by.
+     * @param direction - The direction to create the leaf in.
+     * @param before - Whether to create the leaf before the current leaf.
+     * @returns The leaf that was created.
+     *
      * @public
      */
     createLeafBySplit(leaf: WorkspaceLeaf, direction?: SplitDirection, before?: boolean): WorkspaceLeaf;
     /**
+     * Split the active leaf.
+     *
+     * @param direction - The direction to split the leaf in.
+     * @returns The leaf that was created.
+     *
      * @public
      * @deprecated - You should use {@link Workspace.getLeaf|getLeaf(true)} instead which does the same thing.
      */
     splitActiveLeaf(direction?: SplitDirection): WorkspaceLeaf;
 
     /**
+     * Duplicate a leaf.
+     *
+     * @param leaf - The leaf to duplicate.
+     * @param direction - The direction to duplicate the leaf in.
+     * @returns The promise that resolves to the leaf that was created.
+     *
      * @public
      * @deprecated - Use the new form of this method instead
      */
     duplicateLeaf(leaf: WorkspaceLeaf, direction?: SplitDirection): Promise<WorkspaceLeaf>;
     /**
+     * Duplicate a leaf.
+     *
+     * @param leaf - The leaf to duplicate.
+     * @param leafType - The type of the leaf to duplicate.
+     * @param direction - The direction to duplicate the leaf in.
+     * @returns The promise that resolves to the leaf that was created.
+     *
      * @public
      */
     duplicateLeaf(leaf: WorkspaceLeaf, leafType: PaneType | boolean, direction?: SplitDirection): Promise<WorkspaceLeaf>;
     /**
+     * Get the unpinned leaf.
+     *
+     * @returns The unpinned leaf.
+     *
      * @public
      * @deprecated - You should use {@link Workspace.getLeaf|getLeaf(false)} instead which does the same thing.
      */
@@ -10991,6 +11461,9 @@ export class Workspace extends Events {
      *
      * If newLeaf is `'window'` then a popout window will be created with a new leaf inside.
      *
+     * @param newLeaf - The type of the leaf to get or `true` to create a new leaf or `false` to get an existing leaf.
+     * @returns The leaf that was created.
+     *
      * @public
      */
     getLeaf(newLeaf?: PaneType | boolean): WorkspaceLeaf;
@@ -10998,25 +11471,53 @@ export class Workspace extends Events {
     /**
      * Migrates this leaf to a new popout window.
      * Only works on the desktop app.
-     * @public
+     *
+     * @param leaf - The leaf to migrate to a popout window.
+     * @param data - The data to pass to the popout window.
+     * @returns The popout window that was created.
      * @throws Error if the app does not support popout windows (i.e. on mobile or if Electron version is too old).
+     *
+     * @public
      */
     moveLeafToPopout(leaf: WorkspaceLeaf, data?: WorkspaceWindowInitData): WorkspaceWindow;
 
     /**
      * Open a new popout window with a single new leaf and return that leaf.
      * Only works on the desktop app.
+     *
+     * @param data - The data to pass to the popout window.
+     * @returns The leaf that was created.
+     *
      * @public
      */
     openPopoutLeaf(data?: WorkspaceWindowInitData): WorkspaceLeaf;
     /**
+     * Open a link text.
+     *
+     * @param linktext - The link text to open.
+     * @param sourcePath - The source path to open.
+     * @param newLeaf - The type of the leaf to open.
+     * @param openViewState - The view state to open.
+     *
+     * @example
+     * ```ts
+     * app.workspace.openLinkText('foo', 'bar.md', 'tab');
+     * ```
+     *
      * @public
      */
     openLinkText(linktext: string, sourcePath: string, newLeaf?: PaneType | boolean, openViewState?: OpenViewState): Promise<void>;
     /**
      * Sets the active leaf.
+     *
      * @param leaf - The new active leaf.
      * @param params - Parameter object of whether to set the focus.
+     *
+     * @example
+     * ```ts
+     * app.workspace.setActiveLeaf(app.workspace.getLeaf(false), { focus: true });
+     * ```
+     *
      * @public
      */
     setActiveLeaf(leaf: WorkspaceLeaf, params?: {
@@ -11024,6 +11525,17 @@ export class Workspace extends Events {
         focus?: boolean;
     }): void;
     /**
+     * Sets the active leaf.
+     *
+     * @param leaf - The new active leaf.
+     * @param pushHistory - Whether to push the history.
+     * @param focus - Whether to focus the leaf.
+     *
+     * @example
+     * ```ts
+     * app.workspace.setActiveLeaf(app.workspace.getLeaf(false), true, true);
+     * ```
+     *
      * @deprecated - function signature changed. Use other form instead.
      * @public
      */
@@ -11031,37 +11543,58 @@ export class Workspace extends Events {
 
     /**
      * Retrieve a leaf by its id.
+     *
      * @param id id of the leaf to retrieve.
+     * @returns The leaf that was retrieved.
+     *
      * @public
      */
     getLeafById(id: string): WorkspaceLeaf | null;
     /**
      * Get all leaves that belong to a group.
-     * @param group id.
+     *
+     * @param group - The id of the group to get the leaves from.
+     * @returns The leaves that belong to the group.
+     *
      * @public
      */
     getGroupLeaves(group: string): WorkspaceLeaf[];
 
     /**
      * Get the most recently active leaf in a given workspace root. Useful for interacting with the leaf in the root split while a sidebar leaf might be active.
-     * @param root Root for the leaves you want to search. If a root is not provided, the `rootSplit` and leaves within pop-outs will be searched.
+     *
+     * @param root - The root to get the most recently active leaf from. If a root is not provided, the `rootSplit` and leaves within pop-outs will be searched.
+     * @returns The most recently active leaf.
+     *
      * @public
      */
     getMostRecentLeaf(root?: WorkspaceParent): WorkspaceLeaf | null;
     /**
      * Create a new leaf inside the left sidebar.
-     * @param split Should the existing split be split up?.
+     *
+     * @param split - Should the existing split be split up?.
+     * @returns The leaf that was created or `null` if the left sidebar is not open.
+     *
      * @public
      */
     getLeftLeaf(split: boolean): WorkspaceLeaf | null;
     /**
      * Create a new leaf inside the right sidebar.
-     * @param split Should the existing split be split up?.
+     *
+     * @param split - Should the existing split be split up?.
+     * @returns The leaf that was created or `null` if the right sidebar is not open.
+     *
      * @public
      */
     getRightLeaf(split: boolean): WorkspaceLeaf | null;
     /**
      * Get side leaf or create one if one does not exist.
+     *
+     * @param type - The type of the leaf to get or create.
+     * @param side - The side of the leaf to get or create.
+     * @param options - The options to pass to the leaf.
+     * @returns The promise that is resolved to the leaf that was created or `null` if the side is not open.
+     *
      * @public
      */
     ensureSideLeaf(type: string, side: Side, options?: {
@@ -11077,6 +11610,10 @@ export class Workspace extends Events {
 
     /**
      * Get the currently active view of a given type.
+     *
+     * @param type - The type of the view to get.
+     * @returns The active view of the given type or `null` if no view of the given type is active.
+     *
      * @public
      */
     getActiveViewOfType<T extends View>(type: Constructor<T>): T | null;
@@ -11084,27 +11621,43 @@ export class Workspace extends Events {
     /**
      * Returns the file for the current view if it's a `FileView`.
      * Otherwise, it will return the most recently active file.
+     *
+     * @returns The active file or `null` if no file is active.
+     *
      * @public
      */
     getActiveFile(): TFile | null;
 
     /**
      * Iterate through all leaves in the main area of the workspace.
+     *
+     * @param callback - The callback to call for each leaf.
+     *
      * @public
      */
     iterateRootLeaves(callback: (leaf: WorkspaceLeaf) => any): void;
     /**
      * Iterate through all leaves, including main area leaves, floating leaves, and sidebar leaves.
+     *
+     * @param callback - The callback to call for each leaf.
+     *
      * @public
      */
     iterateAllLeaves(callback: (leaf: WorkspaceLeaf) => any): void;
     /**
      * Get all leaves of a given type.
+     *
+     * @param viewType - The type of the view to get.
+     * @returns The leaves of the given type.
+     *
      * @public
      */
     getLeavesOfType(viewType: string): WorkspaceLeaf[];
     /**
      * Remove all leaves of the given type.
+     *
+     * @param viewType - The type of the view to remove.
+     *
      * @public
      */
     detachLeavesOfType(viewType: string): void;
@@ -11112,11 +11665,18 @@ export class Workspace extends Events {
     /**
      * Bring a given leaf to the foreground. If the leaf is in a sidebar, the sidebar will be uncollapsed.
      * `await` this function to ensure your view has been fully loaded and is not deferred.
+     *
+     * @param leaf - The leaf to bring to the foreground.
+     * @returns A promise that resolves when the leaf is brought to the foreground.
+     *
      * @public
      */
     revealLeaf(leaf: WorkspaceLeaf): Promise<void>;
     /**
      * Get the filenames of the 10 most recently opened files.
+     *
+     * @returns The filenames of the 10 most recently opened files.
+     *
      * @public
      */
     getLastOpenFiles(): string[];
@@ -11124,6 +11684,7 @@ export class Workspace extends Events {
     /**
      * Calling this function will update/reconfigure the options of all Markdown views.
      * It is fairly expensive, so it should not be called frequently.
+     *
      * @public
      */
     updateOptions(): void;
@@ -11131,70 +11692,238 @@ export class Workspace extends Events {
     /**
      * Triggered when the active Markdown file is modified. React to file changes before they.
      * are saved to disk.
+     *
+     * @param name - Should be `'quick-preview'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('quick-preview', (file, data) => {
+     *     console.log(file, data);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'quick-preview', callback: (file: TFile, data: string) => any, ctx?: any): EventRef;
     /**
      * Triggered when a `WorkspaceItem` is resized or the workspace layout has changed.
+     *
+     * @param name - Should be `'resize'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('resize', () => {
+     *     console.log('resize');
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'resize', callback: () => any, ctx?: any): EventRef;
 
     /**
      * Triggered when the active leaf changes.
+     *
+     * @param name - Should be `'active-leaf-change'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('active-leaf-change', (leaf) => {
+     *     console.log(leaf);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'active-leaf-change', callback: (leaf: WorkspaceLeaf | null) => any, ctx?: any): EventRef;
     /**
      * Triggered when the active file changes. The file could be in a new leaf, an existing leaf,.
      * or an embed.
+     *
+     * @param name - Should be `'file-open'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('file-open', (file) => {
+     *     console.log(file);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'file-open', callback: (file: TFile | null) => any, ctx?: any): EventRef;
 
     /**
+     * Triggered when the layout of the workspace changes.
+     *
+     * @param name - Should be `'layout-change'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('layout-change', () => {
+     *     console.log('layout-change');
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'layout-change', callback: () => any, ctx?: any): EventRef;
     /**
      * Triggered when a new popout window is created.
+     *
+     * @param name - Should be `'window-open'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('window-open', (win, window) => {
+     *     console.log(win, window);
+     * });
+     *
      * @public
      */
     on(name: 'window-open', callback: (win: WorkspaceWindow, window: Window) => any, ctx?: any): EventRef;
     /**
      * Triggered when a popout window is closed.
+     *
+     * @param name - Should be `'window-close'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('window-close', (win, window) => {
+     *     console.log(win, window);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'window-close', callback: (win: WorkspaceWindow, window: Window) => any, ctx?: any): EventRef;
     /**
      * Triggered when the CSS of the app has changed.
+     *
+     * @param name - Should be `'css-change'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('css-change', () => {
+     *     console.log('css-change');
+     * });
+     *
      * @public
      */
     on(name: 'css-change', callback: () => any, ctx?: any): EventRef;
 
     /**
      * Triggered when the user opens the context menu on a file.
+     *
+     * @param name - Should be `'file-menu'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('file-menu', (menu, file, source, leaf) => {
+     *     console.log(menu, file, source, leaf);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'file-menu', callback: (menu: Menu, file: TAbstractFile, source: string, leaf?: WorkspaceLeaf) => any, ctx?: any): EventRef;
     /**
      * Triggered when the user opens the context menu with multiple files selected in the File Explorer.
+     *
+     * @param name - Should be `'files-menu'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('files-menu', (menu, files, source, leaf) => {
+     *     console.log(menu, files, source, leaf);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'files-menu', callback: (menu: Menu, files: TAbstractFile[], source: string, leaf?: WorkspaceLeaf) => any, ctx?: any): EventRef;
 
     /**
      * Triggered when the user opens the context menu on an external URL.
+     *
+     * @param name - Should be `'url-menu'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('url-menu', (menu, url) => {
+     *     console.log(menu, url);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'url-menu', callback: (menu: Menu, url: string) => any, ctx?: any): EventRef;
     /**
      * Triggered when the user opens the context menu on an editor.
+     *
+     * @param name - Should be `'editor-menu'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('editor-menu', (menu, editor, info) => {
+     *     console.log(menu, editor, info);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'editor-menu', callback: (menu: Menu, editor: Editor, info: MarkdownView | MarkdownFileInfo) => any, ctx?: any): EventRef;
     /**
      * Triggered when changes to an editor has been applied, either programmatically or from a user event.
+     *
+     * @param name - Should be `'editor-change'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('editor-change', (editor, info) => {
+     *     console.log(editor, info);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'editor-change', callback: (editor: Editor, info: MarkdownView | MarkdownFileInfo) => any, ctx?: any): EventRef;
@@ -11203,6 +11932,19 @@ export class Workspace extends Events {
      * Triggered when the editor receives a paste event.
      * Check for `evt.defaultPrevented` before attempting to handle this event, and return if it has been already handled.
      * Use `evt.preventDefault()` to indicate that you've handled the event.
+     *
+     * @param name - Should be `'editor-paste'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('editor-paste', (evt, editor, info) => {
+     *     console.log(evt, editor, info);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'editor-paste', callback: (evt: ClipboardEvent, editor: Editor, info: MarkdownView | MarkdownFileInfo) => any, ctx?: any): EventRef;
@@ -11210,6 +11952,19 @@ export class Workspace extends Events {
      * Triggered when the editor receives a drop event.
      * Check for `evt.defaultPrevented` before attempting to handle this event, and return if it has been already handled.
      * Use `evt.preventDefault()` to indicate that you've handled the event.
+     *
+     * @param name - Should be `'editor-drop'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('editor-drop', (evt, editor, info) => {
+     *     console.log(evt, editor, info);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'editor-drop', callback: (evt: DragEvent, editor: Editor, info: MarkdownView | MarkdownFileInfo) => any, ctx?: any): EventRef;
@@ -11218,6 +11973,19 @@ export class Workspace extends Events {
      * Triggered when the app is about to quit.
      * Not guaranteed to actually run.
      * Perform some best effort cleanup here.
+     *
+     * @param name - Should be `'quit'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * app.workspace.on('quit', (tasks: Tasks) => {
+     *     console.log(tasks);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'quit', callback: (tasks: Tasks) => any, ctx?: any): EventRef;
@@ -11225,15 +11993,21 @@ export class Workspace extends Events {
 }
 
 /**
+ * Workspace container.
+ *
  * @public
  */
 export abstract class WorkspaceContainer extends WorkspaceSplit {
 
     /**
+     * The window object.
+     *
      * @public
      */
     abstract win: Window;
     /**
+     * The document object.
+     *
      * @public
      */
     abstract doc: Document;
@@ -11241,10 +12015,14 @@ export abstract class WorkspaceContainer extends WorkspaceSplit {
 }
 
 /**
+ * Workspace floating.
+ *
  * @public
  */
 export class WorkspaceFloating extends WorkspaceParent {
     /**
+     * The parent of the floating.
+     *
      * @public
      */
     parent: WorkspaceParent;
@@ -11252,17 +12030,22 @@ export class WorkspaceFloating extends WorkspaceParent {
 }
 
 /**
+ * Workspace item.
+ *
  * @public
  */
 export abstract class WorkspaceItem extends Events {
 
     /**
      * The direct parent of the leaf.
+     *
      * @public
      */
     abstract parent: WorkspaceParent;
 
     /**
+     * Get the root item.
+     *
      * @public
      */
     getRoot(): WorkspaceItem;
@@ -11270,6 +12053,7 @@ export abstract class WorkspaceItem extends Events {
      * Get the root container parent item, which can be one of:.
      * - {@link WorkspaceRoot}
      * - {@link WorkspaceWindow}
+     *
      * @public
      */
     getContainer(): WorkspaceContainer;
@@ -11277,6 +12061,8 @@ export abstract class WorkspaceItem extends Events {
 }
 
 /**
+ * Workspace leaf.
+ *
  * @public
  */
 export class WorkspaceLeaf extends WorkspaceItem implements HoverParent {
@@ -11294,13 +12080,16 @@ export class WorkspaceLeaf extends WorkspaceItem implements HoverParent {
     parent: WorkspaceTabs | WorkspaceMobileDrawer;
 
     /**
-     * The view associated with this leaf. Do not attempt to cast this to your.
+     * The view associated with this leaf. Do not attempt to cast this to your
      * custom `View` without first checking `instanceof`.
+     *
      * @public
      */
     view: View;
 
     /**
+     * The hover popover associated with this leaf.
+     *
      * @public
      */
     hoverPopover: HoverPopover | null;
@@ -11308,20 +12097,36 @@ export class WorkspaceLeaf extends WorkspaceItem implements HoverParent {
     /**
      * Open a file in this leaf.
      *
+     * @param file - The file to open.
+     * @param openState - The open state of the file.
+     * @returns A promise that resolves when the file is opened.
+     *
      * @public
      */
     openFile(file: TFile, openState?: OpenViewState): Promise<void>;
 
     /**
+     * Open a view in this leaf.
+     *
+     * @param view - The view to open.
+     * @returns A promise that resolves to the opened view.
+     *
      * @public
      */
     open(view: View): Promise<View>;
 
     /**
+     * Get the view state of this leaf.
+     *
      * @public
      */
     getViewState(): ViewState;
     /**
+     * Set the view state of this leaf.
+     *
+     * @param viewState - The view state to set.
+     * @param eState - The ephemeral state to set.
+     *
      * @public
      */
     setViewState(viewState: ViewState, eState?: any): Promise<void>;
@@ -11329,65 +12134,134 @@ export class WorkspaceLeaf extends WorkspaceItem implements HoverParent {
      * Returns `true` if this leaf is currently deferred because it is in the background.
      * A deferred leaf will have a DeferredView as its view, instead of the View that
      * it should normally have for its type (like MarkdownView for the `markdown` type).
+     *
+     * @returns Whether the leaf is deferred.
+     *
      * @since 1.7.2
      * @public
      */
     get isDeferred(): boolean;
     /**
      * If this view is currently deferred, load it and await that it has fully loaded.
+     *
+     * @returns A promise that resolves when the leaf is loaded.
+     *
      * @since 1.7.2
      * @public
      */
     loadIfDeferred(): Promise<void>;
 
     /**
+     * Get the ephemeral state of this leaf.
+     *
+     * @returns The ephemeral state of the leaf.
+     *
      * @public
      */
     getEphemeralState(): any;
     /**
+     * Set the ephemeral state of this leaf.
+     *
+     * @param state - The ephemeral state to set.
+     *
      * @public
      */
     setEphemeralState(state: any): void;
     /**
+     * Toggle the pinned state of this leaf.
+     *
      * @public
      */
     togglePinned(): void;
     /**
+     * Set the pinned state of this leaf.
+     *
+     * @param pinned - Whether the leaf should be pinned.
+     *
      * @public
      */
     setPinned(pinned: boolean): void;
     /**
+     * Set the group of this leaf.
+     *
+     * @param group - The group to set.
+     *
      * @public
      */
     setGroupMember(other: WorkspaceLeaf): void;
     /**
+     * Set the group of this leaf.
+     *
+     * @param group - The group to set.
+     *
      * @public
      */
     setGroup(group: string): void;
     /**
+     * Detach this leaf from its parent.
+     *
      * @public
      */
     detach(): void;
 
     /**
+     * Get the icon of this leaf.
+     *
+     * @returns The icon of the leaf.
+     *
      * @public
      */
     getIcon(): IconName;
     /**
+     * Get the display text of this leaf.
+     *
+     * @returns The display text of the leaf.
+     *
      * @public
      */
     getDisplayText(): string;
 
     /**
+     * Handle the resize event.
+     *
      * @public
      */
     onResize(): void;
 
     /**
+     * Handle the pinned-change event.
+     *
+     * @param name - Should be `'pinned-change'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * leaf.on('pinned-change', (pinned) => {
+     *     console.log(pinned);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'pinned-change', callback: (pinned: boolean) => any, ctx?: any): EventRef;
+
     /**
+     * Handle the group-change event.
+     *
+     * @param name - Should be `'group-change'`.
+     * @param callback - The callback function.
+     * @param ctx - The context passed as `this` to the `callback` function.
+     * @returns The event reference.
+     *
+     * @example
+     * ```ts
+     * leaf.on('group-change', (group) => {
+     *     console.log(group);
+     * });
+     * ```
+     *
      * @public
      */
     on(name: 'group-change', callback: (group: string) => any, ctx?: any): EventRef;
@@ -11395,31 +12269,43 @@ export class WorkspaceLeaf extends WorkspaceItem implements HoverParent {
 }
 
 /**
+ * Workspace mobile drawer.
+ *
  * @public
  */
 export class WorkspaceMobileDrawer extends WorkspaceParent {
 
     /**
+     * The parent of the mobile drawer.
+     *
      * @public
      */
     parent: WorkspaceParent;
 
     /**
+     * Whether the mobile drawer is collapsed.
+     *
      * @public
      */
     collapsed: boolean;
 
     /**
+     * Expand the mobile drawer.
+     *
      * @public
      */
     expand(): void;
 
     /**
+     * Collapse the mobile drawer.
+     *
      * @public
      */
     collapse(): void;
 
     /**
+     * Toggle the mobile drawer.
+     *
      * @public
      */
     toggle(): void;
@@ -11427,6 +12313,8 @@ export class WorkspaceMobileDrawer extends WorkspaceParent {
 }
 
 /**
+ * Workspace parent.
+ *
  * @public
  */
 export abstract class WorkspaceParent extends WorkspaceItem {
@@ -11434,6 +12322,8 @@ export abstract class WorkspaceParent extends WorkspaceItem {
 }
 
 /**
+ * Workspace ribbon.
+ *
  * @public
  */
 export class WorkspaceRibbon {
@@ -11441,38 +12331,54 @@ export class WorkspaceRibbon {
 }
 
 /**
+ * Workspace root.
+ *
  * @public
  */
 export class WorkspaceRoot extends WorkspaceContainer {
     /**
+     * The window object.
+     *
      * @public
      */
     win: Window;
     /**
+     * The document object.
+     *
      * @public
      */
     doc: Document;
 }
 
 /**
+ * Workspace sidedock.
+ *
  * @public
  */
 export class WorkspaceSidedock extends WorkspaceSplit {
 
     /**
+     * Whether the sidedock is collapsed.
+     *
      * @public
      */
     collapsed: boolean;
 
     /**
+     * Toggle the sidedock.
+     *
      * @public
      */
     toggle(): void;
     /**
+     * Collapse the sidedock.
+     *
      * @public
      */
     collapse(): void;
     /**
+     * Expand the sidedock.
+     *
      * @public
      */
     expand(): void;
@@ -11480,10 +12386,14 @@ export class WorkspaceSidedock extends WorkspaceSplit {
 }
 
 /**
+ * Workspace split.
+ *
  * @public
  */
 export class WorkspaceSplit extends WorkspaceParent {
     /**
+     * The parent of the split.
+     *
      * @public
      */
     parent: WorkspaceParent;
@@ -11491,11 +12401,15 @@ export class WorkspaceSplit extends WorkspaceParent {
 }
 
 /**
+ * Workspace tabs.
+ *
  * @public
  */
 export class WorkspaceTabs extends WorkspaceParent {
 
     /**
+     * The parent of the tabs.
+     *
      * @public
      */
     parent: WorkspaceSplit;
@@ -11503,15 +12417,21 @@ export class WorkspaceTabs extends WorkspaceParent {
 }
 
 /**
+ * Workspace window.
+ *
  * @public
  */
 export class WorkspaceWindow extends WorkspaceContainer {
 
     /**
+     * The window object.
+     *
      * @public
      */
     win: Window;
     /**
+     * The document object.
+     *
      * @public
      */
     doc: Document;
@@ -11519,26 +12439,40 @@ export class WorkspaceWindow extends WorkspaceContainer {
 }
 
 /**
+ * Workspace window init data.
+ *
  * @public
  */
 export interface WorkspaceWindowInitData {
     /**
+     * The x position.
+     *
      * @public
      */
     x?: number;
     /**
+     * The y position.
+     *
      * @public
      */
     y?: number;
 
     /**
      * The suggested size.
+     *
      * @public
      */
     size?: {
-        /** @public */
+        /**
+         * The width.
+         * @public
+         */
         width: number;
-        /** @public */
+        /**
+         * The height.
+         *
+         * @public
+         */
         height: number;
     };
 }
@@ -11546,6 +12480,8 @@ export interface WorkspaceWindowInitData {
 export { }
 
 /**
+ * The name of the icon.
+ *
  * @public
  */
 export type IconName = string;
