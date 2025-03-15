@@ -7621,69 +7621,137 @@ export class MetadataCache extends Events {
 }
 
 /**
+ * Modal dialog component.
+ *
  * @public
  */
 export class Modal implements CloseableComponent {
     /**
+     * The Obsidian app instance.
+     *
      * @public
      */
     app: App;
     /**
+     * The scope for the keymaps.
+     *
      * @public
      */
     scope: Scope;
     /**
+     * The container HTML element for the modal.
+     *
      * @public
      */
     containerEl: HTMLElement;
     /**
+     * The HTML element that represents the modal.
+     *
      * @public
      */
     modalEl: HTMLElement;
 
     /**
+     * The HTML element that represents the title of the modal.
+     *
      * @public
      */
     titleEl: HTMLElement;
     /**
+     * The HTML element that represents the content of the modal.
+     *
      * @public
      */
     contentEl: HTMLElement;
 
     /**
+     * Whether the modal should restore the selection when it is opened or closed.
+     *
      * @public
      */
     shouldRestoreSelection: boolean;
 
     /**
+     * Create a new modal.
+     *
+     * @param app - The Obsidian app instance.
+     *
      * @public
      */
     constructor(app: App);
     /**
      * Show the modal on the the active window. On mobile, the modal will animate on screen.
+     *
      * @public
      */
     open(): void;
 
     /**
-     * Hide the modal.
+     * Close the modal.
+     *
      * @public
      */
     close(): void;
     /**
+     * Called when the modal is opened.
+     *
+     * @example
+     * ```ts
+     * class MyModal extends Modal {
+     *     public override onOpen(): void {
+     *         console.log('MyModal opened');
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     onOpen(): void;
     /**
+     * Called when the modal is closed.
+     *
+     * @example
+     * ```ts
+     * class MyModal extends Modal {
+     *     public override onClose(): void {
+     *         console.log('MyModal closed');
+     *     }
+     * }
+     * ```
+     *
      * @public
      */
     onClose(): void;
 
     /**
+     * Set the title of the modal.
+     *
+     * @param title - The title of the modal.
+     * @returns The modal instance.
+     *
+     * @example
+     * ```ts
+     * modal.setTitle('foo');
+     * ```
+     *
      * @public
      */
     setTitle(title: string): this;
     /**
+     * Set the content of the modal.
+     *
+     * @param content - The content of the modal.
+     * @returns The modal instance.
+     *
+     * @example
+     * ```ts
+     * modal.setContent('foo');
+     *
+     * const fragment = createFragment();
+     * fragment.createEl('p', { text: 'foo' });
+     * modal.setContent(fragment);
+     * ```
+     *
      * @public
      */
     setContent(content: string | DocumentFragment): this;
