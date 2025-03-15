@@ -2452,7 +2452,7 @@ export class CapacitorAdapter implements DataAdapter {
      *
      * @example
      * ```ts
-     * await app.vault.adapter.writeBinary('foo/bar.jpg', new Uint8Array([1, 2, 3]));
+     * await app.vault.adapter.writeBinary('foo/bar.jpg', new Uint8Array([1, 2, 3]).buffer);
      * ```
      *
      * @public
@@ -3243,7 +3243,7 @@ export interface DataAdapter {
      *
      * @example
      * ```ts
-     * await app.vault.adapter.writeBinary('foo/bar.jpg', new Uint8Array([1, 2, 3]));
+     * await app.vault.adapter.writeBinary('foo/bar.jpg', new Uint8Array([1, 2, 3]).buffer);
      * ```
      *
      * @public
@@ -4835,7 +4835,7 @@ export class FileSystemAdapter implements DataAdapter {
      *
      * @example
      * ```ts
-     * await app.vault.adapter.writeBinary('foo/bar.jpg', new Uint8Array([1, 2, 3]));
+     * await app.vault.adapter.writeBinary('foo/bar.jpg', new Uint8Array([1, 2, 3]).buffer);
      * ```
      *
      * @public
@@ -8802,7 +8802,7 @@ export interface RequestUrlParam {
      * @example
      * ```ts
      * 'foo'
-     * new ArrayBuffer(10)
+     * new Uint8Array([1, 2, 3]).buffer
      * ```
      *
      * @public
@@ -10528,7 +10528,7 @@ export class Vault extends Events {
      *
      * @example
      * ```ts
-     * await vault.createBinary('foo.png', new Uint8Array([1, 2, 3]));
+     * await vault.createBinary('foo.png', new Uint8Array([1, 2, 3]).buffer);
      * ```
      *
      * @public
