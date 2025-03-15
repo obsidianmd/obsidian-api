@@ -8795,21 +8795,44 @@ export class ProgressBarComponent extends ValueComponent<number> {
 
 /**
  * Base interface for items that point to a different location.
+ *
  * @public
  */
 export interface Reference {
     /**
      * Link destination.
+     *
      * @public
      */
     link: string;
     /**
      * Contains the text as it's written in the document. Not available on Publish.
+     *
      * @public
      */
     original: string;
     /**
-     * Available if title is different from link text, in the case of `[[page name|display name]]` this will return `display name`.
+     * Display text of the link.
+     *
+     * @example
+     * For the following links:
+     *
+     * ```md
+     * [[foo|bar]]
+     * [[foo]]
+     * [foo](bar.md)
+     * ![](bar.jpg)
+     * ```
+     *
+     * `displayText` will be:
+     *
+     * ```
+     * 'bar'
+     * 'foo'
+     * 'foo'
+     * ''
+     * ```
+     *
      * @public
      */
     displayText?: string;
