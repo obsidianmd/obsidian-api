@@ -7769,83 +7769,171 @@ export class Modal implements CloseableComponent {
 export type Modifier = 'Mod' | 'Ctrl' | 'Meta' | 'Shift' | 'Alt';
 
 /**
- * An instance of `moment.js` library.
+ * An instance of `Moment.js` library.
  * @public
  */
 export const moment: typeof Moment;
 
 
 /**
+ * A component that allows you to format dates using `Moment.js`.
+ *
  * @public
  */
 export class MomentFormatComponent extends TextComponent {
     /**
+     * The HTML element that represents the sample value.
+     *
      * @public
      */
     sampleEl: HTMLElement;
 
     /**
      * Sets the default format when input is cleared. Also used for placeholder.
+     *
+     * @param defaultFormat - The default format.
+     * @returns The component instance.
+     *
+     * @example
+     * ```ts
+     * momentFormatComponent.setDefaultFormat('YYYY-MM-DD');
+     * ```
+     *
      * @public
      */
     setDefaultFormat(defaultFormat: string): this;
     /**
+     * Sets the sample HTML element.
+     *
+     * @param sampleEl - The sample HTML element.
+     * @returns The component instance.
+     *
+     * @example
+     * ```ts
+     * momentFormatComponent.setSampleEl(createEl('strong'));
+     * ```
+     *
      * @public
      */
     setSampleEl(sampleEl: HTMLElement): this;
     /**
+     * Sets the value of the component.
+     *
+     * @param value - The value of the component.
+     * @returns The component instance.
+     *
+     * @example
+     * ```ts
+     * momentFormatComponent.setValue('2025-01-01');
+     * ```
+     *
      * @public
      */
     setValue(value: string): this;
     /**
+     * Called when the value of the component changes.
+     *
      * @public
      */
     onChanged(): void;
     /**
+     * Updates the sample value.
+     *
      * @public
      */
     updateSample(): void;
 }
 
 /**
+ * Normalizes a path replacing all invalid symbols.
+ *
+ * @param path - The path to normalize.
+ * @returns The normalized path.
+ *
+ * @example
+ * ```ts
+ * normalizePath('foo/bar'); // foo/bar
+ * normalizePath('/foo/bar'); // foo/bar
+ * normalizePath('foo/bar/'); // foo/bar
+ * normalizePath('foo//bar'); // foo/bar
+ * normalizePath('foo\\bar'); // foo/bar
+ * normalizePath('foo\u00A0bar'); // foo bar
+ * normalizePath('foo\u202Fbar'); // foo bar
+ * ```
+ *
  * @public
  */
 export function normalizePath(path: string): string;
 
 /**
  * Notification component. Use to present timely, high-value information.
+ *
  * @public
  */
 export class Notice {
     /**
+     * The HTML element that represents the notice.
+     *
      * @public
      * @deprecated Use `messageEl` instead
      */
     noticeEl: HTMLElement;
     /**
-     * The container HTML element for the component.
+     * The container HTML element for the notice.
      *
      * @public
      */
     containerEl: HTMLElement;
     /**
+     * The HTML element that represents the message of the notice.
+     *
      * @public
      */
     messageEl: HTMLElement;
     /**
+     * Creates a new notice.
+     *
      * @param message - The message to be displayed, can either be a simple string or a {@link DocumentFragment}.
-     * @param duration - Time in milliseconds to show the notice for. If this is 0, the.
-     * Notice will stay visible until the user manually dismisses it.
+     * @param duration - Time in milliseconds to show the notice for. If this is `0`, the
+     * `Notice` will stay visible until the user manually dismisses it.
+     *
+     * @example
+     * ```ts
+     * new Notice('foo');
+     *
+     * const fragment = createFragment();
+     * fragment.createEl('strong', { text: 'bar' });
+     * new Notice(fragment);
+     *
+     * new Notice('baz', 1000); // will be visible for 1 second
+     * new Notice('qux', 0); // will stay visible until the user manually dismisses it
+     * ```
+     *
      * @public
      */
     constructor(message: string | DocumentFragment, duration?: number);
     /**
      * Change the message of this notice.
+     *
+     * @param message - The message to be displayed, can either be a simple string or a {@link DocumentFragment}.
+     * @returns The notice instance.
+     *
+     * @example
+     * ```ts
+     * notice.setMessage('foo');
+     *
+     * const fragment = createFragment();
+     * fragment.createEl('strong', { text: 'bar' });
+     * notice.setMessage(fragment);
+     * ```
+     *
      * @public
      */
     setMessage(message: string | DocumentFragment): this;
 
     /**
+     * Hide the notice.
+     *
      * @public
      */
     hide(): void;
