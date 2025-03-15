@@ -3526,9 +3526,9 @@ export interface DataWriteOptions {
  * const debounced = debounce((text: string) => {
  *     console.log(text);
  * }, 1000, true);
- * debounced('Hello world'); // this will not be printed
+ * debounced('foo'); // this will not be printed
  * await sleep(500);
- * debounced('World, hello'); // this will be printed to the console.
+ * debounced('bar'); // this will be printed to the console.
  * ```
  *
  * @public
@@ -9413,7 +9413,7 @@ export class Vault extends Events {
      * @example
      * ```ts
      * app.vault.process(file, (data) => {
-     *  return data.replace('Hello', 'World');
+     *  return data.replace('foo', 'bar');
      * });
      * ```
      * @public
