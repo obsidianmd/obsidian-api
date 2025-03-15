@@ -8718,16 +8718,19 @@ export abstract class PopoverSuggest<T> implements ISuggestOwner<T>, CloseableCo
 
 /**
  * Describes a text range in a Markdown document.
+ *
  * @public
  */
 export interface Pos {
     /**
      * Starting location.
+     *
      * @public
      */
     start: Loc;
     /**
      * End location.
+     *
      * @public
      */
     end: Loc;
@@ -8737,16 +8740,20 @@ export interface Pos {
  * Construct a fuzzy search callback that runs on a target string.
  * Performance may be an issue if you are running the search for more than a few thousand times.
  * If performance is a problem, consider using `prepareSimpleSearch` instead.
+ *
  * @param query - the fuzzy query.
- * @return fn - the callback function to apply the search on.
+ * @return fn - the callback function to apply the search on or `null` if the query is empty.
+ *
  * @public
  */
 export function prepareFuzzySearch(query: string): (text: string) => SearchResult | null;
 
 /**
  * Construct a simple search callback that runs on a target string.
+ *
  * @param query - the space-separated words.
- * @return fn - the callback function to apply the search on.
+ * @return fn - the callback function to apply the search on or `null` if the query is empty.
+ *
  * @public
  */
 export function prepareSimpleSearch(query: string): (text: string) => SearchResult | null;
