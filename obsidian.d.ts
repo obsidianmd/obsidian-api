@@ -1579,12 +1579,6 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
      * @param app - The app instance.
      * @param textInputEl - The text input element.
      *
-     * @example
-     * ```ts
-     * class MyInputSuggest extends AbstractInputSuggest<string> {}
-     * const inputSuggest = new MyInputSuggest(app, document.querySelector('input'));
-     * ```
-     *
      * @public
      */
     constructor(app: App, textInputEl: HTMLInputElement | HTMLDivElement);
@@ -1606,11 +1600,6 @@ export abstract class AbstractInputSuggest<T> extends PopoverSuggest<T> {
      * Gets the value from the input element.
      *
      * @returns The value from the input element.
-     *
-     * @example
-     * ```ts
-     * const value = inputSuggest.getValue();
-     * ```
      *
      * @public
      */
@@ -1681,11 +1670,6 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      *
      * @param inputEl - The input element.
      *
-     * @example
-     * ```ts
-     * const textComponent = new AbstractTextComponent(document.querySelector('input'));
-     * ```
-     *
      * @public
      */
     constructor(inputEl: T);
@@ -1707,11 +1691,6 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
      * Gets the value of the input element.
      *
      * @returns The value of the input element.
-     *
-     * @example
-     * ```ts
-     * const value = textComponent.getValue();
-     * ```
      *
      * @public
      */
@@ -1746,14 +1725,6 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
     setPlaceholder(placeholder: string): this;
     /**
      * Manually invokes the callback registered with `onChange`.
-     *
-     * @example
-     * ```ts
-     * textComponent.onChange((value) => {
-     *     console.log(value);
-     * });
-     * textComponent.onChanged();
-     * ```
      *
      * @public
      */
@@ -1852,11 +1823,6 @@ export class App {
      *
      * @param key - The key to retrieve.
      * @returns The value from `localStorage`.
-     *
-     * @example
-     * ```ts
-     * const value = app.loadLocalStorage('my-key');
-     * ```
      *
      * @public
      */
