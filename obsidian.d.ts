@@ -9154,27 +9154,42 @@ export function requireApiVersion(version: string): boolean;
 export function resolveSubpath(cache: CachedMetadata, subpath: string): HeadingSubpathResult | BlockSubpathResult | FootnoteSubpathResult | null;
 
 /**
+ * A color in RGB format.
+ *
  * @public
  */
 export interface RGB {
     /**
      * Red integer value between 0 and 255.
+     *
      * @public
      */
     r: number;
     /**
      * Green integer value between 0 and 255.
+     *
      * @public
      */
     g: number;
     /**
      * Blue integer value between 0 and 255.
+     *
      * @public
      */
     b: number;
 }
 
 /**
+ * Sanitize HTML to a DOM fragment.
+ *
+ * @param html - The HTML to sanitize.
+ * @returns The sanitized DOM fragment.
+ *
+ * @example
+ * ```ts
+ * console.log(sanitizeHTMLToDom('<div>foo</div>')); #document-fragment
+ * ```
+ *
  * @public
  */
 export function sanitizeHTMLToDom(html: string): DocumentFragment;
@@ -9182,24 +9197,47 @@ export function sanitizeHTMLToDom(html: string): DocumentFragment;
 /**
  * A scope receives keyboard events and binds callbacks to given hotkeys.
  * Only one scope is active at a time, but scopes may define parent scopes (in the constructor) and inherit their hotkeys.
+ *
  * @public
  */
 export class Scope {
 
     /**
+     * Create a new scope.
+     *
+     * @param parent - The parent scope.
+     *
      * @public
      */
     constructor(parent?: Scope);
     /**
      * Add a keymap event handler to this scope.
+     *
      * @param modifiers - `Mod`, `Ctrl`, `Meta`, `Shift`, or `Alt`. `Mod` translates to `Meta` on macOS and `Ctrl` otherwise. Pass `null` to capture all events matching the `key`, regardless of modifiers.
      * @param key - Keycode from https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key%5FValues.
      * @param func - the callback that will be called when a user triggers the keybind.
+     * @returns The keymap event handler.
+     *
+     * @example
+     * ```ts
+     * scope.register(['Ctrl', 'Shift'], 'l', (evt, ctx) => {
+     *     console.log('Ctrl+Shift+L pressed');
+     * });
+     * ```
+     *
      * @public
      */
     register(modifiers: Modifier[] | null, key: string | null, func: KeymapEventListener): KeymapEventHandler;
     /**
      * Remove an existing keymap event handler.
+     *
+     * @param handler - The keymap event handler to remove.
+     *
+     * @example
+     * ```ts
+     * scope.unregister(handler);
+     * ```
+     *
      * @public
      */
     unregister(handler: KeymapEventHandler): void;
