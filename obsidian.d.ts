@@ -2005,11 +2005,6 @@ export class ButtonComponent extends BaseComponent {
      *
      * @param containerEl - The container element.
      *
-     * @example
-     * ```ts
-     * const button = new ButtonComponent(containerEl);
-     * ```
-     *
      * @public
      */
     constructor(containerEl: HTMLElement);
@@ -2021,7 +2016,6 @@ export class ButtonComponent extends BaseComponent {
      *
      * @example
      * ```ts
-     * const button = new ButtonComponent(containerEl);
      * button.setDisabled(true);
      * ```
      *
@@ -2034,12 +2028,6 @@ export class ButtonComponent extends BaseComponent {
      *
      * @returns The button component.
      *
-     * @example
-     * ```ts
-     * const button = new ButtonComponent(containerEl);
-     * button.setCta();
-     * ```
-     *
      * @public
      */
     setCta(): this;
@@ -2048,12 +2036,6 @@ export class ButtonComponent extends BaseComponent {
      *
      * @returns The button component.
      *
-     * @example
-     * ```ts
-     * const button = new ButtonComponent(containerEl);
-     * button.removeCta();
-     * ```
-     *
      * @public
      */
     removeCta(): this;
@@ -2061,12 +2043,6 @@ export class ButtonComponent extends BaseComponent {
      * Sets the button component to a warning button.
      *
      * @returns The button component.
-     *
-     * @example
-     * ```ts
-     * const button = new ButtonComponent(containerEl);
-     * button.setWarning();
-     * ```
      *
      * @public
      */
@@ -2077,12 +2053,6 @@ export class ButtonComponent extends BaseComponent {
      * @param tooltip - The tooltip to set.
      * @param options - The options for the tooltip.
      * @returns The button component.
-     *
-     * @example
-     * ```ts
-     * const button = new ButtonComponent(containerEl);
-     * button.setTooltip('My tooltip');
-     * ```
      *
      * @public
      */
@@ -2095,7 +2065,6 @@ export class ButtonComponent extends BaseComponent {
      *
      * @example
      * ```ts
-     * const button = new ButtonComponent(containerEl);
      * button.setButtonText('My button');
      * ```
      *
@@ -2110,7 +2079,6 @@ export class ButtonComponent extends BaseComponent {
      *
      * @example
      * ```ts
-     * const button = new ButtonComponent(containerEl);
      * button.setIcon('dice');
      * ```
      *
@@ -2125,7 +2093,6 @@ export class ButtonComponent extends BaseComponent {
      *
      * @example
      * ```ts
-     * const button = new ButtonComponent(containerEl);
      * button.setClass('my-class');
      * ```
      *
@@ -2140,7 +2107,6 @@ export class ButtonComponent extends BaseComponent {
      *
      * @example
      * ```ts
-     * const button = new ButtonComponent(containerEl);
      * button.onClick(() => {
      *     console.log('Button clicked');
      * });
@@ -2369,11 +2335,6 @@ export class CapacitorAdapter implements DataAdapter {
      * Get the name of the vault.
      *
      * @returns The name of the vault.
-     *
-     * @example
-     * ```ts
-     * console.log(app.vault.adapter.getName());
-     * ```
      *
      * @public
      */
@@ -2662,11 +2623,6 @@ export interface CloseableComponent {
     /**
      * Close the component.
      *
-     * @example
-     * ```ts
-     * component.close();
-     * ```
-     *
      * @public
      */
     close(): void;
@@ -2683,11 +2639,6 @@ export class ColorComponent extends ValueComponent<string> {
      * Create a new color picker component.
      *
      * @param containerEl - The container element.
-     *
-     * @example
-     * ```ts
-     * const colorPicker = new ColorComponent(containerEl);
-     * ```
      *
      * @public
      */
@@ -2710,11 +2661,6 @@ export class ColorComponent extends ValueComponent<string> {
      *
      * @returns The current value of the color picker.
      *
-     * @example
-     * ```ts
-     * console.log(colorPicker.getValue());
-     * ```
-     *
      * @public
      */
     getValue(): HexString;
@@ -2723,10 +2669,6 @@ export class ColorComponent extends ValueComponent<string> {
      *
      * @returns The current value of the color picker as an RGB object.
      *
-     * @example
-     * ```ts
-     * console.log(colorPicker.getValueRgb());
-     *
      * @public
      */
     getValueRgb(): RGB;
@@ -2734,11 +2676,6 @@ export class ColorComponent extends ValueComponent<string> {
      * Get the current value of the color picker as an HSL object.
      *
      * @returns The current value of the color picker as an HSL object.
-     *
-     * @example
-     * ```ts
-     * console.log(colorPicker.getValueHsl());
-     * ```
      *
      * @public
      */
@@ -3202,11 +3139,6 @@ export interface DataAdapter {
     /**
      * Gets the name of the vault.
      *
-     * @example
-     * ```ts
-     * console.log(app.vault.adapter.getName());
-     * ```
-     *
      * @public
      */
     getName(): string;
@@ -3601,11 +3533,6 @@ export class DropdownComponent extends ValueComponent<string> {
      *
      * @param containerEl - The container element.
      *
-     * @example
-     * ```ts
-     * const dropdown = new DropdownComponent(document.body);
-     * ```
-     *
      * @public
      */
     constructor(containerEl: HTMLElement);
@@ -3656,11 +3583,6 @@ export class DropdownComponent extends ValueComponent<string> {
      * Get the selected value of the dropdown.
      *
      * @returns The selected value of the dropdown.
-     *
-     * @example
-     * ```ts
-     * console.log(dropdown.getValue());
-     * ```
      *
      * @public
      */
@@ -3716,11 +3638,6 @@ export abstract class Editor {
      *
      * @returns The editor instance.
      *
-     * @example
-     * ```ts
-     * console.log(editor.getDoc());
-     * ```
-     *
      * @public
      */
     getDoc(): this;
@@ -3739,11 +3656,6 @@ export abstract class Editor {
      * Get the content of the editor.
      *
      * @returns The content of the editor.
-     *
-     * @example
-     * ```ts
-     * console.log(editor.getValue());
-     * ```
      *
      * @public
      */
@@ -3794,11 +3706,6 @@ export abstract class Editor {
      *
      * @returns The amount of lines in the document.
      *
-     * @example
-     * ```ts
-     * console.log(editor.lineCount());
-     * ```
-     *
      * @public
      */
     abstract lineCount(): number;
@@ -3807,33 +3714,21 @@ export abstract class Editor {
      *
      * @returns The index of the last line.
      *
-     * @example
-     * ```ts
-     * console.log(editor.lastLine());
-     * ```
-     * @public */
+     * @public
+     */
     abstract lastLine(): number;
     /**
      * Get the selection.
      *
      * @returns The selection.
      *
-     * @example
-     * ```ts
-     * console.log(editor.getSelection());
-     * ```
-     *
-     * @public */
+     * @public
+     */
     abstract getSelection(): string;
     /**
      * Check if there is a selection.
      *
      * @returns Whether there is a selection.
-     *
-     * @example
-     * ```ts
-     * console.log(editor.somethingSelected());
-     * ```
      *
      * @public
      */
@@ -3886,11 +3781,6 @@ export abstract class Editor {
      * Get the list of selections if multiple cursors are active.
      *
      * @returns The list of selections.
-     *
-     * @example
-     * ```ts
-     * console.log(editor.listSelections());
-     * ```
      *
      * @public
      */
@@ -3968,11 +3858,6 @@ export abstract class Editor {
      *
      * @returns Whether the editor is focused.
      *
-     * @example
-     * ```ts
-     * console.log(editor.hasFocus());
-     * ```
-     *
      * @public
      */
     abstract hasFocus(): boolean;
@@ -3980,11 +3865,6 @@ export abstract class Editor {
      * Get the scroll info (horizontal and vertical scroll positions).
      *
      * @returns The scroll info.
-     *
-     * @example
-     * ```ts
-     * console.log(editor.getScrollInfo());
-     * ```
      *
      * @public
      */
@@ -4200,7 +4080,8 @@ export interface EditorRange {
     /**
      * The end position.
      *
-     * @public */
+     * @public
+     */
     to: EditorPosition;
 }
 
@@ -4322,13 +4203,6 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
      * Create a new EditorSuggest.
      *
      * @param app - The app instance.
-     *
-     * @example
-     * ```ts
-     * class MyEditorSuggest extends EditorSuggest<string> {}
-     *
-     * new MyEditorSuggest(app);
-     * ```
      *
      * @public
      */
@@ -4614,11 +4488,6 @@ export class ExtraButtonComponent extends BaseComponent {
      * Create a new ExtraButtonComponent.
      *
      * @param containerEl - The container element.
-     *
-     * @example
-     * ```ts
-     * const extraButton = new ExtraButtonComponent(containerEl);
-     * ```
      *
      * @public
      */
@@ -5200,13 +5069,6 @@ export abstract class FileView extends ItemView {
      *
      * @param leaf - The workspace leaf to create the file view in.
      *
-     * @example
-     * ```ts
-     * const leaf = app.workspace.createLeafInTabGroup();
-     * class MyFileView extends FileView {}
-     * const fileView = new MyFileView(leaf);
-     * ```
-     *
      * @public
      */
     constructor(leaf: WorkspaceLeaf);
@@ -5215,11 +5077,6 @@ export abstract class FileView extends ItemView {
      * Get the display text for the file view.
      *
      * @returns The display text for the file view.
-     *
-     * @example
-     * ```ts
-     * console.log(fileView.getDisplayText());
-     * ```
      *
      * @public
      */
@@ -5234,11 +5091,6 @@ export abstract class FileView extends ItemView {
      * Get the state of the file view.
      *
      * @returns The state of the file view.
-     *
-     * @example
-     * ```ts
-     * console.log(fileView.getState());
-     * ```
      *
      * @public
      */
@@ -5723,11 +5575,6 @@ export function getIcon(iconId: string): SVGSVGElement | null;
 /**
  * Get the list of registered icons.
  *
- * @example
- * ```ts
- * console.log(getIconIds()); // ['lucide-a-arrow-down', ..., 'rectangle-vertical-double']
- * ```
- *
  * @public
  */
 export function getIconIds(): IconName[];
@@ -5735,11 +5582,6 @@ export function getIconIds(): IconName[];
 /**
  * Get the ISO code for the currently configured app language. Defaults to 'en'.
  * See {@link https://github.com/obsidianmd/obsidian-translations?tab=readme-ov-file#existing-languages} for list of options.
- *
- * @example
- * ```ts
- * console.log(getLanguage()); // en
- * ```
  *
  * @public
  */
@@ -5953,11 +5795,6 @@ export class HoverPopover extends Component {
      * @param waitTime - The wait time of the hover popover.
      * @param staticPos - The static position of the hover popover.
      *
-     * @example
-     * ```ts
-     * const hoverPopover = new HoverPopover(parent, targetEl, 1000, { x: 100, y: 100 });
-     * ```
-     *
      * @public
      */
     constructor(parent: HoverParent, targetEl: HTMLElement | null, waitTime?: number, staticPos?: Point | null);
@@ -6106,12 +5943,6 @@ export abstract class ItemView extends View {
      * Create a new item view.
      *
      * @param leaf - The workspace leaf to create the item view in.
-     *
-     * @example
-     * ```ts
-     * class MyItemView extends ItemView {}
-     * const itemView = new MyItemView(leaf);
-     * ```
      *
      * @public
      */
@@ -6298,7 +6129,8 @@ export interface KeymapInfo {
     /**
      * The main key of the keymap.
      *
-     * @public */
+     * @public
+     */
     key: string | null;
 }
 
@@ -6494,11 +6326,6 @@ export class MarkdownEditView implements MarkdownSubView, HoverParent, MarkdownF
      *
      * @param view - The markdown view.
      *
-     * @example
-     * ```ts
-     * const markdownEditView = new MarkdownEditView(markdownView);
-     * ```
-     *
      * @public
      */
     constructor(view: MarkdownView);
@@ -6516,11 +6343,6 @@ export class MarkdownEditView implements MarkdownSubView, HoverParent, MarkdownF
     clear(): void;
     /**
      * Get the markdown content of the edit view.
-     *
-     * @example
-     * ```ts
-     * console.log(markdownEditView.get());
-     * ```
      *
      * @public
      */
@@ -6555,22 +6377,12 @@ export class MarkdownEditView implements MarkdownSubView, HoverParent, MarkdownF
     /**
      * Get the selection of the edit view.
      *
-     * @example
-     * ```ts
-     * console.log(markdownEditView.getSelection());
-     * ```
-     *
      * @public
      */
     getSelection(): string;
 
     /**
      * Get the scroll position of the edit view.
-     *
-     * @example
-     * ```ts
-     * console.log(markdownEditView.getScroll());
-     * ```
      *
      * @public
      */
@@ -6771,11 +6583,6 @@ export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSub
     /**
      * Get the markdown content of the markdown preview view.
      *
-     * @example
-     * ```ts
-     * console.log(markdownPreviewView.get());
-     * ```
-     *
      * @public
      */
     get(): string;
@@ -6822,11 +6629,6 @@ export class MarkdownPreviewView extends MarkdownRenderer implements MarkdownSub
 
     /**
      * Get the scroll position of the markdown preview view.
-     *
-     * @example
-     * ```ts
-     * console.log(markdownPreviewView.getScroll());
-     * ```
      *
      * @public
      */
@@ -7047,12 +6849,6 @@ export class MarkdownView extends TextFileView implements MarkdownFileInfo {
      * Create a new markdown view.
      *
      * @param leaf - The workspace leaf to attach the markdown view to.
-     *
-     * @example
-     * ```ts
-     * const leaf = app.workspace.createLeafInTabGroup();
-     * const markdownView = new MarkdownView(leaf);
-     * ```
      *
      * @public
      */
