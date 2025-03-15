@@ -2891,7 +2891,7 @@ export interface Command {
      * Complex callback, overrides the simple callback.
      * Used to 'check' whether your command can be performed in the current circumstances.
      * For example, if your command requires the active focused pane to be a MarkdownView, then
-     * you should only return true if the condition is satisfied. Returning false or undefined causes
+     * you should only return `true` if the condition is satisfied. Returning `false` or `undefined` causes
      * the command to be hidden from the command palette.
      *
      * @param checking - Whether the command palette is just 'checking' if your command should show right now.
@@ -4324,7 +4324,7 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
 
     /**
      * Current suggestion context, containing the result of `onTrigger`.
-     * This will be null any time the `EditorSuggest` is not supposed to run.
+     * This will be `null` any time the `EditorSuggest` is not supposed to run.
      *
      * @public
      */
@@ -4367,15 +4367,15 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
     /**
      * Based on the editor line and cursor position, determine if this EditorSuggest should be triggered at this moment.
      * Typically, you would run a regular expression on the current line text before the cursor.
-     * Return null to indicate that this editor suggest is not supposed to be triggered.
+     * Return `null` to indicate that this editor suggest is not supposed to be triggered.
      *
      * Please be mindful of performance when implementing this function, as it will be triggered very often (on each keypress).
-     * Keep it simple, and return null as early as possible if you determine that it is not the right time.
+     * Keep it simple, and return `null` as early as possible if you determine that it is not the right time.
      *
      * @param cursor - The cursor position.
      * @param editor - The editor instance.
      * @param file - The file instance.
-     * @returns The trigger info or null if the suggestion is not supposed to be triggered.
+     * @returns The trigger info or `null` if the suggestion is not supposed to be triggered.
      *
      * @example
      * ```ts
@@ -5723,7 +5723,7 @@ export function getBlobArrayBuffer(blob: Blob): Promise<ArrayBuffer>;
 export function getFrontMatterInfo(content: string): FrontMatterInfo;
 
 /**
- * Create an SVG from an iconId. Returns null if no icon associated with the iconId.
+ * Create an SVG from an iconId. Returns `null` if no icon associated with the iconId.
  *
  * @param iconId - the icon ID.
  * @returns the SVG element or `null` if no icon associated with the iconId.
@@ -6179,7 +6179,7 @@ export function iterateCacheRefs(cache: CachedMetadata, cb: (ref: ReferenceCache
  *
  * @param refs - The references to iterate.
  * @param cb - The callback to call for each reference.
- * @returns true if callback ever returns true, false otherwise.
+ * @returns `true` if callback ever returns true, `false` otherwise.
  *
  * @example
  * ```ts
@@ -8616,7 +8616,7 @@ export interface RequestUrlResponsePromise extends Promise<RequestUrlResponse> {
 }
 
 /**
- * Returns true if the API version is equal or higher than the requested version.
+ * Returns `true` if the API version is equal or higher than the requested version.
  * Use this to limit functionality that require specific API versions to avoid
  * crashing on older Obsidian builds.
  * @public
@@ -9733,7 +9733,7 @@ export interface ViewState {
  */
 export interface ViewStateResult {
     /**
-     * Set this to true to indicate that there is a state change which should be recorded in the navigation history.
+     * Set this to `true` to indicate that there is a state change which should be recorded in the navigation history.
      * @public
      */
     history: boolean;
@@ -9800,7 +9800,7 @@ export class Workspace extends Events {
 
     /**
      * A component managing the current editor.
-     * This can be null if the active view has no editor.
+     * This can be `null` if the active view has no editor.
      * @public
      */
     activeEditor: MarkdownFileInfo | null;
@@ -9859,7 +9859,7 @@ export class Workspace extends Events {
      */
     getLeaf(newLeaf?: 'split', direction?: SplitDirection): WorkspaceLeaf;
     /**
-     * If newLeaf is false (or not set) then an existing leaf which can be navigated.
+     * If newLeaf is `false` (or not set) then an existing leaf which can be navigated.
      * is returned, or a new leaf will be created if there was no leaf available.
      *
      * If newLeaf is `'tab'` or `true` then a new leaf will be created in the preferred
@@ -10204,7 +10204,7 @@ export class WorkspaceLeaf extends WorkspaceItem implements HoverParent {
      */
     setViewState(viewState: ViewState, eState?: any): Promise<void>;
     /**
-     * Returns true if this leaf is currently deferred because it is in the background.
+     * Returns `true` if this leaf is currently deferred because it is in the background.
      * A deferred leaf will have a DeferredView as its view, instead of the View that
      * it should normally have for its type (like MarkdownView for the `markdown` type).
      * @since 1.7.2
