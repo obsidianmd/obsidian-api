@@ -8181,7 +8181,7 @@ export abstract class Plugin extends Component {
      * @param language - The language of the code block to register.
      * @param handler - The handler to register.
      * @param sortOrder - The sort order of the post processor.
-     * @returns The post processor.
+     * @returns The code block processor.
      *
      * @example
      * ```ts
