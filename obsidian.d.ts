@@ -8625,6 +8625,8 @@ export interface Point {
 }
 
 /**
+ * The state of a popover.
+ *
  * @public
  */
 export enum PopoverState {
@@ -8633,6 +8635,9 @@ export enum PopoverState {
 
 /**
  * Base class for adding a type-ahead popover.
+ *
+ * @typeParam T - The type of the suggested item.
+ *
  * @public
  */
 export abstract class PopoverSuggest<T> implements ISuggestOwner<T>, CloseableComponent {
@@ -8650,24 +8655,61 @@ export abstract class PopoverSuggest<T> implements ISuggestOwner<T>, CloseableCo
     scope: Scope;
 
     /**
+     * Creates a new PopoverSuggest.
+     *
+     * @param app - The Obsidian app instance.
+     * @param scope - The scope for the keymaps.
+     *
      * @public
      */
     constructor(app: App, scope?: Scope);
     /**
+     * Opens the popover.
+     *
      * @public
      */
     open(): void;
     /**
+     * Closes the popover.
+     *
      * @public
      */
     close(): void;
 
     /**
+     * Render the suggestion.
+     *
+     * @param value - The value to render.
+     * @param el - The element to render the suggestion to.
+     *
+     * @example
+     * ```ts
+     * class MyPopoverSuggest extends PopoverSuggest<string> {
+     *     public override renderSuggestion(value: string, el: HTMLElement): void {
+     *         el.createEl('strong', { text: value });
+     *     }
+     * }
+     * ```
+     *
      * @inheritDoc
      * @public
      */
     abstract renderSuggestion(value: T, el: HTMLElement): void;
     /**
+     * Select the suggestion.
+     *
+     * @param value - The value to select.
+     * @param evt - The event that triggered the selection.
+     *
+     * @example
+     * ```ts
+     * class MyPopoverSuggest extends PopoverSuggest<string> {
+     *     public override selectSuggestion(value: string, evt: MouseEvent | KeyboardEvent): void {
+     *         console.log(value);
+     *     }
+     * }
+     * ```
+     *
      * @inheritDoc
      * @public
      */
