@@ -1865,7 +1865,7 @@ export function arrayBufferToBase64(buffer: ArrayBuffer): string;
  *
  * @param buffer - The `ArrayBuffer` to convert.
  * @returns The hex string.
- * 
+ *
  * @example
  * ```ts
  * console.log(arrayBufferToHex(new Uint8Array([1,2,3]).buffer)); // 010203
@@ -2026,14 +2026,20 @@ export class ButtonComponent extends BaseComponent {
 
     /**
      * Sets the button component to a call to action button.
+     * `CTA` stands for `call to action`.
+     * It changes how the button is styled, to make it stand out.
+     * Use it sparingly, to make the button stand out from others nearby.
      *
      * @returns The button component.
+     *
+     * @example `Check for updates` button in the `General` options settings.
      *
      * @public
      */
     setCta(): this;
     /**
      * Removes the call to action style from the button component.
+     * `CTA` stands for `call to action`.
      *
      * @returns The button component.
      *
@@ -2042,6 +2048,10 @@ export class ButtonComponent extends BaseComponent {
     removeCta(): this;
     /**
      * Sets the button component to a warning button.
+     * Usually it's added to buttons that perform destructive actions, such as deleting user's data.
+     *
+     * @example `Uninstall` button in the modal of uninstalling a community plugin
+     * @example `Clear` button in the `File recovery` core plugin setting
      *
      * @returns The button component.
      *
