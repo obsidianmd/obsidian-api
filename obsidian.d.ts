@@ -8731,7 +8731,7 @@ export function renderMath(source: string, display: boolean): HTMLElement;
 export function renderResults(el: HTMLElement, text: string, result: SearchResult, offset?: number): void;
 
 /**
- * Similar to `fetch()`, request a URL using HTTP/HTTPS, without any CORS restrictions.
+ * Similar to {@link fetch}, request a URL using HTTP/HTTPS, without any CORS restrictions.
  *
  * @param request - The request parameters.
  * @returns The promise that resolves to the text value of the response.
@@ -8747,7 +8747,7 @@ export function renderResults(el: HTMLElement, text: string, result: SearchResul
 export function request(request: RequestUrlParam | string): Promise<string>;
 
 /**
- * Similar to `fetch()`, request a URL using HTTP/HTTPS, without any CORS restrictions.
+ * Similar to {@link fetch}, request a URL using HTTP/HTTPS, without any CORS restrictions.
  *
  * @param request - The request parameters.
  * @returns The response.
