@@ -2956,12 +2956,6 @@ export class Component {
      */
     onload(): void;
     /**
-     * Unload this component and its children.
-     *
-     * @public
-     */
-    unload(): void;
-    /**
      * Override this to unload your component.
      *
      * @example
@@ -2976,6 +2970,8 @@ export class Component {
      * @public
      * @virtual
      */
+    unload(): void;
+
     /**
      * Adds a child component, loading it if this component is loaded.
      *
