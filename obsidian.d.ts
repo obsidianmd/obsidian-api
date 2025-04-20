@@ -5043,7 +5043,7 @@ export class FileSystemAdapter implements DataAdapter {
  */
 export abstract class FileView extends ItemView {
     /**
-     * Whether to allow no file.
+     * Whether the view may be run without an attached file.
      *
      * @public
      */
