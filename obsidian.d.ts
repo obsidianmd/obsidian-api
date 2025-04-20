@@ -10365,6 +10365,8 @@ export type UserEvent = MouseEvent | KeyboardEvent | TouchEvent | PointerEvent;
 
 /**
  * A value component.
+ * 
+ * @typeParam T - The type of the value.
  *
  * @public
  */
