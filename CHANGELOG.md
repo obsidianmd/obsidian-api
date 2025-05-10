@@ -8,7 +8,7 @@ This CHANGELOG details any breaking changes to the API or new additions that req
 
 - New function `Plugin#onUserEnable` gives you a place to performance one-time initialize after the user installs and enables your plugin. If your plugin has a custom view, this is a good place to initialize it rather than recreating the view in `Plugin#onload`.
 - `Workspace#ensureSideLeaf` is now public. This function is a shorthand way to create a leaf in the sidebar if one does not already exist.
-- Added `WorkspaceLeaf#isDeferred` and `WorkspaceLeaf#loadIfDeferred`. As of Obsidian v1.7.2, Obsidian will now defer tabs by default. We published [a guide on how to handle deferred views](<https://publish.obsidian.md/dev-docs-test/Plugins/Guides/Understanding+deferred+views>) in the developer docs.
+- Added `WorkspaceLeaf#isDeferred` and `WorkspaceLeaf#loadIfDeferred`. As of Obsidian v1.7.2, Obsidian will now defer tabs by default. We published [a guide on how to handle deferred views](<https://docs.obsidian.md/Plugins/Guides/Understanding+deferred+views>) in the developer docs.
 
 ### Housekeeping
 
