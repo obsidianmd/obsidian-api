@@ -2726,6 +2726,12 @@ export class MenuItem {
      */
     setTitle(title: string | DocumentFragment): this;
     /**
+     * @param state - If the warning state is enabled
+     * If set to true the MenuItem's title and icon will become red. Or whatever colour is applied to the class 'is-warning' by a theme.
+     * @public
+     */
+    setWarning(state: boolean): this;
+    /**
      * @param icon - ID of the icon, can use any icon loaded with {@link addIcon} or from the built-in lucide library.
      * @see The Obsidian icon library includes the {@link https://lucide.dev/ Lucide icon library}, any icon name from their site will work here.
      * @public
