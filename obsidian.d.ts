@@ -448,11 +448,13 @@ export class App {
 
     /**
      * @public
+     * @since 1.10.0
      */
     renderContext: RenderContext;
 
     /**
      * @public
+     * @since 1.10.0
      */
     isDarkMode(): boolean;
 
@@ -2280,6 +2282,7 @@ export class FileManager {
 
     /**
      * @public
+     * @since 0.15.0
      */
     promptForDeletion(file: TAbstractFile): Promise<void>;
 
@@ -3654,6 +3657,7 @@ export class Menu extends Component implements CloseableComponent {
 
     /**
      * @public
+     * @since 1.6.0
      */
     static forEvent(evt: PointerEvent | MouseEvent): Menu;
 }
@@ -3691,10 +3695,12 @@ export class MenuItem {
      * @param state - If the warning state is enabled
      * If set to true the MenuItem's title and icon will become red. Or whatever colour is applied to the class 'is-warning' by a theme.
      * @public
+     * @since 0.15.0
      */
     setWarning(isWarning: boolean): this;
     /**
      * @public
+     * @since 0.15.0
      */
     setIsLabel(isLabel: boolean): this;
 
@@ -3887,6 +3893,7 @@ export class Modal implements CloseableComponent {
 
     /**
      * @public
+     * @since 1.10.0
      */
     setCloseCallback(callback: () => any): this;
 
@@ -4335,6 +4342,7 @@ export abstract class Plugin extends Component {
      *
      * @returns false if bases are not enabled in this vault.
      * @public
+     * @since 1.10.0
      */
     registerBasesView(viewId: string, registration: BasesViewRegistration): boolean;
 
@@ -6349,7 +6357,7 @@ export class Workspace extends Events {
      * @public
      * @deprecated - You should use {@link Workspace.getLeaf|getLeaf(false)} instead which does the same thing.
      */
-    getUnpinnedLeaf(active?: boolean): WorkspaceLeaf;
+    getUnpinnedLeaf(): WorkspaceLeaf;
     /**
      * Creates a new leaf in a leaf adjacent to the currently active leaf.
      * If direction is `'vertical'`, the leaf will appear to the right.
