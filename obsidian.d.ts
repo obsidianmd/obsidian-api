@@ -369,17 +369,17 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
     setValue(value: string): this;
     /**
      * @public
-     * 0.9.7
+     * @since 0.9.7
      */
     setPlaceholder(placeholder: string): this;
     /**
      * @public
-     * 0.9.21
+     * @since 0.9.21
      */
     onChanged(): void;
     /**
      * @public
-     * 0.9.7
+     * @since 0.9.7
      */
     onChange(callback: (value: string) => any): this;
 }
