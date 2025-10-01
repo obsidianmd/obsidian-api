@@ -447,6 +447,16 @@ export class App {
     lastEvent: UserEvent | null;
 
     /**
+     * @public
+     */
+    renderContext: RenderContext;
+
+    /**
+     * @public
+     */
+    isDarkMode(): boolean;
+
+    /**
      * Retrieve value from `localStorage` for this vault.
      * @param key
      * @public
@@ -498,6 +508,341 @@ export abstract class BaseComponent {
 
 /**
  * @public
+ * @since 1.10.0
+ */
+export interface BaseOption {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    key: string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    type: string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    displayName: string;
+}
+
+/**
+ * Represent a single "row" or file in a base.
+ * @public
+ * @since 1.10.0
+ */
+export class BasesEntry implements FormulaContext {
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    file: TFile;
+
+    /**
+     * Get the value of the property.
+     * @throws Error if the property is a formula and cannot be evaluated.
+     * @public
+     * @since 1.10.0
+     */
+    getValue(propertyId: BasesPropertyId): Value | null;
+
+}
+
+/**
+ * A group of BasesEntry objects for a given value of the groupBy key.
+ * If there are entries in the results which do not have a value for the
+ * groupBy key, the key will be the {@link NullValue}.
+ * @public
+ * @since 1.10.0
+ */
+export class BasesEntryGroup {
+    /**
+     * The value of the groupBy key for this entry group.
+     * @public
+     * @since 1.10.0
+     */
+    key?: Value;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    entries: BasesEntry[];
+
+    /**
+     * @returns true iff this entry group has a non-null key.
+     * @public
+     * @since 1.10.0
+     */
+    hasKey(): boolean;
+}
+
+/**
+ * A parsed version of the {@link BasesPropertyId}.
+ *
+ * @public
+ * @since 1.10.0
+ */
+export interface BasesProperty {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    type: BasesPropertyType;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    name: string;
+}
+
+/**
+ * The full ID of a property, used in the bases config file. The prefixed
+ * {@link BasesPropertyType} disambiguates properties of the same name but from different sources.
+ *
+ * @public
+ * @since 1.10.0
+ */
+export type BasesPropertyId = `${BasesPropertyType}.${string}`;
+
+/**
+ * The three valid "sources" of a property in a Base.
+ *
+ * - `note`: Properties from the frontmatter of markdown files in the vault.
+ * - `formula`: Properties calculated by evaluating a formula from the base config file.
+ * - `file`: Properties inherent to a file, such as the name, extension, size, etc.
+ *
+ * @public
+ * @since 1.10.0
+ */
+export type BasesPropertyType = 'note' | 'formula' | 'file';
+
+/**
+ * The BasesQueryResult contains all of the available information from executing the
+ * bases query, applying filters, and evaluating formulas. The `data` or `groupedData`
+ * should be displayed by your view.
+ *
+ * @public
+ * @since 1.10.0
+ */
+export class BasesQueryResult {
+
+    /**
+     * A ungrouped version of the data, with user-configured sort and limit applied.
+     * Where appropriate, views should support groupBy by using `groupedData` instead of this value.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    data: BasesEntry[];
+
+    /**
+     * The data to be rendered, grouped according to the groupBy config.
+     * If there is no groupBy configured, returns a single group with an empty key.
+     * @public
+     * @since 1.10.0
+     */
+    get groupedData(): BasesEntryGroup[];
+    /**
+     * Visible properties defined by the user.
+     * @public
+     * @since 1.10.0
+     */
+    get properties(): BasesPropertyId[];
+
+    /**
+     * Applies a summary function to a single property over a set of entries.
+     * @public
+     * @since 1.10.0
+     */
+    getSummaryValue(queryController: QueryController, entries: BasesEntry[], prop: BasesPropertyId, summaryKey: string): Value;
+}
+
+/**
+ * @public
+ * @since 1.10.0
+ */
+export type BasesSortConfig = {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    property: BasesPropertyId;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    direction: 'ASC' | 'DESC';
+};
+
+/**
+ * Plugins can create a class which extends this in order to render a Base.
+ * Plugins should create a {@link BaseViewHandlerFactory} function, then call
+ * `plugin.registerView` to register the view factory.
+ *
+ * @public
+ * @since 1.10.0
+ */
+export abstract class BasesView extends Component {
+    /**
+     * The type ID of this view
+     * @public
+     * @since 1.10.0
+     */
+    abstract type: string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    app: App;
+
+    /**
+     * The config object for this view.
+     * @public
+     * @since 1.10.0
+     */
+    config: BasesViewConfig;
+    /**
+     * All available properties from the dataset.
+     * @public
+     * @since 1.10.0
+     */
+    allProperties: BasesPropertyId[];
+    /**
+     * The most recent output from executing the bases query, applying filters, and evaluating formulas.
+     * This object will be replaced with a new result set when changes to the vault or Bases config occur,
+     * so views should not keep a reference to it. Also note the contained BasesEntry objects will be recreated.
+     * @public
+     * @since 1.10.0
+     */
+    data: BasesQueryResult;
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    protected constructor(controller: QueryController);
+    /**
+     * Called when there is new data for the query. This view should rerender with the updated data.
+     * @public
+     * @since 1.10.0
+     */
+    abstract onDataUpdated(): void;
+
+}
+
+/**
+ * The in-memory representation of a single entry in the "views" section of a Bases file.
+ * Contains settings and configuration options set by the user from the toolbar menus and view options.
+ * @public
+ * @since 1.10.0
+ */
+export class BasesViewConfig {
+
+    /**
+     * User-friendly name for this view.
+     * @public
+     * @since 1.10.0
+     */
+    name: string;
+
+    /**
+     * Retrieve the user-configured value of options exposed in `BasesViewRegistration.options`.
+     * @public
+     * @since 1.10.0
+     */
+    get(key: string): unknown;
+    /**
+     * Retrieve a user-configured value from the config, converting it to a BasesPropertyId.
+     * Returns null if the requested key is not present in the config, or if the value is invalid.
+     * @public
+     * @since 1.10.0
+     */
+    getAsPropertyId(key: string): BasesPropertyId | null;
+    /**
+     * Store configuration data for the view. Views should prefer `BasesViewRegistration.options`
+     * to allow users to configure options where appropriate.
+     * @public
+     * @since 1.10.0
+     */
+    set(key: string, value: any | null): void;
+    /**
+     * Ordered list of properties to display in this view.
+     * In a table, these can be interpreted as the list of visible columns.
+     * Order is configured by the user through the properties toolbar menu.
+     * @public
+     * @since 1.10.0
+     */
+    getOrder(): BasesPropertyId[];
+
+    /**
+     * Retrieve the sorting config for this view. Sort is configured by the user through the sort toolbar menu.
+     * Removes invalid sort configs. If no (valid) sort config, returns an empty array.
+     * Does not validate that the properties exists.
+     *
+     * Note that data from BasesQueryResult will be presorted.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    getSort(): BasesSortConfig[];
+
+    /**
+     * Retrieve a friendly name for the provided property.
+     * If the property has been renamed by the user in the Base config, that value is returned.
+     * File properties may have a default name that is returned, otherwise the name with the property
+     * type prefix removed is returned.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    getDisplayName(propertyId: BasesPropertyId): string;
+
+}
+
+/**
+ * Implement this factory function in a {@link BasesViewRegistration} to create a
+ * new instance of a custom Bases view.
+ * @param containerEl - The container below the Bases toolbar where the view will be displayed.
+ * @public
+ * @since 1.10.0
+ */
+export type BasesViewFactory = (controller: QueryController, containerEl: HTMLElement) => BasesView;
+
+/**
+ * Container for options when registering a new Bases view type.
+ * @public
+ * @since 1.10.0
+ */
+export interface BasesViewRegistration {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    name: string;
+    /**
+     * Icon ID to be used in the Bases view selector.
+     * See {@link https://docs.obsidian.md/Plugins/User+interface/Icons} for available icons and how to add your own.
+     * @public
+     * @since 1.10.0
+     */
+    icon: IconName;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    factory: BasesViewFactory;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    options?: () => ViewOption[];
+}
+
+/**
+ * @public
  * @since 0.11.13
  */
 export interface BlockCache extends CacheItem {
@@ -522,6 +867,20 @@ export interface BlockSubpathResult extends SubpathResult {
      * @public
      */
     list?: ListItemCache;
+}
+
+/**
+ * {@link Value} wrapping a boolean.
+ * @public
+ * @since 1.10.0
+ */
+export class BooleanValue extends PrimitiveValue<boolean> {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    static type: string;
+
 }
 
 /**
@@ -584,7 +943,7 @@ export class ButtonComponent extends BaseComponent {
      * @public
      * @since 0.12.16
      */
-    onClick(callback: (evt: MouseEvent) => any): this;
+    onClick(callback: (evt: MouseEvent) => unknown | Promise<unknown>): this;
 }
 
 /**
@@ -1216,6 +1575,44 @@ export interface DataWriteOptions {
 }
 
 /**
+ * {@link Value} wrapping a Date.
+ * @public
+ * @since 1.10.0
+ */
+export class DateValue extends NotNullValue {
+
+    /**
+     * @returns a new DateValue with any time portion in this DateValue removed.
+     * @public
+     * @since 1.10.0
+     */
+    dateOnly(): DateValue;
+
+    /**
+     * @returns a new {@link RelativeDateValue} based on this DateValue.
+     * @public
+     * @since 1.10.0
+     */
+    relative(): string;
+
+    /**
+     * Create new DateValue from an input string.
+     *
+     * @example
+     * parseFromString("2025-12-31")
+     * parseFromString("2025-12-31T23:59")
+     * parseFromString("2025-12-31T23:59:59")
+     * parseFromString("2025-12-31T23:59:59Z-07")
+     *
+     * @param input - An ISO 8601 date or datetime string.
+     * @public
+     * @since 1.10.0
+     */
+    static parseFromString(input: string): DateValue | null;
+
+}
+
+/**
  * A standard debounce function.
  * Use this to have a time-delayed function only be called once in a given timeframe.
  *
@@ -1311,6 +1708,64 @@ export class DropdownComponent extends ValueComponent<string> {
 
 /**
  * @public
+ * @since 1.10.0
+ */
+export interface DropdownOption extends BaseOption {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    type: 'dropdown';
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    default?: string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    options: Record<string, string>;
+}
+
+/**
+ * {@link Value} wrapping a duration. Durations can be used to modify a {@link DateValue} or can
+ * result from subtracting a DateValue from another.
+ * @public
+ * @since 1.10.0
+ */
+export class DurationValue extends NotNullValue {
+
+    /**
+     * Modifies the provided {@DateValue} by this duration.
+     * @public
+     * @since 1.10.0
+     */
+    addToDate(value: DateValue, subtract?: boolean): DateValue;
+    /**
+     * Convert this duration into milliseconds.
+     * @public
+     * @since 1.10.0
+     */
+    getMilliseconds(): number;
+
+    /**
+     * Create a new DurationValue using an ISO 8601 duration.
+     * See {@link https://en.wikipedia.org/wiki/ISO_8601#Durations} for duration format details.
+     * @public
+     * @since 1.10.0
+     */
+    static parseFromString(input: string): DurationValue | null;
+    /**
+     * Create a new DurationValue from milliseconds.
+     * @public
+     * @since 1.10.0
+     */
+    static fromMilliseconds(milliseconds: number): DurationValue;
+}
+
+/**
+ * @public
  * @since 0.9.7
  */
 export abstract class EditableFileView extends FileView {
@@ -1394,7 +1849,7 @@ export abstract class Editor {
      * @public
      * @since 0.11.11
      */
-    abstract getCursor(string?: 'from' | 'to' | 'head' | 'anchor'): EditorPosition;
+    abstract getCursor(side?: 'from' | 'to' | 'head' | 'anchor'): EditorPosition;
     /**
      * @public
      * @since 0.11.11
@@ -1824,6 +2279,11 @@ export class FileManager {
     renameFile(file: TAbstractFile, newPath: string): Promise<void>;
 
     /**
+     * @public
+     */
+    promptForDeletion(file: TAbstractFile): Promise<void>;
+
+    /**
      * Remove a file or a folder from the vault according the user's preferred 'trash'
      * options (either moving the file to .trash/ or the OS trash bin).
      * @param file
@@ -2013,6 +2473,15 @@ export class FileSystemAdapter implements DataAdapter {
 }
 
 /**
+ * {@link Value} wrapping a file in Obsidian.
+ * @public
+ * @since 1.10.0
+ */
+export class FileValue extends NotNullValue {
+
+}
+
+/**
  * @public
  */
 export abstract class FileView extends ItemView {
@@ -2113,6 +2582,15 @@ export interface FootnoteSubpathResult extends SubpathResult {
      * @public
      */
     footnote: FootnoteCache;
+}
+
+/**
+ * The context in which a formula is evaluated. In most cases, {@link BasesEntry} is the specific type to use.
+ * @public
+ * @since 1.10.0
+ */
+export interface FormulaContext {
+
 }
 
 /**
@@ -2250,6 +2728,29 @@ export function getLanguage(): string;
  * @public
  */
 export function getLinkpath(linktext: string): string;
+
+/**
+ * Collapsible container for other ViewOptions.
+ * @public
+ * @since 1.10.0
+ */
+export interface GroupOption {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    type: 'group';
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    displayName: string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    items: Exclude<ViewOption, GroupOption>[];
+}
 
 /**
  * @public
@@ -2390,6 +2891,33 @@ export interface HSL {
  * @public
  */
 export function htmlToMarkdown(html: string | HTMLElement | Document | DocumentFragment): string;
+
+/**
+ * {@link Value} wrapping raw HTML.
+ * @public
+ * @since 1.10.0
+ */
+export class HTMLValue extends StringValue {
+
+}
+
+/**
+ * {@link Value} wrapping a renderable icon.
+ * @public
+ * @since 1.10.0
+ */
+export class IconValue extends StringValue {
+
+}
+
+/**
+ * {@link Value} wrapping a path to an image resource in the vault.
+ * @public
+ * @since 1.10.0
+ */
+export class ImageValue extends StringValue {
+
+}
 
 /**
  * @public
@@ -2554,6 +3082,25 @@ export interface LinkCache extends ReferenceCache {
 }
 
 /**
+ * {@link Value} wrapping an internal wikilink.
+ * @public
+ * @since 1.10.0
+ */
+export class LinkValue extends StringValue {
+
+    /**
+     * Create a new LinkValue from wikilink syntax.
+     * @example
+     * parseFromString("[[Welcome|Example Link]]")
+     *
+     * @public
+     * @since 1.10.0
+     */
+    static parseFromString(app: App, input: string, sourcePath: string): LinkValue | null;
+
+}
+
+/**
  * @public
  */
 export interface ListedFiles {
@@ -2590,6 +3137,55 @@ export interface ListItemCache extends CacheItem {
      * @public
      */
     parent: number;
+}
+
+/**
+ * {@link Value} wrapping an array of Values. Values do not all need to be of the same type.
+ * @public
+ * @since 1.10.0
+ */
+export class ListValue extends NotNullValue {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    static type: string;
+
+    /**
+     * The array passed in will be modified!
+     * @param value - Contents of the list.
+     * @public
+     * @since 1.10.0
+     */
+    constructor(value: (unknown | Value)[]);
+
+    /**
+     * @returns true if any elements in this list loosely equal the provided value.
+     * @public
+     * @since 1.10.0
+     */
+    includes(value: Value): boolean;
+
+    /**
+     * @returns the number of elements in this list.
+     * @public
+     * @since 1.10.0
+     */
+    length(): number;
+    /**
+     * @returns the value at the provided index, or {@link NullValue}.
+     * @public
+     * @since 1.10.0
+     */
+    get(index: number): Value;
+
+    /**
+     * @returns a new {@link ListValue} containing the elements from this ListValue and the provided ListValue.
+     * @public
+     * @since 1.10.0
+     */
+    concat(other: ListValue): ListValue;
+
 }
 
 /**
@@ -3056,6 +3652,10 @@ export class Menu extends Component implements CloseableComponent {
      */
     onHide(callback: () => any): void;
 
+    /**
+     * @public
+     */
+    static forEvent(evt: PointerEvent | MouseEvent): Menu;
 }
 
 /**
@@ -3087,7 +3687,12 @@ export class MenuItem {
      * @public
      */
     setDisabled(disabled: boolean): this;
-
+    /**
+     * @param state - If the warning state is enabled
+     * If set to true the MenuItem's title and icon will become red. Or whatever colour is applied to the class 'is-warning' by a theme.
+     * @public
+     */
+    setWarning(isWarning: boolean): this;
     /**
      * @public
      */
@@ -3265,7 +3870,7 @@ export class Modal implements CloseableComponent {
     /**
      * @public
      */
-    onOpen(): void;
+    onOpen(): Promise<void> | void;
     /**
      * @public
      */
@@ -3279,6 +3884,11 @@ export class Modal implements CloseableComponent {
      * @public
      */
     setContent(content: string | DocumentFragment): this;
+
+    /**
+     * @public
+     */
+    setCloseCallback(callback: () => any): this;
 
 }
 
@@ -3335,6 +3945,23 @@ export class MomentFormatComponent extends TextComponent {
 
 /**
  * @public
+ * @since 1.10.0
+ */
+export interface MultitextOption extends BaseOption {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    type: 'multitext';
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    default?: string[];
+}
+
+/**
+ * @public
  */
 export function normalizePath(path: string): string;
 
@@ -3379,6 +4006,71 @@ export class Notice {
      * @since 0.9.7
      */
     hide(): void;
+}
+
+/**
+ * Base type for all non-null {@link Values}.
+ * @public
+ * @since 1.10.0
+ */
+export abstract class NotNullValue extends Value {
+}
+
+/**
+ * {@link Value} which represents null.
+ * NullValue is a singleton and `NullValue.value` should be used instead of calling the constructor.
+ * @public
+ * @since 1.10.0
+ */
+export class NullValue extends Value {
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    static value: NullValue;
+}
+
+/**
+ * {@link Value} wrapping a number.
+ * @public
+ * @since 1.10.0
+ */
+export class NumberValue extends PrimitiveValue<number> {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    static type: string;
+
+}
+
+/**
+ * {@link Value} wrapping an object.
+ * @public
+ * @since 1.10.0
+ */
+export class ObjectValue extends NotNullValue {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    static type: string;
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    isEmpty(): boolean;
+
+    /**
+     * @returns the {@link Value} associated with the provided key, or {@link NullValue}.
+     * If the referenced property in the object is not a Value, it will be wrapped before returning.
+     * @public
+     * @since 1.10.0
+     */
+    get(key: string): Value | null;
+
 }
 
 /**
@@ -3428,7 +4120,7 @@ export function parseFrontMatterEntry(frontmatter: any | null, key: string | Reg
 /**
  * @public
  */
-export function parseFrontMatterStringArray(frontmatter: any | null, key: string | RegExp, nospaces?: boolean): string[] | null;
+export function parseFrontMatterStringArray(frontmatter: any | null, key: string | RegExp): string[] | null;
 
 /**
  * @public
@@ -3451,6 +4143,13 @@ export function parseLinktext(linktext: string): {
      */
     subpath: string;
 };
+
+/**
+ * Split a Bases property ID into constituent parts.
+ * @public
+ * @since 1.10.0
+ */
+export function parsePropertyId(propertyId: BasesPropertyId): BasesProperty;
 
 /** @public */
 export function parseYaml(yaml: string): any;
@@ -3630,7 +4329,14 @@ export abstract class Plugin extends Component {
      * @public
      * @since 0.9.7
      */
-    registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void, sortOrder?: number): MarkdownPostProcessor;
+    registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownCodePostProcessorContext) => Promise<any> | void, sortOrder?: number): MarkdownPostProcessor;
+    /**
+     * Register a Base view handler that can be used to render data from property queries.
+     *
+     * @returns false if bases are not enabled in this vault.
+     * @public
+     */
+    registerBasesView(viewId: string, registration: BasesViewRegistration): boolean;
 
     /**
      * Registers a CodeMirror 6 extension.
@@ -3851,6 +4557,21 @@ export function prepareFuzzySearch(query: string): (text: string) => SearchResul
 export function prepareSimpleSearch(query: string): (text: string) => SearchResult | null;
 
 /**
+ * Base type for {@link Values} which wrap a single primitive.
+ * @public
+ * @since 1.10.0
+ */
+export abstract class PrimitiveValue<T> extends NotNullValue {
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    constructor(value: T);
+
+}
+
+/**
  * @public
  * @since 1.4.4
  */
@@ -3869,6 +4590,46 @@ export class ProgressBarComponent extends ValueComponent<number> {
      * @public
      */
     setValue(value: number): this;
+
+}
+
+/**
+ * A dropdown menu allowing selection of a property.
+ * @public
+ * @since 1.10.0
+ */
+export interface PropertyOption extends BaseOption {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    type: 'property';
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    default?: string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    placeholder?: string;
+    /**
+     * If provided, only properties which pass the filter will be included for selection in the property dropdown.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    filter?: (prop: BasesPropertyId) => boolean;
+}
+
+/**
+ * Responsible for executing the Bases query and evaluating filters and formulas.
+ * Notifies views of updated results.
+ * @public
+ * @since 1.10.0
+ */
+export class QueryController extends Component implements SearchResults {
 
 }
 
@@ -3916,11 +4677,50 @@ export interface ReferenceLinkCache extends CacheItem {
 }
 
 /**
+ * {@link Value} wrapping a RegExp pattern.
+ * @public
+ * @since 1.10.0
+ */
+export class RegExpValue extends NotNullValue {
+
+}
+
+/**
+ * {@link Value} wrapping a Date.
+ * RelativeDateValue behaves the same as a {@link DateValue} however it renders as a time relative to now.
+ * @public
+ * @since 1.10.0
+ */
+export class RelativeDateValue extends DateValue {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    toString(): string;
+
+}
+
+/**
  * Remove a custom icon from the library.
  * @param iconId - the icon ID
  * @public
  */
 export function removeIcon(iconId: string): void;
+
+/**
+ * Utility functions for rendering Values within the app.
+ * @public
+ * @since 1.10.0
+ */
+export class RenderContext implements HoverParent {
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    hoverPopover: HoverPopover | null;
+
+}
 
 /**
  * @public
@@ -4359,7 +5159,7 @@ export class SliderComponent extends ValueComponent<number> {
      * @public
      * @since 0.9.7
      */
-    setLimits(min: number, max: number, step: number | 'any'): this;
+    setLimits(min: number | null, max: number | null, step: number | 'any'): this;
     /**
      * @public
      * @since 0.9.7
@@ -4390,6 +5190,43 @@ export class SliderComponent extends ValueComponent<number> {
      * @since 0.9.7
      */
     onChange(callback: (value: number) => any): this;
+}
+
+/**
+ * @public
+ * @since 1.10.0
+ */
+export interface SliderOption extends BaseOption {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    type: 'slider';
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    default?: number;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    min?: number;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    max?: number;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    step?: number;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    instant?: boolean;
 }
 
 /**
@@ -4425,6 +5262,20 @@ export interface Stat {
 
 /** @public */
 export function stringifyYaml(obj: any): string;
+
+/**
+ * {@link Value} wrapping a string.
+ * @public
+ * @since 1.10.0
+ */
+export class StringValue extends PrimitiveValue<string> {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    static type: string;
+
+}
 
 /**
  * Normalizes headings for link matching by stripping out special characters and shrinking consecutive spaces.
@@ -4568,6 +5419,21 @@ export interface TagCache extends CacheItem {
 }
 
 /**
+ * {@link Value} wrapping an Obsidian tag.
+ * @public
+ * @since 1.10.0
+ */
+export class TagValue extends StringValue {
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    constructor(value: string);
+
+}
+
+/**
  * @public
  * @since 0.10.2
  */
@@ -4691,6 +5557,28 @@ export abstract class TextFileView extends EditableFileView {
 
 /**
  * @public
+ * @since 1.10.0
+ */
+export interface TextOption extends BaseOption {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    type: 'text';
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    default?: string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    placeholder?: string;
+}
+
+/**
+ * @public
  * @since 0.9.7
  */
 export class TFile extends TAbstractFile {
@@ -4780,6 +5668,23 @@ export class ToggleComponent extends ValueComponent<boolean> {
     onChange(callback: (value: boolean) => any): this;
 }
 
+/**
+ * @public
+ * @since 1.10.0
+ */
+export interface ToggleOption extends BaseOption {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    type: 'toggle';
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    default?: boolean;
+}
+
 /** @public */
 export interface TooltipOptions {
     /** @public */
@@ -4806,9 +5711,67 @@ export interface TooltipOptions {
 export type TooltipPlacement = 'bottom' | 'right' | 'left' | 'top';
 
 /**
+ * {@link Value} wrapping an external link.
+ * @public
+ * @since 1.10.0
+ */
+export class UrlValue extends StringValue {
+
+}
+
+/**
  * @public
  */
 export type UserEvent = MouseEvent | KeyboardEvent | TouchEvent | PointerEvent;
+
+/**
+ * Container type for data which can expose functions for retrieving, comparing, and rendering the data.
+ * Most commonly used in conjunction with formulas for Bases. Values can be used as formula parameters,
+ * intermediate values, and the result of evaluation.
+ * @public
+ * @since 1.10.0
+ */
+export abstract class Value {
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    static equals(a: Value | null, b: Value | null): boolean;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    static looseEquals(a: Value | null, b: Value | null): boolean;
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    abstract toString(): string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    abstract isTruthy(): boolean;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    equals(other: this): boolean;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    looseEquals(other: Value): boolean;
+    /**
+     * Render this value into the provided HTMLElement.
+     * @public
+     * @since 1.10.0
+     */
+    renderTo(el: HTMLElement, ctx: RenderContext): void;
+
+}
 
 /**
  * @public
@@ -5211,6 +6174,16 @@ export abstract class View extends Component {
 export type ViewCreator = (leaf: WorkspaceLeaf) => View;
 
 /**
+ * ViewOption and the associated sub-types are configuration-driven settings controls
+ * which can be provided by a {@link BasesViewRegistration} to expose configuration options
+ * to users in the view config menu of the Bases toolbar.
+ *
+ * @public
+ * @since 1.10.0
+ */
+export type ViewOption = TextOption | MultitextOption | GroupOption | PropertyOption | ToggleOption | SliderOption | DropdownOption;
+
+/**
  * @public
  */
 export interface ViewState {
@@ -5376,7 +6349,7 @@ export class Workspace extends Events {
      * @public
      * @deprecated - You should use {@link Workspace.getLeaf|getLeaf(false)} instead which does the same thing.
      */
-    getUnpinnedLeaf(): WorkspaceLeaf;
+    getUnpinnedLeaf(active?: boolean): WorkspaceLeaf;
     /**
      * Creates a new leaf in a leaf adjacent to the currently active leaf.
      * If direction is `'vertical'`, the leaf will appear to the right.
@@ -5552,6 +6525,12 @@ export class Workspace extends Events {
      * @since 0.13.21
      */
     updateOptions(): void;
+
+    /**
+     * Add a context menu to internal file links.
+     * @public
+     */
+    handleLinkContextMenu(menu: Menu, linktext: string, sourcePath: string, leaf?: WorkspaceLeaf): boolean;
 
     /**
      * Triggered when the active Markdown file is modified. React to file changes before they
