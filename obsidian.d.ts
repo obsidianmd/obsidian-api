@@ -1584,6 +1584,12 @@ export interface DataWriteOptions {
 export class DateValue extends NotNullValue {
 
     /**
+     * @public
+     * @since 1.10.0
+     */
+    toString(): string;
+
+    /**
      * @returns a new DateValue with any time portion in this DateValue removed.
      * @public
      * @since 1.10.0
@@ -1596,6 +1602,11 @@ export class DateValue extends NotNullValue {
      * @since 1.10.0
      */
     relative(): string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    isTruthy(): boolean;
 
     /**
      * Create new DateValue from an input string.
@@ -1737,6 +1748,17 @@ export interface DropdownOption extends BaseOption {
  * @since 1.10.0
  */
 export class DurationValue extends NotNullValue {
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    toString(): string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    isTruthy(): boolean;
 
     /**
      * Modifies the provided {@DateValue} by this duration.
@@ -2482,6 +2504,17 @@ export class FileSystemAdapter implements DataAdapter {
  */
 export class FileValue extends NotNullValue {
 
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    toString(): string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    isTruthy(): boolean;
+
 }
 
 /**
@@ -3162,6 +3195,16 @@ export class ListValue extends NotNullValue {
      */
     constructor(value: (unknown | Value)[]);
 
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    toString(): string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    isTruthy(): boolean;
     /**
      * @returns true if any elements in this list loosely equal the provided value.
      * @public
@@ -4035,6 +4078,17 @@ export class NullValue extends Value {
      * @public
      * @since 1.10.0
      */
+    toString(): string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    isTruthy(): boolean;
+
+    /**
+     * @public
+     * @since 1.10.0
+     */
     static value: NullValue;
 }
 
@@ -4064,6 +4118,16 @@ export class ObjectValue extends NotNullValue {
      */
     static type: string;
 
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    toString(): string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    isTruthy(): boolean;
     /**
      * @public
      * @since 1.10.0
@@ -4336,7 +4400,7 @@ export abstract class Plugin extends Component {
      * @public
      * @since 0.9.7
      */
-    registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownCodePostProcessorContext) => Promise<any> | void, sortOrder?: number): MarkdownPostProcessor;
+    registerMarkdownCodeBlockProcessor(language: string, handler: (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => Promise<any> | void, sortOrder?: number): MarkdownPostProcessor;
     /**
      * Register a Base view handler that can be used to render data from property queries.
      *
@@ -4576,6 +4640,16 @@ export abstract class PrimitiveValue<T> extends NotNullValue {
      * @since 1.10.0
      */
     constructor(value: T);
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    toString(): string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    isTruthy(): boolean;
 
 }
 
@@ -4637,7 +4711,7 @@ export interface PropertyOption extends BaseOption {
  * @public
  * @since 1.10.0
  */
-export class QueryController extends Component implements SearchResults {
+export class QueryController extends Component {
 
 }
 
@@ -4691,6 +4765,16 @@ export interface ReferenceLinkCache extends CacheItem {
  */
 export class RegExpValue extends NotNullValue {
 
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    toString(): string;
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    isTruthy(): boolean;
 }
 
 /**
@@ -4700,11 +4784,6 @@ export class RegExpValue extends NotNullValue {
  * @since 1.10.0
  */
 export class RelativeDateValue extends DateValue {
-    /**
-     * @public
-     * @since 1.10.0
-     */
-    toString(): string;
 
 }
 
@@ -6537,6 +6616,7 @@ export class Workspace extends Events {
     /**
      * Add a context menu to internal file links.
      * @public
+     * @since 0.12.10
      */
     handleLinkContextMenu(menu: Menu, linktext: string, sourcePath: string, leaf?: WorkspaceLeaf): boolean;
 
