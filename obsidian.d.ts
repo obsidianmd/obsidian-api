@@ -1565,7 +1565,7 @@ export interface DataWriteOptions {
      * Time of creation, represented as a unix timestamp, in milliseconds.
      * Omit this if you want to keep the default behaviour.
      * @public
-     * */
+     */
     ctime?: number;
     /**
      * Time of last modification, represented as a unix timestamp, in milliseconds.
@@ -2045,7 +2045,7 @@ export interface EditorRangeOrCaret {
 /**
  * @public
  * @since 0.15.0
- * */
+ */
 export interface EditorScrollInfo {
     /** @public */
     left: number;
@@ -3063,7 +3063,7 @@ export class Keymap {
      * Returns 'window' if Cmd/Ctrl+Alt+Shift is pressed.
      * @public
      * @since 0.16.0
-     * */
+     */
     static isModEvent(evt?: UserEvent | null): PaneType | boolean;
 }
 
@@ -5063,7 +5063,7 @@ export class Setting {
     /**
      * @public
      * @since 0.9.7
-     * */
+     */
     components: BaseComponent[];
     /**
      * @public
@@ -5333,7 +5333,7 @@ export interface Stat {
     /**
      * Time of creation, represented as a unix timestamp.
      * @public
-     * */
+     */
     ctime: number;
     /**
      * Time of last modification, represented as a unix timestamp.
@@ -6389,7 +6389,7 @@ export class Workspace extends Events {
      * or push it to a queue to be called later when layout is ready.
      * @public
      * @since 0.11.0
-     * */
+     */
     onLayoutReady(callback: () => any): void;
     /**
      * @public
