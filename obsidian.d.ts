@@ -632,7 +632,7 @@ export type BasesPropertyType = 'note' | 'formula' | 'file';
 export class BasesQueryResult {
 
     /**
-     * A ungrouped version of the data, with user-configured sort and limit applied.
+     * An ungrouped version of the data, with user-configured sort and limit applied.
      * Where appropriate, views should support groupBy by using `groupedData` instead of this value.
      *
      * @public
@@ -1392,19 +1392,19 @@ export class Component {
      */
     registerEvent(eventRef: EventRef): void;
     /**
-     * Registers an DOM event to be detached when unloading
+     * Registers a DOM event to be detached when unloading
      * @public
      * @since 0.14.8
      */
     registerDomEvent<K extends keyof WindowEventMap>(el: Window, type: K, callback: (this: HTMLElement, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     /**
-     * Registers an DOM event to be detached when unloading
+     * Registers a DOM event to be detached when unloading
      * @public
      * @since 0.14.8
      */
     registerDomEvent<K extends keyof DocumentEventMap>(el: Document, type: K, callback: (this: HTMLElement, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     /**
-     * Registers an DOM event to be detached when unloading
+     * Registers a DOM event to be detached when unloading
      * @public
      * @since 0.14.8
      */
@@ -1501,7 +1501,7 @@ export interface DataAdapter {
      */
     process(normalizedPath: string, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
     /**
-     * Returns an URI for the browser engine to use, for example to embed an image.
+     * Returns a URI for the browser engine to use, for example to embed an image.
      * @param normalizedPath - path to file/folder, use {@link normalizePath} to normalize beforehand.
      * @public
      */
@@ -3158,7 +3158,7 @@ export interface ListItemCache extends CacheItem {
     /**
      * A single character indicating the checked status of a task.
      * The space character `' '` is interpreted as an incomplete task.
-     * An other character is interpreted as completed task.
+     * Any other character is interpreted as completed task.
      * `undefined` if this item isn't a task.
      * @public
      */
@@ -5996,7 +5996,7 @@ export class Vault extends Events {
     readBinary(file: TFile): Promise<ArrayBuffer>;
 
     /**
-     * Returns an URI for the browser engine to use, for example to embed an image.
+     * Returns a URI for the browser engine to use, for example to embed an image.
      * @public
      * @since 0.9.7
      */
