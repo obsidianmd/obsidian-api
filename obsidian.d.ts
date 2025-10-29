@@ -369,17 +369,17 @@ export class AbstractTextComponent<T extends HTMLInputElement | HTMLTextAreaElem
     setValue(value: string): this;
     /**
      * @public
-     * 0.9.7
+     * @since 0.9.7
      */
     setPlaceholder(placeholder: string): this;
     /**
      * @public
-     * 0.9.21
+     * @since 0.9.21
      */
     onChanged(): void;
     /**
      * @public
-     * 0.9.7
+     * @since 0.9.7
      */
     onChange(callback: (value: string) => any): this;
 }
@@ -528,6 +528,14 @@ export interface BaseOption {
      * @since 1.10.0
      */
     displayName: string;
+    /**
+     * If provided, the option will be hidden if the function returns true.
+     *
+     * @public
+     * @since 1.10.2
+     * @param config - Read-only copy of the current view configuration.
+     */
+    shouldHide?: (config: BasesViewConfig) => boolean;
 }
 
 /**
@@ -632,7 +640,7 @@ export type BasesPropertyType = 'note' | 'formula' | 'file';
 export class BasesQueryResult {
 
     /**
-     * A ungrouped version of the data, with user-configured sort and limit applied.
+     * An ungrouped version of the data, with user-configured sort and limit applied.
      * Where appropriate, views should support groupBy by using `groupedData` instead of this value.
      *
      * @public
@@ -733,6 +741,13 @@ export abstract class BasesView extends Component {
      */
     abstract onDataUpdated(): void;
 
+    /**
+     * Display the new note menu for a file with the provided filename and optionally a function to modify the frontmatter.
+     * @public
+     * @since 1.10.2
+     */
+    createFileForView(baseFileName: string, frontmatterProcessor?: (frontmatter: Frontmatter) => void): Promise<void>;
+
 }
 
 /**
@@ -763,6 +778,17 @@ export class BasesViewConfig {
      * @since 1.10.0
      */
     getAsPropertyId(key: string): BasesPropertyId | null;
+    /**
+     * Retrieve a user-configured value from the config, evaluating it as a
+     * formula in the context of the current Base. For embedded bases, or bases
+     * in the sidebar, this means evaluating the formula against the currently
+     * active file.
+     *
+     * @public
+     * @returns the Value result from evaluating the formula, or NullValue if the formula is invalid, or the key is not present.
+     * @since 1.10.2
+     */
+    getEvaluatedFormula(view: BasesView, key: string): Value;
     /**
      * Store configuration data for the view. Views should prefer `BasesViewRegistration.options`
      * to allow users to configure options where appropriate.
@@ -1392,19 +1418,19 @@ export class Component {
      */
     registerEvent(eventRef: EventRef): void;
     /**
-     * Registers an DOM event to be detached when unloading
+     * Registers a DOM event to be detached when unloading
      * @public
      * @since 0.14.8
      */
     registerDomEvent<K extends keyof WindowEventMap>(el: Window, type: K, callback: (this: HTMLElement, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     /**
-     * Registers an DOM event to be detached when unloading
+     * Registers a DOM event to be detached when unloading
      * @public
      * @since 0.14.8
      */
     registerDomEvent<K extends keyof DocumentEventMap>(el: Document, type: K, callback: (this: HTMLElement, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     /**
-     * Registers an DOM event to be detached when unloading
+     * Registers a DOM event to be detached when unloading
      * @public
      * @since 0.14.8
      */
@@ -1501,7 +1527,7 @@ export interface DataAdapter {
      */
     process(normalizedPath: string, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
     /**
-     * Returns an URI for the browser engine to use, for example to embed an image.
+     * Returns a URI for the browser engine to use, for example to embed an image.
      * @param normalizedPath - path to file/folder, use {@link normalizePath} to normalize beforehand.
      * @public
      */
@@ -1565,7 +1591,7 @@ export interface DataWriteOptions {
      * Time of creation, represented as a unix timestamp, in milliseconds.
      * Omit this if you want to keep the default behaviour.
      * @public
-     * */
+     */
     ctime?: number;
     /**
      * Time of last modification, represented as a unix timestamp, in milliseconds.
@@ -2045,7 +2071,7 @@ export interface EditorRangeOrCaret {
 /**
  * @public
  * @since 0.15.0
- * */
+ */
 export interface EditorScrollInfo {
     /** @public */
     left: number;
@@ -2367,6 +2393,34 @@ export class FileManager {
 }
 
 /**
+ * A text input allowing selection of a file from in the vault.
+ * @public
+ * @since 1.10.2
+ */
+export interface FileOption extends BaseOption {
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    type: 'file';
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    default?: string;
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    placeholder?: string;
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    filter?: (file: TFile) => boolean;
+}
+
+/**
  * @public
  */
 export interface FileStats {
@@ -2586,6 +2640,34 @@ export abstract class FileView extends ItemView {
 export function finishRenderMath(): Promise<void>;
 
 /**
+ * A text input allowing selection of a folder from in the vault.
+ * @public
+ * @since 1.10.2
+ */
+export interface FolderOption extends BaseOption {
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    type: 'folder';
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    default?: string;
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    placeholder?: string;
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    filter?: (folder: TFolder) => boolean;
+}
+
+/**
  * @public
  */
 export interface FootnoteCache extends CacheItem {
@@ -2627,6 +2709,29 @@ export interface FootnoteSubpathResult extends SubpathResult {
  */
 export interface FormulaContext {
 
+}
+
+/**
+ * A text input supporting formula evaluation.
+ * @public
+ * @since 1.10.2
+ */
+export interface FormulaOption extends BaseOption {
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    type: 'formula';
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    default?: string;
+    /**
+     * @public
+     * @since 1.10.2
+     */
+    placeholder?: string;
 }
 
 /**
@@ -2786,6 +2891,14 @@ export interface GroupOption {
      * @since 1.10.0
      */
     items: Exclude<ViewOption, GroupOption>[];
+    /**
+     * If provided, the group will be hidden if the function returns true.
+     *
+     * @public
+     * @since 1.10.2
+     * @param config - Read-only copy of the current view configuration.
+     */
+    shouldHide?: (config: BasesViewConfig) => boolean;
 }
 
 /**
@@ -3063,7 +3176,7 @@ export class Keymap {
      * Returns 'window' if Cmd/Ctrl+Alt+Shift is pressed.
      * @public
      * @since 0.16.0
-     * */
+     */
     static isModEvent(evt?: UserEvent | null): PaneType | boolean;
 }
 
@@ -3158,7 +3271,7 @@ export interface ListItemCache extends CacheItem {
     /**
      * A single character indicating the checked status of a task.
      * The space character `' '` is interpreted as an incomplete task.
-     * An other character is interpreted as completed task.
+     * Any other character is interpreted as completed task.
      * `undefined` if this item isn't a task.
      * @public
      */
@@ -3666,6 +3779,7 @@ export class Menu extends Component implements CloseableComponent {
      * @since 0.16.0
      */
     setUseNativeMenu(useNativeMenu: boolean): this;
+
     /**
      * Adds a menu item. Only works when menu is not shown yet.
      * @public
@@ -5063,7 +5177,7 @@ export class Setting {
     /**
      * @public
      * @since 0.9.7
-     * */
+     */
     components: BaseComponent[];
     /**
      * @public
@@ -5333,7 +5447,7 @@ export interface Stat {
     /**
      * Time of creation, represented as a unix timestamp.
      * @public
-     * */
+     */
     ctime: number;
     /**
      * Time of last modification, represented as a unix timestamp.
@@ -5819,6 +5933,11 @@ export type UserEvent = MouseEvent | KeyboardEvent | TouchEvent | PointerEvent;
  * @since 1.10.0
  */
 export abstract class Value {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    static type: string;
 
     /**
      * @public
@@ -5996,7 +6115,7 @@ export class Vault extends Events {
     readBinary(file: TFile): Promise<ArrayBuffer>;
 
     /**
-     * Returns an URI for the browser engine to use, for example to embed an image.
+     * Returns a URI for the browser engine to use, for example to embed an image.
      * @public
      * @since 0.9.7
      */
@@ -6268,7 +6387,7 @@ export type ViewCreator = (leaf: WorkspaceLeaf) => View;
  * @public
  * @since 1.10.0
  */
-export type ViewOption = TextOption | MultitextOption | GroupOption | PropertyOption | ToggleOption | SliderOption | DropdownOption;
+export type ViewOption = DropdownOption | FileOption | FolderOption | FormulaOption | GroupOption | MultitextOption | PropertyOption | SliderOption | TextOption | ToggleOption;
 
 /**
  * @public
@@ -6389,7 +6508,7 @@ export class Workspace extends Events {
      * or push it to a queue to be called later when layout is ready.
      * @public
      * @since 0.11.0
-     * */
+     */
     onLayoutReady(callback: () => any): void;
     /**
      * @public
@@ -6957,6 +7076,7 @@ export class WorkspaceRoot extends WorkspaceContainer {
     win: Window;
     /** @public */
     doc: Document;
+
 }
 
 /**
