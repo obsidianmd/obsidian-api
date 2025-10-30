@@ -746,7 +746,7 @@ export abstract class BasesView extends Component {
      * @public
      * @since 1.10.2
      */
-    createFileForView(baseFileName: string, frontmatterProcessor?: (frontmatter: Frontmatter) => void): Promise<void>;
+    createFileForView(baseFileName: string, frontmatterProcessor?: (frontmatter: any) => void): Promise<void>;
 
 }
 
