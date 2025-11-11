@@ -539,6 +539,127 @@ export interface BaseOption {
 }
 
 /**
+ * Represents the serialized format of a Bases query as stored in a `.base` file.
+ *
+ * @public
+ * @since 1.10.0
+ */
+export interface BasesConfigFile {
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    filters?: BasesConfigFileFilter;
+
+    /**
+     * Configuration for properties in this Base.
+     *
+     * Valid keys for this object currently include:
+     *
+     *   - displayName: string
+     *
+     * @public
+     * @since 1.10.0
+     */
+    properties?: Record<string, Record<string, any>>;
+    /**
+     * Configuration for formulas used in this Base.
+     *
+     * Key: Formula property name.
+     * Value: Formula string.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    formulas?: Record<string, string>;
+    /**
+     * Configuration for summary formulas used in this Base.
+     *
+     * Key: Summary formula name.
+     * Value: Formula string.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    summaries?: Record<string, string>;
+    /**
+     * Configuration for views used in this Base.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    views?: BasesConfigFileView[];
+
+}
+
+/**
+ * @public
+ * @since 1.10.0
+ */
+export type BasesConfigFileFilter = string | {
+
+} | {
+
+} | {
+
+};
+
+/**
+ * @public
+ * @since 1.10.0
+ */
+export interface BasesConfigFileView {
+    /**
+     * Unique identifier for the view type. Used to select the correct view renderer.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    type: string;
+    /**
+     * Friendly name for this view, displayed in the UI to select between views.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    name: string;
+    /**
+     * Additional filters, applied only to this view.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    filters?: BasesConfigFileFilter;
+    /**
+     * Configuration for grouping the results of this view.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    groupBy?: {
+
+    };
+    /**
+     * An ordered list of the properties to display in this view.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    order?: string[];
+    /**
+     * Configuration of summaries to display for each property in this view.
+     *
+     * Key: Property name.
+     * Value: Summary formula name.
+     *
+     * @public
+     * @since 1.10.0
+     */
+    summaries?: Record<string, string>;
+
+}
+
+/**
  * Represent a single "row" or file in a base.
  * @public
  * @since 1.10.0
@@ -553,7 +674,7 @@ export class BasesEntry implements FormulaContext {
 
     /**
      * Get the value of the property.
-     * @throws Error if the property is a formula and cannot be evaluated.
+     * Note: Errors are returned as {@link ErrorValue}
      * @public
      * @since 1.10.0
      */
@@ -746,7 +867,7 @@ export abstract class BasesView extends Component {
      * @public
      * @since 1.10.2
      */
-    createFileForView(baseFileName: string, frontmatterProcessor?: (frontmatter: any) => void): Promise<void>;
+    createFileForView(baseFileName?: string, frontmatterProcessor?: (frontmatter: any) => void): Promise<void>;
 
 }
 
