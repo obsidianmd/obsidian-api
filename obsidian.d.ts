@@ -597,11 +597,23 @@ export interface BasesConfigFile {
  * @since 1.10.0
  */
 export type BasesConfigFileFilter = string | {
-
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    and: BasesConfigFileFilter[];
 } | {
-
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    or: BasesConfigFileFilter[];
 } | {
-
+    /**
+     * @public
+     * @since 1.10.0
+     */
+    not: BasesConfigFileFilter[];
 };
 
 /**
@@ -5357,6 +5369,11 @@ export class Setting {
     addText(cb: (component: TextComponent) => any): this;
     /**
      * @public
+     * @since 1.11.0
+     */
+    addComponent<T extends BaseComponent>(cb: (el: HTMLElement) => T): this;
+    /**
+     * @public
      * @since 0.9.21
      */
     addSearch(cb: (component: SearchComponent) => any): this;
@@ -5406,11 +5423,46 @@ export class Setting {
 
 /**
  * @public
+ * @since 1.11.0
+ */
+export class SettingGroup {
+
+    /**
+     * @public
+     * @since 1.11.0
+     */
+    constructor(containerEl: HTMLElement);
+    /**
+     * @public
+     * @since 1.11.0
+     */
+    setHeading(text: string | DocumentFragment): this;
+    /**
+     * @public
+     * @since 1.11.0
+     */
+    addClass(cls: string): this;
+    /**
+     * @public
+     * @since 1.11.0
+     */
+    addSetting(cb: (setting: Setting) => void): this;
+
+}
+
+/**
+ * @public
  * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings#Register+a+settings+tab}
  * @since 0.9.7
  */
 export abstract class SettingTab {
 
+    /**
+     * The icon to display in the settings sidebar.
+     * @public
+     * @since 1.11.0
+     */
+    icon: IconName;
     /**
      * Reference to the app instance.
      * @public
@@ -5418,7 +5470,7 @@ export abstract class SettingTab {
     app: App;
 
     /**
-     * Outermost HTML element on the setting tab.
+     * HTML element for the setting tab content.
      * @public
      */
     containerEl: HTMLElement;
@@ -7286,5 +7338,8 @@ export interface WorkspaceWindowInitData {
 
 export { }
 
-/** @public */
+/**
+ * Can be any Lucide icon name or an internal icon name.
+ * @public
+ */
 export type IconName = string;
