@@ -451,6 +451,11 @@ export class App {
      * @since 1.10.0
      */
     renderContext: RenderContext;
+    /**
+     * @public
+     * @since 1.11.4
+     */
+    secretStorage: SecretStorage;
 
     /**
      * @public
@@ -3483,7 +3488,7 @@ export class ListValue extends NotNullValue {
 /**
  * @public
  */
-export const livePreviewState: ViewPlugin<LivePreviewStateType>;
+export const livePreviewState: ViewPlugin<LivePreviewStateType, undefined>;
 
 /**
  * The object stored in the view plugin {@link livePreviewState}
@@ -3983,7 +3988,7 @@ export class MenuItem {
     setDisabled(disabled: boolean): this;
     /**
      * @param state - If the warning state is enabled
-     * If set to true the MenuItem's title and icon will become red. Or whatever colour is applied to the class 'is-warning' by a theme.
+     * If set to true the MenuItem's title and icon will become red. Or whatever color is applied to the class 'is-warning' by a theme.
      * @public
      * @since 0.15.0
      */
@@ -4284,6 +4289,7 @@ export class Notice {
      * @since 1.8.7
      */
     messageEl: HTMLElement;
+
     /**
      * @param message - The message to be displayed, can either be a simple string or a {@link DocumentFragment}
      * @param duration - Time in milliseconds to show the notice for. If this is 0, the
@@ -5254,6 +5260,67 @@ export interface SearchResultContainer {
 
 /**
  * @public
+ * @since 1.11.1
+ */
+export class SecretComponent extends BaseComponent {
+
+    /**
+     * @public
+     */
+    constructor(app: App, containerEl: HTMLElement);
+    /**
+     * @public
+     * @since 1.11.4
+     */
+    setValue(value: string): this;
+    /**
+     * @public
+     * @since 1.11.4
+     */
+    onChange(cb: (value: string) => unknown): this;
+}
+
+/**
+ * @public
+ * @since 1.11.4
+ */
+export class SecretStorage {
+
+    /**
+     * @public
+     * @since 1.11.4
+     */
+    private loadSecrets;
+
+    /**
+     * Sets a secret in the storage.
+     * @param id Lowercase alphanumeric ID with optional dashes
+     * @param secret The secret value to store
+     * @throws Error if ID is invalid
+     * @public
+     * @since 1.11.4
+     */
+    setSecret(id: string, secret: string): void;
+    /**
+     * Gets a secret from storage
+     * @param id The secret ID
+     * @returns The secret value or null if not found
+     * @public
+     * @since 1.11.4
+     */
+    getSecret(id: string): string | null;
+    /**
+     * Lists all secrets in storage
+     * @returns Array of secret IDs
+     * @public
+     * @since 1.11.4
+     */
+    listSecrets(): string[];
+
+}
+
+/**
+ * @public
  */
 export interface SectionCache extends CacheItem {
     /**
@@ -5447,7 +5514,18 @@ export class SettingGroup {
      * @since 1.11.0
      */
     addSetting(cb: (setting: Setting) => void): this;
-
+    /**
+     * Add a search input at the beginning of the setting group. Useful for filtering
+     * results or adding an input for quick entry.
+     * @public
+     * @since 1.11.0
+     */
+    addSearch(cb: (component: SearchComponent) => any): this;
+    /**
+     * @public
+     * @since 1.11.0
+     */
+    addExtraButton(cb: (component: ExtraButtonComponent) => any): this;
 }
 
 /**
