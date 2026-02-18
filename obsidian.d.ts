@@ -1572,6 +1572,45 @@ export class CapacitorAdapter implements DataAdapter {
 }
 
 /**
+ * @public
+ */
+export interface CliData {
+    /** @public */
+    [key: string]: string | 'true';
+}
+
+/**
+ * @public
+ */
+export interface CliFlag {
+    /**
+     * Value placeholder (e.g., '<filename>', '<path>'). Omit for boolean flags.
+     * @public
+     */
+    value?: string;
+    /**
+     * Description shown in help and autocomplete
+     * @public
+     */
+    description: string;
+    /**
+     * Whether this flag is required (default: false)
+     * @public
+     */
+    required?: boolean;
+}
+
+/**
+ * @public
+ */
+export type CliFlags = Record<string, CliFlag>;
+
+/**
+ * @public
+ */
+export type CliHandler = (params: CliData) => string | Promise<string>;
+
+/**
  * A closeable component that can get dismissed via the Android 'back' button.
  * @public
  */
@@ -2715,10 +2754,13 @@ export class FileManager {
     renameFile(file: TAbstractFile, newPath: string): Promise<void>;
 
     /**
+     * Prompt the user to confirm they want to delete the specified file or folder
+     * @param file - the file or folder to delete
+     * @returns A promise that resolves to true if the prompt was confirmed or false if it was canceled
      * @public
      * @since 0.15.0
      */
-    promptForDeletion(file: TAbstractFile): Promise<void>;
+    promptForDeletion(file: TAbstractFile): Promise<boolean>;
 
     /**
      * Remove a file or a folder from the vault according the user's preferred 'trash'
@@ -4809,6 +4851,20 @@ export abstract class Plugin extends Component {
      */
     registerEditorSuggest(editorSuggest: EditorSuggest<any>): void;
     /**
+     * Register a CLI handler to handle a command from the CLI.
+     * Command IDs must be globally unique. Attempting to register a command that is already registered will throw an Error.
+     *
+     * Use the format `<plugin-id>` for your default command, and `<plugin-id>:<action>` for sub-commands and actions.
+     *
+     * @param command The command ID that will be used. Use alphanumeric characters without spaces.
+     * @param description The description text to provide in the help command, and in auto-completion prompts.
+     * @param flags Command line flags that can be passed in.
+     * @param handler The callback handler to handle a CLI invocation.
+     * @public
+     * @since 1.12.2
+     */
+    registerCliHandler(command: string, description: string, flags: CliFlags | null, handler: CliHandler): void;
+    /**
      * Load settings data from disk.
      * Data is stored in `data.json` in the plugin folder.
      * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings}
@@ -5376,14 +5432,6 @@ export class SecretComponent extends BaseComponent {
  * @since 1.11.4
  */
 export class SecretStorage {
-
-    /**
-     * Gets the last access timestamp for a secret key
-     * @param id The secret ID
-     * @returns Timestamp in milliseconds, or null if never accessed
-     * @public
-     */
-    getLastAccess(id: string): number | null;
 
     /**
      * Sets a secret in the storage.
