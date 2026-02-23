@@ -1521,6 +1521,11 @@ export class CapacitorAdapter implements DataAdapter {
     append(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
     /**
      * @public
+     * @since 1.12.3
+     */
+    appendBinary(normalizedPath: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
      * @since 1.7.2
      */
     process(normalizedPath: string, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
@@ -1573,40 +1578,50 @@ export class CapacitorAdapter implements DataAdapter {
 
 /**
  * @public
+ * @since 1.12.2
  */
 export interface CliData {
-    /** @public */
+    /**
+     * @public
+     * @since 1.12.2
+     */
     [key: string]: string | 'true';
 }
 
 /**
  * @public
+ * @since 1.12.2
  */
 export interface CliFlag {
     /**
      * Value placeholder (e.g., '<filename>', '<path>'). Omit for boolean flags.
      * @public
+     * @since 1.12.2
      */
     value?: string;
     /**
      * Description shown in help and autocomplete
      * @public
+     * @since 1.12.2
      */
     description: string;
     /**
      * Whether this flag is required (default: false)
      * @public
+     * @since 1.12.2
      */
     required?: boolean;
 }
 
 /**
  * @public
+ * @since 1.12.2
  */
 export type CliFlags = Record<string, CliFlag>;
 
 /**
  * @public
+ * @since 1.12.2
  */
 export type CliHandler = (params: CliData) => string | Promise<string>;
 
@@ -1965,6 +1980,15 @@ export interface DataAdapter {
      */
     append(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
     /**
+     * Add data to the end of a binary file.
+     * @param normalizedPath - path to file, use {@link normalizePath} to normalize beforehand.
+     * @param data - the data to append.
+     * @param options - (Optional)
+     * @public
+     * @since 1.12.3
+     */
+    appendBinary(normalizedPath: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
+    /**
      * Atomically read, modify, and save the contents of a plaintext file.
      * @param normalizedPath - path to file/folder, use {@link normalizePath} to normalize beforehand.
      * @param fn - a callback function which returns the new content of the file synchronously.
@@ -2104,7 +2128,7 @@ export class DateValue extends NotNullValue {
  *
  * @param cb - The function to call.
  * @param timeout - The timeout to wait, in milliseconds
- * @param resetTimer - Whether to reset the timeout when the debouncer is called again.
+ * @param resetTimer - Whether to reset the timeout when the debounce function is called again.
  * @returns a debounced function that takes the same parameter as the original function.
  * @example
  * ```ts
@@ -2892,6 +2916,11 @@ export class FileSystemAdapter implements DataAdapter {
      * @public
      */
     append(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
+     * @since 1.12.3
+     */
+    appendBinary(normalizedPath: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
     /**
      * @public
      */
@@ -6489,6 +6518,15 @@ export class Vault extends Events {
      * @since 0.13.0
      */
     append(file: TFile, data: string, options?: DataWriteOptions): Promise<void>;
+    /**
+     * Add data to the end of a binary file inside the vault.
+     * @param file - The file
+     * @param data - the data to add
+     * @param options - (Optional)
+     * @public
+     * @since 1.12.3
+     */
+    appendBinary(file: TFile, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
     /**
      * Atomically read, modify, and save the contents of a note.
      * @param file - the file to be read and modified.
