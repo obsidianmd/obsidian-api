@@ -5453,7 +5453,7 @@ export class SecretComponent extends BaseComponent {
      * @public
      * @since 1.11.4
      */
-    onChange(cb: (value: string) => unknown): this;
+    onChange(cb: (value: string | null) => unknown): this;
 }
 
 /**
