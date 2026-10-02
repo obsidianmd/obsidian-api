@@ -636,6 +636,14 @@ export interface BasesConfigFileView {
 
     };
     /**
+     * Ordered list of the groupBy values to show. When set, only these groups appear, in this order.
+     * `null` is the group of entries with no value.
+     *
+     * @public
+     * @since 1.14.3
+     */
+    groupOrder?: FrontmatterValue[];
+    /**
      * An ordered list of the properties to display in this view.
      *
      * @public
@@ -1153,7 +1161,7 @@ export abstract class BasesView extends Component {
      * @public
      * @since 1.10.2
      */
-    createFileForView(baseFileName?: string, frontmatterProcessor?: (frontmatter: any) => void): Promise<void>;
+    createFileForView(baseFileName?: string, frontmatterProcessor?: (frontmatter: any, file: TFile) => void): Promise<void>;
 
 }
 
@@ -1951,6 +1959,7 @@ export class ConfirmationButton extends ButtonComponent {
      * @since 1.13.0
      */
     setCancel(): this;
+
 }
 
 /**
@@ -2140,6 +2149,7 @@ export interface DataAdapter {
      * @public
      */
     copy(normalizedPath: string, normalizedNewPath: string): Promise<void>;
+
 }
 
 /**
@@ -3060,6 +3070,7 @@ export class FileSystemAdapter implements DataAdapter {
      * @since 0.14.3
      */
     getFilePath(normalizedPath: string): string;
+
     /**
      * @public
      */
@@ -3102,6 +3113,7 @@ export class FileSystemAdapter implements DataAdapter {
      * @public
      */
     static mkdir(path: string): Promise<void>;
+
 }
 
 /**
@@ -4947,7 +4959,7 @@ export abstract class Plugin extends Component {
     addStatusBarItem(): HTMLElement;
     /**
      * Register a command globally.
-     * Registered commands will be available from the {@link https://help.obsidian.md/Plugins/Command+palette Command palette}.
+     * Registered commands will be available from the {@link https://obsidian.md/help/plugins/command-palette Command palette}.
      * The command id and name will be automatically prefixed with this plugin's id and name.
      * @public
      * @since 0.9.7
@@ -5626,6 +5638,7 @@ export class SecretComponent extends BaseComponent {
      * @since 1.11.4
      */
     onChange(cb: (value: string | null) => unknown): this;
+
 }
 
 /**
@@ -5717,6 +5730,7 @@ export class Setting {
      * @since 0.9.7
      */
     controlEl: HTMLElement;
+
     /**
      * @public
      * @since 0.9.7
@@ -5750,6 +5764,7 @@ export class Setting {
      * @since 1.13.1
      */
     addDisplayValue(cb: (component: DisplayValueComponent) => any): this;
+
     /**
      * @public
      * @since 0.9.7
@@ -5944,6 +5959,7 @@ export interface SettingDefinitionAction extends SettingDefinitionBase {
      * @since 1.13.0
      */
     action: (el: HTMLElement, index: number) => void;
+
     /**
      * Disables the row. Evaluated on each render. Call `update()` on the
      * setting tab to re-evaluate.
@@ -5995,6 +6011,7 @@ export interface SettingDefinitionBase {
      * @since 1.13.0
      */
     name: string;
+
     /**
      * Description text or fragment. Used for rendering; the textContent of a
      * fragment is used for search.
@@ -6052,6 +6069,7 @@ export interface SettingDefinitionControl<K extends string = string> extends Set
  * @since 1.13.0
  */
 export interface SettingDefinitionEmpty extends SettingDefinitionBase {
+
     /**
      * @public
      * @since 1.13.0
@@ -6083,6 +6101,7 @@ export interface SettingDefinitionGroup<K extends string = string> {
      * @since 1.13.0
      */
     type: 'group' | 'list';
+
     /**
      * Heading text displayed above the group.
      * @public
@@ -6212,6 +6231,7 @@ export interface SettingDefinitionPage<K extends string = string> {
      * @since 1.13.0
      */
     name: string;
+
     /**
      * Description shown on the navigable entry.
      * @public
@@ -6727,9 +6747,12 @@ export interface SettingToggleControl<K extends string = string> extends Setting
 export function setTooltip(el: HTMLElement, tooltip: string, options?: TooltipOptions): void;
 
 /**
+ * Logical sidedock identity, independent of screen position. In LTR, `'primary'`
+ * renders on the left and `'secondary'` on the right; RTL mirrors them.
+ * `'left'` and `'right'` are legacy aliases for `'primary'` and `'secondary'`.
  * @public
  */
-export type Side = 'left' | 'right';
+export type Side = 'primary' | 'secondary' | 'left' | 'right';
 
 /**
  * @public
@@ -7048,6 +7071,25 @@ export class TextComponent extends AbstractTextComponent<HTMLInputElement> {
      * @public
      */
     constructor(containerEl: HTMLElement);
+
+}
+
+/**
+ * Represents a file that is outside the Vault.
+ * Can be used with the vault API just like any other file.
+ * Do not create these manually.
+ *
+ * @public
+ * @since 1.14.4
+ */
+export class TExternalFile extends TFile {
+
+    /**
+     * Returns the physical path in the filesystem
+     * @public
+     * @since 1.14.4
+     */
+    getRealPath(): string;
 
 }
 
