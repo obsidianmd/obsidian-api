@@ -1585,7 +1585,7 @@ export interface BasesConfigFileView {
      * @public
      * @since 1.14.3
      */
-    groupOrder?: any[];
+    groupOrder?: FrontmatterValue[];
     /**
      * An ordered list of the properties to display in this view.
      *
@@ -4896,6 +4896,15 @@ export interface FrontmatterLinkCache extends Reference {
      */
     key: string;
 }
+
+/**
+ * All possible types that can be emitted from parsing or writing to frontmatter.
+ * @public
+ */
+export type FrontmatterValue = string | number | boolean | undefined | null | {
+    /** @public */
+    [key: string]: FrontmatterValue;
+} | Array<FrontmatterValue>;
 
 /**
  * The result of a fuzzy search.
