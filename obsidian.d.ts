@@ -2915,7 +2915,7 @@ export interface Command {
      * this.addCommand({
      *   id: 'example-command',
      *   name: 'Example command',
-     *   editorCallback: (editor: Editor, view: MarkdownView) => {
+     *   editorCallback: (editor: Editor, ctx: MarkdownView | MarkdownFileInfo) => {
      *     const sel = editor.getSelection();
      *
      *     console.log(`You have selected: ${sel}`);
@@ -2934,7 +2934,7 @@ export interface Command {
      * this.addCommand({
      *   id: 'example-command',
      *   name: 'Example command',
-     *   editorCheckCallback: (checking: boolean, editor: Editor, view: MarkdownView) => {
+     *   editorCheckCallback: (checking: boolean, editor: Editor, ctx: MarkdownView | MarkdownFileInfo) => {
      *     const value = getRequiredValue();
      *
      *     if (value) {
