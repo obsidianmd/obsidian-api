@@ -8644,6 +8644,14 @@ export interface SettingDefinitionBase {
     name: string;
 
     /**
+     * Unique identifier to differentiate between sibling settings that share
+     * a name, or to keep a stable reference when a setting or setting page
+     * is renamed. If not set, name is used.
+     * @public
+     * @since 1.14.0
+     */
+    id?: string;
+    /**
      * Description text or fragment. Used for rendering; the textContent of a
      * fragment is used for search.
      * @public
@@ -8733,6 +8741,14 @@ export interface SettingDefinitionGroup<K extends string = string> {
      */
     type: 'group' | 'list';
 
+    /**
+     * Unique identifier to differentiate between sibling settings that share
+     * a name, or to keep a stable reference when a setting or setting page
+     * is renamed. If not set, name is used.
+     * @public
+     * @since 1.14.0
+     */
+    id?: string;
     /**
      * Heading text displayed above the group.
      * @public
@@ -8863,6 +8879,14 @@ export interface SettingDefinitionPage<K extends string = string> {
      */
     name: string;
 
+    /**
+     * Unique identifier to differentiate between sibling settings that share
+     * a name, or to keep a stable reference when a setting or setting page
+     * is renamed. If not set, name is used.
+     * @public
+     * @since 1.14.0
+     */
+    id?: string;
     /**
      * Description shown on the navigable entry.
      * @public
