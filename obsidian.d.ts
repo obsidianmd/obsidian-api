@@ -27,8 +27,8 @@ declare global {
          * @returns `false` if the callback returned `false`, `true` otherwise.
          * @example
          * ```ts
-         * console.log(Object.each({ a: 1, b: 2 }, function(value) { return value > this.min }, { min: 0 })); // true
-         * console.log(Object.each({ a: 1, b: 2 }, function(value) { return value > this.min }, { min: 1 })); // false
+         * console.log(Object.each({ a: 1, b: 2 }, function(this: { min: number }, value) { return value > this.min }, { min: 0 })); // true
+         * console.log(Object.each({ a: 1, b: 2 }, function(this: { min: number }, value) { return value > this.min }, { min: 1 })); // false
          * ```
          */
         each<T>(object: {
@@ -499,7 +499,7 @@ declare global {
          * ```ts
          * const element = document.body.createEl('p');
          * console.log(element.isActiveElement()); // false
-         * console.log(document.activeElement.isActiveElement()); // true
+         * console.log(document.activeElement?.isActiveElement()); // true
          * ```
          */
         isActiveElement(): boolean;
@@ -4124,7 +4124,7 @@ export abstract class EditorSuggest<T> extends PopoverSuggest<T> {
      *         return {
      *             start: { line: cursor.line, ch: cursor.ch - match[0].length },
      *             end: cursor,
-     *             query: match[1],
+     *             query: match[1] ?? '',
      *         };
      *     }
      * }
@@ -4381,7 +4381,9 @@ export class FileManager {
      * @example
      * ```ts
      * const file = vault.getFileByPath('foo/bar.md');
-     * await fileManager.renameFile(file, 'baz/qux.md');
+     * if (file) {
+     *     await fileManager.renameFile(file, 'baz/qux.md');
+     * }
      * ```
      * @public
      * @since 0.11.0
@@ -4404,7 +4406,9 @@ export class FileManager {
      * @example
      * ```ts
      * const file = vault.getFileByPath('foo/bar.md');
-     * await fileManager.trashFile(file);
+     * if (file) {
+     *     await fileManager.trashFile(file);
+     * }
      * ```
      * @public
      * @since 1.6.6
@@ -4420,7 +4424,9 @@ export class FileManager {
      * @example
      * ```ts
      * const file = vault.getFileByPath('foo/bar.md');
-     * fileManager.generateMarkdownLink(file, 'baz/qux.md', '#heading', 'Display text') // [[bar#heading|Display text]], depending on the user's link settings
+     * if (file) {
+     *     fileManager.generateMarkdownLink(file, 'baz/qux.md', '#heading', 'Display text') // [[bar#heading|Display text]], depending on the user's link settings
+     * }
      * ```
      * @public
      * @since 0.12.0
@@ -10151,8 +10157,8 @@ export abstract class ValueComponent<T> extends BaseComponent {
      * ```ts
      * const listeners: Record<string, (value?: string) => string> = {};
      * textComponent.registerOptionListener(listeners, 'foo');
-     * listeners.foo('bar');
-     * console.log(listeners.foo()); // bar
+     * listeners.foo?.('bar');
+     * console.log(listeners.foo?.()); // bar
      * ```
      * @public
      * @since 0.9.7
